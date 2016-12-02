@@ -1,0 +1,4 @@
+9799812358751,Design Patterns,Erich Gamma,Addison Wesley,12.99,15.65,1479096890
+9780133769395,Starting Out With C++,Tony Gaddis,Pearson,52.5,65,1479098495
+9780139798092,Thinking in C++,Bruce Eckel,Prentice Hall,46.75,54.5,1479098555
+9780672326967,C Primer Plus,Stephen Prata,Sams,48.21,94.54,1479098593
