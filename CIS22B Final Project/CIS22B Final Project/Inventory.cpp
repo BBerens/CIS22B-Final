@@ -2,12 +2,12 @@
 #define __INVENTORY_CPP__
 
 #include "Inventory.h"
-#include "Book.h"
-#include <fstream>
+
 
 Inventory::Inventory(void)
 {
 	numBooks = 0;
+	numUsedBooks = 0;
 	readBooksFromFile();
 	for (int i = 0; i <= 7; i++)
 	{
@@ -34,6 +34,16 @@ Book* Inventory::addBook(void)
 	return newBook;
 }
 
+UsedBook* Inventory::addUsedBook(void)
+{
+	// when we add a new book we should generate a new dynamically allocated array of book pointers(books)
+	UsedBook* newUsedBook;
+	newUsedBook = new UsedBook(); // temporary, need to do this with dynamic allocation
+	usedBooks[numUsedBooks] = newUsedBook;
+	numUsedBooks++;
+	return newUsedBook;
+}
+
 Book* Inventory::getBook(int index)	// temporary
 {
 	return books[index];
@@ -42,55 +52,73 @@ Book* Inventory::getBook(int index)	// temporary
 void Inventory::readBooksFromFile()
 {
 	Book* bookPtr;
+	UsedBook* usedBookPtr;
 	fstream bookDatabase;
+	int newBooks, usedBooks;
 
 	bookDatabase.open("BookDatabase.txt", ios::in);
-
-	do
+	bookDatabase >> newBooks;
+	bookDatabase.ignore(20, '\n'); // ignore the rest of the line
+	for (int i = 0; i < newBooks; i++)
 	{
-		bookPtr = addBook();		
-	} while (bookDatabase >> *bookPtr);
-	delete books[numBooks--];
+		bookPtr = addBook();
+		bookDatabase >> *bookPtr;
+		bookDatabase.ignore();	// should ignore the '\n' character
+	}
+	
+	bookDatabase >> usedBooks;
+	bookDatabase.ignore(20, '\n');
+	for (int j = 0; j < usedBooks; j++)
+	{
+		usedBookPtr = addUsedBook();
+		bookDatabase >> *usedBookPtr;
+	}
+
 	bookDatabase.close();
 }
 void Inventory::writeBooks()
 {
 	fstream bookDatabase;
 	bookDatabase.open("BookDatabase.txt", ios::out);
+	bookDatabase << numBooks << " New Books" << endl;
 	for (int i = 0; i < numBooks; i++)
 	{
-		bookDatabase << *books[i];
+		bookDatabase << *books[i] << endl;
+	}
+	bookDatabase << numUsedBooks << " Used Books" << endl;
+	for (int j = 0; j < numUsedBooks; j++)
+	{
+		bookDatabase << *usedBooks[j] << endl;
 	}
 	bookDatabase.close();
-
 }
 
 Book ** Inventory::generateAttributeList(int attribute)
 {
-	int lowerLimit;
-	int smallIndex;
-	Book * temp;
-	Book ** tempList = nullptr;
-	tempList = new Book*;
+	
+	int startScan;
+	int minIndex;
+	Book * minValue;
+	Book ** tempList;
+	tempList = new Book*[numBooks+numUsedBooks];
 	for (int i = 0; i < numBooks; i++)
 	{
 		tempList[i] = books[i];
-
 	}
-	for (int i = 0; i < numBooks; i++)
+	for (startScan = 0; startScan < numBooks - 1; startScan++)
 	{
-		lowerLimit = i;
-		smallIndex = lowerLimit;
-		for (int j = lowerLimit; j < numBooks; j++)
+		minIndex = startScan;
+		minValue = tempList[startScan];
+		for (int j = startScan +1; j < numBooks; j++)
 		{
-			if (tempList[j]->getAttribute(attribute) < tempList[smallIndex]->getAttribute(attribute))
+			if (tempList[j]->getAttribute(attribute) < minValue->getAttribute(attribute))
 			{
-				smallIndex = j;
+				minIndex = j;
+				minValue = tempList[j];
 			}
-			temp = tempList[lowerLimit];
-			tempList[lowerLimit] = tempList[smallIndex];
-			tempList[smallIndex] = temp;
 		}
+		tempList[minIndex] = tempList[startScan];
+		tempList[startScan] = minValue;
 	}
 	return tempList;
 }

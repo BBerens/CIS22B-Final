@@ -6,6 +6,7 @@
 #include <iostream>
 #include <iomanip>
 #include "Book.h"
+#include "UsedBook.h"
 #include "Inventory.h"
 #include "Order.h"
 #include <ctime>
@@ -29,6 +30,7 @@ void displayEditBook(Book *);
 void bookLookup(void);
 Book* displayAttributeSearch(int);
 void editBook(Book *, int);
+void displayReport(int);
 
 Inventory inventory;
 enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED };
@@ -214,37 +216,8 @@ void bookLookup(void)
 			{
 				foundBook = displayAttributeSearch(menuOption - 1);
 				cin >> subMenuOption;
-				switch (subMenuOption)
-				{
-				case(1) :
-					editBook(foundBook, 1);
-					break;
-				case(2) :
-					editBook(foundBook, 2);
-					break;
-				case(3) :
-					editBook(foundBook, 3);
-					break;
-				case(4) :
-					editBook(foundBook, 4);
-					break;
-				case(5) :
-					editBook(foundBook, 5);
-					break;
-				case(6) :
-					editBook(foundBook, 6);
-					break;
-				case(7) :
-					editBook(foundBook, 7);
-					break;
-				case(8) :
-					editBook(foundBook, 8);
-					break;
-				case(9) :
-					break;
-				default:
-					;
-				}
+				if (subMenuOption != 9)
+					editBook(foundBook, subMenuOption);
 			}
 		}
 	}
@@ -665,7 +638,10 @@ void displayBookInformationScreen(Book * displayBook)
 
 void reportModule(void)
 {
+	int menuOption;
 	displayReportsMenu();
+	cin >> menuOption;
+	displayReport(menuOption);
 }
 void displayReportsMenu(void)
 {
@@ -695,4 +671,14 @@ void displayReportsMenu(void)
 		<< "*                         Enter Your Choice:                                  *" << endl
 		<< "*                                                                             *" << endl
 		<< "*******************************************************************************" << endl;
+}
+
+void displayReport(int listSelection)
+{
+	Book** bookList = inventory.getAttributeList(listSelection);
+	for (int i = 0; i < inventory.getNumBooks(); i++)
+	{
+		cout << bookList[i]->getIsbn() << endl;
+	}
+	system("pause");
 }

@@ -9,7 +9,7 @@ using namespace std;
 
 class Book
 {
-private:
+protected:
 	long long isbn;
 	string title;
 	string author;
@@ -45,7 +45,7 @@ public:
 	time_t getDateAdded(void) const;
 	int getQuantity(void) const;
 	double getWholesaleCost(void) const;
-	double getRetailPrice(void) const;
+	virtual double getRetailPrice(void) const;
 	string getAttribute(int) const;
 
 	void writeToFile(fstream&);

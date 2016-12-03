@@ -28,24 +28,24 @@ string Book::getDateAddedStr(void) const
 
 void Book::writeToFile(fstream & file)
 {
-	file << isbn << ",";
-	file << title << ",";
-	file << author << ",";
-	file << publisher << ",";
-	file << wholesaleCost << ",";
-	file << retailPrice << ",";
+	file << isbn << '\t';
+	file << title << '\t';
+	file << author << '\t';
+	file << publisher << '\t';
+	file << wholesaleCost << '\t';
+	file << retailPrice << '\t';
 	file << dateAdded << endl;
 }
 
 fstream& operator << (fstream& file, Book& outBook)
 {
-	file << outBook.isbn << ",";
-	file << outBook.title << ",";
-	file << outBook.author << ",";
-	file << outBook.publisher << ",";
-	file << outBook.wholesaleCost << ",";
-	file << outBook.retailPrice << ",";
-	file << outBook.dateAdded << endl;
+	file << outBook.isbn << '\t';
+	file << outBook.title << '\t';
+	file << outBook.author << '\t';
+	file << outBook.publisher << '\t';
+	file << outBook.wholesaleCost << '\t';
+	file << outBook.retailPrice << '\t';
+	file << outBook.dateAdded << '\t';
 	return file;
 }
 
@@ -56,28 +56,25 @@ fstream& operator >> (fstream& file, Book& inBook)
 	double tempDouble;
 	time_t tempDate;
 
-	getline(file, tempStr, ',');
-	if (tempStr != "")
-	{
-		tempIsbn = stoll(tempStr, nullptr, 10);
-		inBook.isbn = tempIsbn;
-		getline(file, tempStr, ',');	// messes up if there is a ',' in the title, need to choose a different char
-		inBook.title = tempStr;
-		getline(file, tempStr, ',');
-		inBook.author = tempStr;
-		getline(file, tempStr, ',');
-		inBook.publisher = tempStr;
-		getline(file, tempStr, ',');
-		tempDouble = stod(tempStr, nullptr);
-		inBook.wholesaleCost = tempDouble;
-		getline(file, tempStr, ',');
-		tempDouble = stod(tempStr, nullptr);
-		inBook.retailPrice = tempDouble;
-		getline(file, tempStr, '\n');
-		tempIsbn = stoll(tempStr, nullptr, 10);
-		tempDate = static_cast<time_t>(tempIsbn);
-		inBook.dateAdded = tempDate;
-	}
+	getline(file, tempStr, '\t');
+	tempIsbn = stoll(tempStr, nullptr, 10);
+	inBook.isbn = tempIsbn;
+	getline(file, tempStr, '\t');
+	inBook.title = tempStr;
+	getline(file, tempStr, '\t');
+	inBook.author = tempStr;
+	getline(file, tempStr, '\t');
+	inBook.publisher = tempStr;
+	getline(file, tempStr, '\t');
+	tempDouble = stod(tempStr, nullptr);
+	inBook.wholesaleCost = tempDouble;
+	getline(file, tempStr, '\t');
+	tempDouble = stod(tempStr, nullptr);
+	inBook.retailPrice = tempDouble;
+	getline(file, tempStr, '\t');
+	tempIsbn = stoll(tempStr, nullptr, 10);
+	tempDate = static_cast<time_t>(tempIsbn);
+	inBook.dateAdded = tempDate;
 	return file;
 }
 
