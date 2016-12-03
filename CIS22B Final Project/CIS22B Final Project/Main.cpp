@@ -133,7 +133,9 @@ void displayMainMenu(void)
 
 void displayCashierScreen(Order * currentOrder)
 {
+	// Create a book object for the current book
 	Book * currentBook;
+	// Get the current system time
 	time_t rawtime = time(NULL);
 	struct tm now;
 	localtime_s(&now, &rawtime);
@@ -141,6 +143,7 @@ void displayCashierScreen(Order * currentOrder)
 	int bookCounter = 0;
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
+	// Output casher screen
 	cout << "****************************************************************************************************"
 		<< "*                                                                                                  *"
 		<< "*   Serendipity Book Sellers                                                                       *"
@@ -150,6 +153,10 @@ void displayCashierScreen(Order * currentOrder)
 		<< "*                                                                                                  *"
 		<< "*   Qty   ISBN           Title                                                     Price   Total   *"
 		<< "*   ______________________________________________________________________________________________ *";
+	system("pause");	// Debug Statement
+
+	// Keep this commented for now while testing
+	/*
 	while (bookCounter < currentOrder->getNumBooks())
 	{
 		currentBook = currentOrder->getBook(bookCounter);
@@ -160,6 +167,8 @@ void displayCashierScreen(Order * currentOrder)
 			<< setw(8) << fixed << setprecision(2) << currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice() << "*";
 		bookCounter++;
 	}
+	*/
+
 		cout << "*                     Subtotal                                                                     *"
 		<< "*                     Tax                                                                          *"
 		<< "*                     Total                                                                        *"
@@ -169,7 +178,7 @@ void displayCashierScreen(Order * currentOrder)
 		<< "*  Thank You for Shopping at Serendipity!                                                          *"
 		<< "*                                                                                                  *"
 		<< "****************************************************************************************************" << endl;
-		//cout << ""
+		system("pause");	// Debug Statement
 }
 
 void inventoryModule(void)
