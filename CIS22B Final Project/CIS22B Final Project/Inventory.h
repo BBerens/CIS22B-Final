@@ -24,10 +24,13 @@ public:
 	UsedBook* addUsedBook(void);
 	UsedBook* addUsedBook(int);
 	Book* getBook(int);	// temporary
-	Book** searchAuthor(string);
-	Book** searchTitle(string);
-	Book** searchIsbn(long long);
-	Book** searchPublisher(string);
+
+	// Temporarily commented out
+	// Book** searchAuthor(string);
+	// Book** searchTitle(string);
+	// Book** searchIsbn(long long);
+	// Book** searchPublisher(string);
+
 	void writeBooks(void);
 	void readBooksFromFile(void);
 	Book** generateAttributeList(int);

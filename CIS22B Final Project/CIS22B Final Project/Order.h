@@ -6,9 +6,9 @@
 class Order
 {
 private:
-	Book * books[100];
-	int quantity[100];
-	int items;
+	Book * books[100]; 
+	int quantity[100]; // quantity of each book purchased
+	int items; // Total number of books
 public:
 	Order();
 	void addBook(Book *, int);

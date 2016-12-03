@@ -135,6 +135,10 @@ void displayCashierScreen(Order * currentOrder)
 {
 	// Create a book object for the current book
 	Book * currentBook;
+
+	// Declare variables for cashier input
+	string newInput; // Input book
+
 	// Get the current system time
 	time_t rawtime = time(NULL);
 	struct tm now;
@@ -143,20 +147,43 @@ void displayCashierScreen(Order * currentOrder)
 	int bookCounter = 0;
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
-	// Output casher screen
+	// Output cashier screen
 	cout << "****************************************************************************************************"
 		<< "*                                                                                                  *"
 		<< "*   Serendipity Book Sellers                                                                       *"
 		<< "*                                                                                                  *"
 		<< "*   Date: " << dateStr << "                                                                      *"
 		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
+		<< "*   Please enter the ISBN of the book you are buying.                                            *";
+
+		// Test code
+		cin.ignore();
+		getline(cin, newInput);
+		Book* foundBook;
+		foundBook = inventory.searchAttribute(ISBN, newInput);
+
+			cout << "****************************************************************************************************"
+				<< "*  ISBN: " << foundBook->getIsbn() << endl;
+			cout << "*  Title: " << foundBook->getTitle() << endl;
+			cout << "*  Author: " << foundBook->getAuthor() << endl;
+			cout << "*  Publisher: " << foundBook->getPublisher() << endl;
+			cout << "*  Date Added: " << foundBook->getDateAddedStr();
+			cout << "*  Quantity On-hand: " << setw(4) << foundBook->getQuantity() << endl;
+			cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << foundBook->getWholesaleCost() << endl;
+			cout << "*  Retail Price: $" << fixed << setprecision(2) << foundBook->getRetailPrice() << endl;
+			cout << "*" << endl;
+
+		// End Test
+
+		/*
 		<< "*   Qty   ISBN           Title                                                     Price   Total   *"
 		<< "*   ______________________________________________________________________________________________ *";
+		*/
+	    
 	system("pause");	// Debug Statement
 
 	// Keep this commented for now while testing
-	/*
+	
 	while (bookCounter < currentOrder->getNumBooks())
 	{
 		currentBook = currentOrder->getBook(bookCounter);
@@ -167,7 +194,7 @@ void displayCashierScreen(Order * currentOrder)
 			<< setw(8) << fixed << setprecision(2) << currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice() << "*";
 		bookCounter++;
 	}
-	*/
+	
 
 		cout << "*                     Subtotal                                                                     *"
 		<< "*                     Tax                                                                          *"
@@ -280,6 +307,7 @@ Book* displayAttributeSearch(int attribute)
 	foundBook = inventory.searchAttribute(attribute, inputValue);
 	if (foundBook != nullptr)
 	{
+		cout << "Here's an extra output to test the function: " << foundBook->getIsbn() << endl; // Debug Statement
 		cout << "****************************************************************************************************"
 			 << "*  ISBN: " << foundBook->getIsbn() << endl;
 		cout << "*  Title: " << foundBook->getTitle() << endl;
