@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 // CIS22B Final Project
 // This is a test 
 // This is another test
@@ -457,9 +458,31 @@ void displayBookLookup(void)
 void displayAddBook(void)
 {
 	string userInput;
-	Book * currentBook = inventory.addBook();
+	Book* currentBook;
+	int condition;
 	system("cls");
-	cout << "Please enter the following information for adding a book: " << endl;
+	cout << "Enter 'N' for a new book and 'U' for a used book and press enter: ";
+	cin >> userInput;
+	while (userInput != "N" && userInput != "n" && userInput != "U" && userInput != "u")
+	{
+		cout << "That is not a valid entry.";
+		cout << "Enter 'N' for a new book and 'U' for a used book and press enter: ";
+		cin >> userInput;
+	}
+	if (userInput == "U" || userInput == "u")
+	{
+		cout << "Please enter the condition of the book from the menu and press enter." << endl;
+		cout << "1: Like new, no visible damage." << endl;
+		cout << "2: Good condition, small folds in pages, slightly worn cover." << endl;
+		cout << "3. Fair condition, obvious sign of usage, crease in binding or cover." << endl;
+		cout << "4. Poor condition, significant wear, possible water marks or ripped pages." << endl;
+		cin >> condition;
+		currentBook = inventory.addUsedBook(condition);
+	}
+	else
+	{
+		currentBook = inventory.addBook();
+	}
 	cout << "Enter the 13 digit ISBN for the book to be added or press q and press enter to quit: ";
 	getline(cin, userInput); // check for quit and follow up actions, also needs formatting
 	currentBook->setIsbn(strtoll(userInput.c_str(), nullptr, 10)); // doesn't perform any checks on what the user inputs. Needs to be broken up
@@ -678,7 +701,8 @@ void displayReport(int listSelection)
 	Book** bookList = inventory.getAttributeList(listSelection);
 	for (int i = 0; i < inventory.getNumBooks(); i++)
 	{
-		cout << bookList[i]->getIsbn() << endl;
+		cout << i + 1 << " ";
+		bookList[i]->print();
 	}
 	system("pause");
 }

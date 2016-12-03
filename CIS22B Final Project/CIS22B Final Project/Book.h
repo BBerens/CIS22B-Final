@@ -3,6 +3,8 @@
 
 #include <string>
 #include <ctime>
+#include <iostream>
+#include <iomanip>
 
 
 using namespace std;
@@ -48,6 +50,7 @@ public:
 	virtual double getRetailPrice(void) const;
 	string getAttribute(int) const;
 
+	virtual void print(void);
 	void writeToFile(fstream&);
 	friend fstream& operator << (fstream&, Book&);
 	friend fstream& operator >> (fstream&, Book&);

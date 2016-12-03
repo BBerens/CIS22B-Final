@@ -22,6 +22,7 @@ public:
 	virtual ~Inventory();
 	Book* addBook(void);
 	UsedBook* addUsedBook(void);
+	UsedBook* addUsedBook(int);
 	Book* getBook(int);	// temporary
 	Book** searchAuthor(string);
 	Book** searchTitle(string);
@@ -33,6 +34,7 @@ public:
 	Book** getAttributeList(int);
 	int getNumBooks(void);
 	Book * searchAttribute(int, string) const;
+	void Inventory::updateLists();
 
 };
 #endif

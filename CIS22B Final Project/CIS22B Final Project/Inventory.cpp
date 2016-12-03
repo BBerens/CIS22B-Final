@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #ifndef __INVENTORY_CPP__
 #define __INVENTORY_CPP__
 
@@ -32,6 +33,16 @@ Book* Inventory::addBook(void)
 	books[numBooks] = newBook;
 	numBooks++;
 	return newBook;
+}
+
+UsedBook* Inventory::addUsedBook(int condition)
+{
+	// when we add a new book we should generate a new dynamically allocated array of book pointers(books)
+	UsedBook* newUsedBook;
+	newUsedBook = new UsedBook(condition); // temporary, need to do this with dynamic allocation
+	usedBooks[numUsedBooks] = newUsedBook;
+	numUsedBooks++;
+	return newUsedBook;
 }
 
 UsedBook* Inventory::addUsedBook(void)
@@ -159,4 +170,14 @@ Book * Inventory::searchAttribute(int attribute, string value) const
 		return nullptr;
 }
 #endif
+
+void Inventory::updateLists()
+{
+	for (int i = 0; i <= 7; i++)
+	{
+		delete *lists[i];
+		lists[i] = new Book*[numBooks];
+		lists[i] = generateAttributeList(i);
+	}
+}
 

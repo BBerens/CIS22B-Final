@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "Book.h"
 #include <ctime>
 #include <fstream>
@@ -21,9 +22,11 @@ Book::~Book()
 }
 string Book::getDateAddedStr(void) const
 { 
-	char dateStr[26];
-	ctime_s(dateStr, sizeof(dateStr), &dateAdded);
-	return dateStr; 
+	char dateStr[8];
+	struct tm dateInfo;
+	localtime_s(&dateInfo, &dateAdded);
+	strftime(dateStr, 8, "%d%b%y", &dateInfo);
+	return dateStr;
 }
 
 void Book::writeToFile(fstream & file)
@@ -100,7 +103,6 @@ double Book::getRetailPrice(void) const { return retailPrice; }
 
 string Book::getAttribute(int input) const
 {
-	
 	string output;
 	switch (input)
 	{
@@ -129,4 +131,16 @@ string Book::getAttribute(int input) const
 		output = "error";
 	}
 	return output;
+}
+
+void Book::print(void)
+{
+	cout << setw(13) << isbn;
+	cout << "  " << setw(25) << left << title.substr(0,25);
+	cout << setw(15) << left << author.substr(0, 15);
+	cout << setw(15) << left << publisher.substr(0, 15);
+	cout << " " << setw(3) << quantity;
+	cout << " " << fixed << setprecision(2) << wholesaleCost;
+	cout << " " << fixed << setprecision(2) << retailPrice;
+	cout << " " << setw(10) << getDateAddedStr() << endl;
 }

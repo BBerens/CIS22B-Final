@@ -21,6 +21,7 @@ public:
 
 	double getRetailPrice(void) const;
 
+	virtual void print(void);
 	friend fstream& operator << (fstream&, UsedBook&);
 	friend fstream& operator >> (fstream&, UsedBook&);
 };
