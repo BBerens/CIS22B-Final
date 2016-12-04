@@ -181,3 +181,14 @@ void Inventory::updateLists()
 	}
 }
 
+void Inventory::strSearch(int attribute, string value)
+{
+	string tempStr;
+	for (int i = 0; i < numBooks; i++)
+	{
+		tempStr = books[i]->getAttribute(attribute);
+		if (tempStr.find(value) != -1)
+			books[i]->print();
+	}
+}
+

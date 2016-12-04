@@ -6,7 +6,7 @@
 class Order
 {
 private:
-	Book * books[100]; 
+	Book * orderBooks[100]; 
 	int quantity[100]; // quantity of each book purchased
 	int items; // Total number of books
 public:

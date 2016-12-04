@@ -10,12 +10,12 @@ Order::Order()
 void Order::addBook(Book * newBook, int numberBooks)
 {
 	quantity[items] = numberBooks;
-	books[items] = newBook;
+	orderBooks[items] = newBook;
 	items++;
 }
 Book * Order::getBook(int itemNumber) const
 {
-	return books[itemNumber];
+	return orderBooks[itemNumber];
 }
 int Order::getQuantity(int itemNumber) const
 {

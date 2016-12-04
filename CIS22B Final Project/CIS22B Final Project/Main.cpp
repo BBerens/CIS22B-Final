@@ -86,33 +86,33 @@ void displayMainMenu(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                      Serendipity Booksellers                                                         *"
+		<< "*                                                Serendipity Booksellers                                               *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                             Main Menu                                                                *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
+		<< "*                                                       Main Menu                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                      1. Cashier Module                                                               *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                      2. Inventory Database Module                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*                                                1. Cashier Module                                                     *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                      3. Report Module                                                                *"
+		<< "*                                                2. Inventory Database Module                                          *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                      4. Exit                                                                         *"
+		<< "*                                                3. Report Module                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                4. Exit                                                               *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -310,24 +310,28 @@ Book* displayAttributeSearch(int attribute)
 	}
 
 	system("cls");
-	cout << "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                            " << attributeStr << " Search" << endl;
-	cout << "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                   " << attributeStr << " Search" << endl;
+	cout << "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*  Enter the " << attributeStr << " to search for: ";
 	getline(cin, inputValue, '\n');
-	foundBook = inventory.searchAttribute(attribute, inputValue);
-	if (foundBook != nullptr)
+	cout << "************************************************************************************************************************"
+		<< "                                                                            Wholesale Retail   Date                     "
+		<< "# ISBN           Title                    Author         Publisher      Qty    Cost    Price   Added                    "
+		<< "************************************************************************************************************************";
+	inventory.strSearch(attribute, inputValue);
+	/*if (foundBook != nullptr)
 	{
 		cout << "Here's an extra output to test the function: " << foundBook->getIsbn() << endl; // Debug Statement
-		cout << "****************************************************************************************************"
+		cout << "************************************************************************************************************************"
 			<< "*  ISBN: " << foundBook->getIsbn() << endl;
 		cout << "*  Title: " << foundBook->getTitle() << endl;
 		cout << "*  Author: " << foundBook->getAuthor() << endl;
@@ -337,32 +341,33 @@ Book* displayAttributeSearch(int attribute)
 		cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << foundBook->getWholesaleCost() << endl;
 		cout << "*  Retail Price: $" << fixed << setprecision(2) << foundBook->getRetailPrice() << endl;
 		cout << "*" << endl;
-		cout << "****************************************************************************************************"
-			<< "*                                                                                                  *"
-			<< "*                                                                                                  *"
-			<< "*   Select the record you would like to change:                                                    *"
-			<< "*                                                                                                  *"
-			<< "*   1. ISBN                                                                                        *"
-			<< "*                                                                                                  *"
-			<< "*   2. Title                                                                                       *"
-			<< "*                                                                                                  *"
-			<< "*   3. Author                                                                                      *"
-			<< "*                                                                                                  *"
-			<< "*   4. Publisher                                                                                   *"
-			<< "*                                                                                                  *"
-			<< "*   5. Date Added                                                                                  *"
-			<< "*                                                                                                  *"
-			<< "*   6. Quantity On-Hand                                                                            *"
-			<< "*                                                                                                  *"
-			<< "*   7. Wholesale Cost                                                                              *"
-			<< "*                                                                                                  *"
-			<< "*   8. Retail Price                                                                                *"
-			<< "*                                                                                                  *"
-			<< "*   9. Return to Inventory Menu                                                                    *"
-			<< "*                                                                                                  *"
-			<< "*                                                                                                  *"
-			<< "*                                                                                                  *"
-			<< "****************************************************************************************************"
+		cout << "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Select the record you would like to change:                                                                        *"
+			<< "*                                                                                                                      *"
+			<< "*   1. ISBN                                                                                                            *"
+			<< "*                                                                                                                      *"
+			<< "*   2. Title                                                                                                           *"
+			<< "*                                                                                                                      *"
+			<< "*   3. Author                                                                                                          *"
+			<< "*                                                                                                                      *"
+			<< "*   4. Publisher                                                                                                       *"
+			<< "*                                                                                                                      *"
+			<< "*   5. Date Added                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   6. Quantity On-Hand                                                                                                *"
+			<< "*                                                                                                                      *"
+			<< "*   7. Wholesale Cost                                                                                                  *"
+			<< "*                                                                                                                      *"
+			<< "*   8. Retail Price                                                                                                    *"
+			<< "*                                                                                                                      *"
+			<< "*   9. Return to Inventory Menu                                                                                        *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
 			<< "Enter Your Choice: ";
 		return foundBook;
 	}
@@ -372,7 +377,7 @@ Book* displayAttributeSearch(int attribute)
 			<< "  No book with that " << attributeStr << " was found. Press enter to try again." << endl;
 		system("pause");
 		return nullptr;
-	}
+	}*/
 }
 
 void editBook(Book * editBook, int attribute)
@@ -382,20 +387,20 @@ void editBook(Book * editBook, int attribute)
 	int tempInt;
 	double tempDouble;
 	system("cls");
-	cout << "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                            ISBN Search                                           *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "****************************************************************************************************"
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                      ISBN Search                                                     *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
 		<< "*  ISBN: " << editBook->getIsbn() << endl;
 	cout << "*  Title: " << editBook->getTitle() << endl;
 	cout << "*  Author: " << editBook->getAuthor() << endl;
@@ -405,7 +410,7 @@ void editBook(Book * editBook, int attribute)
 	cout << "*  Retail Price: $" << fixed << setprecision(2) << editBook->getRetailPrice() << endl;
 	cout << "*  Date Added: " << editBook->getDateAddedStr();
 	cout << "*" << endl;
-	cout << "****************************************************************************************************";
+	cout << "************************************************************************************************************************";
 	switch (attribute)
 	{
 	case (1) :
@@ -461,53 +466,54 @@ void editBook(Book * editBook, int attribute)
 void displayBookLookup(void)
 {
 	system("cls");
-	cout << "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                            Book Lookup                                           *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                     Search by:                                                   *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      1. ISBN                                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      2. Title                                                    *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      3. Author                                                   *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      4. Publisher                                                *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      5. Return to Inventory Menu                                 *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "****************************************************************************************************"
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                      Book Lookup                                                     *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                               Search by:                                                             *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                1. ISBN                                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                2. Title                                                              *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                3. Author                                                             *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                4. Publisher                                                          *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                5. Return to Inventory Menu                                           *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
 		<< " Enter Your Choice:";
 }
 
@@ -562,19 +568,19 @@ void displayAddBook(void)
 void displayEditBook(Book * displayBook)
 {
 	system("cls");
-	cout << "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                         Book Information                                         *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*  ISBN: " << displayBook->getIsbn() << "*******************************************************************************"
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                   Book Information                                                   *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*  ISBN: " << displayBook->getIsbn() << "*****************************************************************************************"
 		<< "*  Title: " << displayBook->getTitle() << "*" << endl; // need to ensure string is of a fixed length
 	cout << "*  Author: " << displayBook->getAuthor() << "*" << endl; //need to ensure string is of a fixed length
 	cout << "*  Publisher: " << displayBook->getPublisher() << "*" << endl;
@@ -583,102 +589,102 @@ void displayEditBook(Book * displayBook)
 	cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << displayBook->getWholesaleCost() << endl;
 	cout << "*  Retail Price: $" << fixed << setprecision(2) << displayBook->getRetailPrice() << endl;
 	cout << "*                                                                                                  *"
-		<< "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*   Select the record you would like to change:                                                    *"
-		<< "*                                                                                                  *"
-		<< "*   1. Title                                                                                       *"
-		<< "*                                                                                                  *"
-		<< "*   2. Author                                                                                      *"
-		<< "*                                                                                                  *"
-		<< "*   3. Publisher                                                                                   *"
-		<< "*                                                                                                  *"
-		<< "*   4. Date Added                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*   5. Quantity On-Hand                                                                            *"
-		<< "*                                                                                                  *"
-		<< "*   6. Wholesale Cost                                                                              *"
-		<< "*                                                                                                  *"
-		<< "*   7. Retail Price                                                                                *"
-		<< "*                                                                                                  *"
-		<< "*   8. Return to Inventory Menu                                                                    *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "****************************************************************************************************";
+		<< "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*   Select the record you would like to change:                                                                        *"
+		<< "*                                                                                                                      *"
+		<< "*   1. Title                                                                                                           *"
+		<< "*                                                                                                                      *"
+		<< "*   2. Author                                                                                                          *"
+		<< "*                                                                                                                      *"
+		<< "*   3. Publisher                                                                                                       *"
+		<< "*                                                                                                                      *"
+		<< "*   4. Date Added                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*   5. Quantity On-Hand                                                                                                *"
+		<< "*                                                                                                                      *"
+		<< "*   6. Wholesale Cost                                                                                                  *"
+		<< "*                                                                                                                      *"
+		<< "*   7. Retail Price                                                                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*   8. Return to Inventory Menu                                                                                        *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************";
 }
 void displayInventoryMenu(void)
 {
 	system("cls");
-	cout << "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                          Inventory Menu                                          *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      1. Look Up a Book                                           *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      2. Add a Book                                               *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      3. Edit a Book's Record                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      4. Delete a Book                                            *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      5. Return to the Main Menu                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "****************************************************************************************************"
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                    Inventory Menu                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                1. Search Books                                                       *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                2. Add a Book                                                         *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                3. Edit a Book's Record                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                4. Delete a Book                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                5. Return to the Main Menu                                            *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
 		<< " Enter Your Choice:";
 }
 
 void displayBookInformationScreen(Book * displayBook)
 {
 	system("cls");
-	cout << "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                         Book Information                                         *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*  ISBN: " << displayBook->getIsbn() << "*******************************************************************************"
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                   Book Information                                                   *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*  ISBN: " << displayBook->getIsbn() << "***************************************************************************************************"
 		<< "*  Title: " << displayBook->getTitle() << "*" << endl; // need to ensure string is of a fixed length
 	cout << "*  Author: " << displayBook->getAuthor() << "*" << endl; //need to ensure string is of a fixed length
 	cout << "*  Publisher: " << displayBook->getPublisher() << "*" << endl;
@@ -686,33 +692,33 @@ void displayBookInformationScreen(Book * displayBook)
 	cout << "*  Quantity On-hand: " << setw(4) << displayBook->getQuantity() << endl;
 	cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << displayBook->getWholesaleCost() << endl;
 	cout << "*  Retail Price: $" << fixed << setprecision(2) << displayBook->getRetailPrice() << endl;
-	cout << "*                                                                                                  *"
-		<< "****************************************************************************************************"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*   Select the record you would like to change:                                                    *"
-		<< "*                                                                                                  *"
-		<< "*   1. Title                                                                                       *"
-		<< "*                                                                                                  *"
-		<< "*   2. Author                                                                                      *"
-		<< "*                                                                                                  *"
-		<< "*   3. Publisher                                                                                   *"
-		<< "*                                                                                                  *"
-		<< "*   4. Date Added                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*   5. Quantity On-Hand                                                                            *"
-		<< "*                                                                                                  *"
-		<< "*   6. Wholesale Cost                                                                              *"
-		<< "*                                                                                                  *"
-		<< "*   7. Retail Price                                                                                *"
-		<< "*                                                                                                  *"
-		<< "*   8. Return to Inventory Menu                                                                    *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "****************************************************************************************************";
+	cout << "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*   Select the record you would like to change:                                                                        *"
+		<< "*                                                                                                                      *"
+		<< "*   1. Title                                                                                                           *"
+		<< "*                                                                                                                      *"
+		<< "*   2. Author                                                                                                          *"
+		<< "*                                                                                                                      *"
+		<< "*   3. Publisher                                                                                                       *"
+		<< "*                                                                                                                      *"
+		<< "*   4. Date Added                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*   5. Quantity On-Hand                                                                                                *"
+		<< "*                                                                                                                      *"
+		<< "*   6. Wholesale Cost                                                                                                  *"
+		<< "*                                                                                                                      *"
+		<< "*   7. Retail Price                                                                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*   8. Return to Inventory Menu                                                                                        *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************";
 }
 
 void reportModule(void)
@@ -725,31 +731,31 @@ void reportModule(void)
 void displayReportsMenu(void)
 {
 	system("cls");
-	cout << "*******************************************************************************" << endl
-		<< "*                                                                             *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                           Serendipity Booksellers                           *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                                   Reports                                   *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         1. ISBN Listing                                     *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         2. Title Listing                                    *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         3. Inventory Retail Value                           *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         4. Listing by Quantity                              *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         5. Listing by Cost                                  *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         6. Listing by Age                                   *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         7. Return to the Main Menu                          *" << endl
-		<< "*                                                                             *" << endl
-		<< "*                         Enter Your Choice:                                  *" << endl
-		<< "*                                                                             *" << endl
-		<< "*******************************************************************************" << endl;
+	cout << "***********************************************************************************************************************"
+		<< "*                                                                                                                     *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                Serendipity Booksellers                                              *"
+		<< "*                                                                                                                     *" 
+		<< "*                                                        Reports                                                      *"
+		<< "*                                                                                                                     *"
+		<< "*                                                                                                                     *"
+		<< "*                                                1. ISBN Listing                                                      *"
+		<< "*                                                                                                                     *" 
+		<< "*                                                2. Title Listing                                                     *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                3. Inventory Retail Value                                            *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                4. Listing by Quantity                                               *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                5. Listing by Cost                                                   *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                6. Listing by Age                                                    *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                7. Return to the Main Menu                                           *" 
+		<< "*                                                                                                                     *" 
+		<< "*                                                Enter Your Choice:                                                   *" 
+		<< "*                                                                                                                     *" 
+		<< "***********************************************************************************************************************" << endl;
 }
 
 void displayReport(int listSelection)
@@ -757,19 +763,19 @@ void displayReport(int listSelection)
 	Book** bookList = inventory.getAttributeList(listSelection - 1);
 	system("cls");
 	cout << "New Books:" << endl
-		<< "****************************************************************************************************"
+		<< "************************************************************************************************************************"
 		<< "                                                                            Wholesale Retail   Date "
 		<< "# ISBN           Title                    Author         Publisher      Qty    Cost    Price   Added"
-		<< "****************************************************************************************************";
+		<< "************************************************************************************************************************";
 	for (int i = 0; i < inventory.getNumBooks(); i++)
 	{
 		cout << i + 1 << " ";
 		bookList[i]->print();
 	}
 	cout << endl << endl << "Used Books:" << endl
-		<< "****************************************************************************************************"
+		<< "************************************************************************************************************************"
 		<< "                                                                                       Retail  Date "
 		<< "# ISBN           Title                    Author         Publisher      Qty Condition  Price   Added"
-		<< "****************************************************************************************************";
+		<< "************************************************************************************************************************";
 	system("pause");
 }

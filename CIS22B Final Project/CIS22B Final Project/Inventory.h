@@ -38,6 +38,7 @@ public:
 	int getNumBooks(void);
 	Book * searchAttribute(int, string) const;
 	void Inventory::updateLists();
+	void strSearch(int, string);
 
 };
 #endif
