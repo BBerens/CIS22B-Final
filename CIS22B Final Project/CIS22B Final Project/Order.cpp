@@ -2,11 +2,18 @@
 
 #include "Order.h"
 
-
+// Default Constructor
 Order::Order()
 {
 	items = 0;
 }
+
+// Default Destructor
+Order::~Order()
+{
+	;  
+}
+
 void Order::addBook(Book * newBook, int numberBooks)
 {
 	quantity[items] = numberBooks;

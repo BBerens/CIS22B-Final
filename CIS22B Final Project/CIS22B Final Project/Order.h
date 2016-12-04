@@ -11,6 +11,7 @@ private:
 	int items; // Total number of books
 public:
 	Order();
+	~Order();
 	void addBook(Book *, int);
 	Book * getBook(int) const;
 	int getQuantity(int) const;
