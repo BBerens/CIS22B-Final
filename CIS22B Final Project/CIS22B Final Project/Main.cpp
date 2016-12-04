@@ -139,6 +139,7 @@ void displayCashierScreen(Order* currentOrder)
 	// Create variables for total cost
 	double subtotal = 0;
 	double total;
+	int quantity;
 
 	// Declare variables for cashier input
 	string newInput; // Input book
@@ -156,32 +157,42 @@ void displayCashierScreen(Order* currentOrder)
 		<< "*                                                                                                                      *"
 		<< "*   Serendipity Book Sellers                                                                                           *"
 		<< "*                                                                                                                      *"
-		<< "*   Date: " << dateStr << "			                                                                       *"
+		<< "*   Date: " << dateStr << "			                                                                       *";
 
 		// Collect user Input
-		<< "*   Please enter the ISBN of the book you are buying.                                                                  *";
-	cin.ignore();
-	getline(cin, newInput);
 
-	// Pull book data from the inventory class
-	currentBook = inventory.searchAttribute(ISBN, newInput);
+	while (1)
+	{
+		// Collect user Input
+		cout << "*   Please enter the ISBN of the book you are buying.                                                                  *";
+		cout << "*	 Press q when you have completed the transaction.																	  \n*";
+		cin.ignore();
+		getline(cin, newInput);
 
-	// Return book data and verify user input is correct.  Otherwise collect user input again.
-	cout << "You entered the following book:" << endl;
-	cout << "***********************************************************************************************************************"
-		<< "*  ISBN: " << currentBook->getIsbn() << endl;
-	cout << "*  Title: " << currentBook->getTitle() << endl;
-	cout << "*  Author: " << currentBook->getAuthor() << endl;
-	cout << "*  Publisher: " << currentBook->getPublisher() << endl;
-	cout << "*" << endl;
+		if (newInput == "q")
+			break;
 
-	int quantity;
-	cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy.";
-	cin >> quantity;
+		else{
+			// Pull book data from the inventory class
+			currentBook = inventory.searchAttribute(ISBN, newInput);
 
-	currentOrder->addBook(currentBook, quantity);
+			// Return book data and verify user input is correct.  Otherwise collect user input again.
+			cout << "You entered the following book:" << endl;
+			cout << "************************************************************************************************************************"
+				<< "*  ISBN: " << currentBook->getIsbn() << endl;
+			cout << "*  Title: " << currentBook->getTitle() << endl;
+			cout << "*  Author: " << currentBook->getAuthor() << endl;
+			cout << "*  Publisher: " << currentBook->getPublisher() << endl;
+			cout << "*" << endl;
 
-	system("pause");	// Debug Statement
+
+			cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy.";
+			cin >> quantity;
+
+			currentOrder->addBook(currentBook, quantity);
+			// Debug Statement
+		}
+	}
 
 	// Keep this commented for now while testing
 
@@ -189,9 +200,6 @@ void displayCashierScreen(Order* currentOrder)
 	{
 		currentBook = currentOrder->getBook(bookCounter);
 		cout << fixed << setprecision(2);
-		cout << "Current price is: " << currentBook->getRetailPrice() << endl;
-		cout << "Current book counter is: " << bookCounter << endl;
-		system("pause");
 		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
 		bookCounter++;
 	}
@@ -212,18 +220,6 @@ void displayCashierScreen(Order* currentOrder)
 	<< setw(8) << fixed << setprecision(2) << currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice() << "*";
 	bookCounter++;
 	}
-	*/
-
-	/*
-	cout << "*                     Subtotal                                                                     *"
-	<< "*                     Tax                                                                          *"
-	<< "*                     Total                                                                        *"
-	<< "*                                                                                                  *"
-	<< "*                                                                                                  *"
-	<< "*                                                                                                  *"
-	<< "*  Thank You for Shopping at Serendipity!                                                          *"
-	<< "*                                                                                                  *"
-	<< "****************************************************************************************************" << endl;
 	*/
 
 	system("pause");	// Debug Statement
