@@ -156,11 +156,8 @@ void displayCashierScreen(Order* currentOrder)
 	int bookCounter = 0; // Variable for below while loop
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
-	// Collect user Input
-	//cout << "Please enter the ISBN of the book you are buying: ";
 
 	cin.ignore();
-
 	while (1)
 	{
 		// Collect user Input
@@ -182,21 +179,26 @@ void displayCashierScreen(Order* currentOrder)
 				cout << "Title: " << currentBook->getTitle() << endl;
 				cout << "Author: " << currentBook->getAuthor() << endl;
 				cout << "Publisher: " << currentBook->getPublisher() << endl;
-
+				
+				// Collect the quantity of books being purchased by the user
 				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
 				cin >> purchaseQuantity;
 
+				// Add the current book to the order
 				currentOrder->addBook(currentBook, purchaseQuantity);
 				cin.ignore();
 			}
 			else{
+				// Check that the ISBN is valid
 				cout << "This ISBN is invalid, please try another ISBN: " << endl;
 			}
 		}
 	}
 
+	// Clear the last screen
 	system("cls");
-	// Display receipt
+
+	// Display receipt format
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*   Serendipity Book Sellers                                                                                           *"
@@ -207,7 +209,8 @@ void displayCashierScreen(Order* currentOrder)
 		<< "*   Qty   ISBN           Title                             Price               Total                                   *"
 		<< "*   ___________________________________________________________________________________________________________________*";
 	cout << endl;
-	// using a while loop to call the function from order class
+
+	// Print line by line items for the receipt
 	while (bookCounter < currentOrder->getNumBooks())
 	{
 		currentBook = currentOrder->getBook(bookCounter);
@@ -216,14 +219,15 @@ void displayCashierScreen(Order* currentOrder)
 			<< setw(17) << right << currentBook->getIsbn() << "  "
 			<< setw(33) << left << currentBook->getTitle().substr(0, 32)
 			<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
-		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
-		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
+		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice(); // Calculate line total
+		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice(); // Calculate subtotal
 		bookCounter++;
 		cout << "$" << setw(15) << lineTotal << "                         *";
-		tax = subtotal*TAX_RATE;
-		total = subtotal * (1 + TAX_RATE);
+		tax = subtotal*TAX_RATE; // Calculate the tax
+		total = subtotal + tax; // Calculate the total
 	}
 
+	// Print out subtotal
 	cout << "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                     Subtotal: $" << setw(6) << right
