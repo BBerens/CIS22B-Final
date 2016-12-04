@@ -16,7 +16,7 @@ private:
 	UsedBook* usedBooks[100];
 	int numBooks;
 	int numUsedBooks;
-	Book ** lists[7];
+	Book ** lists[8];
 public:
 	Inventory(void);
 	virtual ~Inventory();

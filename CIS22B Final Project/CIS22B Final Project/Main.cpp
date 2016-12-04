@@ -33,8 +33,7 @@ void editBook(Book *, int);
 void displayReport(int);
 // access inventory class data 
 Inventory inventory;
-// create enum data type to hold data for book attributes
-enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED };
+enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY};
 
 
 int main(void)
@@ -279,7 +278,6 @@ void inventoryModule(void)
 void bookLookup(void)
 {
 	int attributeSelection;
-	Book * foundBook;
 	displayBookLookup();
 	cin >> attributeSelection;
 	cin.ignore();
@@ -382,6 +380,7 @@ void editBook(Book * editBook, int attribute)
 	long long tempISBN;
 	int tempInt;
 	double tempDouble;
+	Book** bookList;
 	system("cls");
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
@@ -413,26 +412,23 @@ void editBook(Book * editBook, int attribute)
 		cout << "Enter the new ISBN for this book: ";
 		getline(cin, tempStr);
 		tempISBN = stoll(tempStr);
-		editBook->setIsbn(tempISBN);
-		inventory.generateAttributeList(ISBN);
 		break;
 	case (2) :
 		cout << "Enter the new Title for this book: ";
 		getline(cin, tempStr);
 		editBook->setTitle(tempStr);
-		//inventory.generateISBNList(); need to resort by title
 		break;
 	case (3) :
 		cout << "Enter the new Author for this book: ";
 		getline(cin, tempStr);
 		editBook->setAuthor(tempStr);
-		//inventory.generateISBNList(); need to resort by author
+		bookList = inventory.getAttributeList(AUTHOR);
 		break;
 	case (4) :
 		cout << "Enter the new Publisher for this book: ";
 		getline(cin, tempStr);
 		editBook->setPublisher(tempStr);
-		//inventory.generateISBNList(); need to resort by publisher
+		bookList = inventory.getAttributeList(PUBLISHER);
 		break;
 	case(5) :
 		//This is tricky. Need to get date added in specific format and convert it to time_t
@@ -718,7 +714,11 @@ void displayReportsMenu(void)
 		<< "*                                                7. Listing by Age                                                     *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                8. Return to the Main Menu                                            *"
+		<< "*                                                8. Listing by Quantity                                                *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                9. Return to the Main Menu                                            *" 
+		<< "*                                                                                                                      *" 
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"

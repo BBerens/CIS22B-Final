@@ -133,6 +133,9 @@ string Book::getAttribute(int input) const
 	case(DATE_ADDED) :
 		output = to_string(dateAdded);
 		break;
+	case(QUANTITY) :
+		output = to_string(quantity);
+		break;
 	default :
 		output = "error";
 	}

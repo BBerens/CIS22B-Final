@@ -10,7 +10,7 @@ Inventory::Inventory(void)
 	numBooks = 0;
 	numUsedBooks = 0;
 	readBooksFromFile();
-	for (int i = 0; i <= 7; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		lists[i] = new Book*[numBooks];
 		lists[i] = generateAttributeList(i);
@@ -19,10 +19,18 @@ Inventory::Inventory(void)
 
 Inventory::~Inventory()
 {
+	for (int i = 0; i < 8; i++)
+	{
+		delete lists[i];
+	}
 	for (int i = 0; i < numBooks; i++)
 	{
 		delete books[i];
 		delete lists[i];
+	}
+	for (int i = 0; i < numUsedBooks; i++)
+	{
+		delete usedBooks[i];
 	}
 }
 
@@ -105,38 +113,37 @@ void Inventory::writeBooks()
 	bookDatabase.close();
 }
 
-Book ** Inventory::generateAttributeList(int attribute)
+Book** Inventory::generateAttributeList(int attribute)
 {
-	
+	Book** attributeList;
 	int startScan;
 	int minIndex;
 	Book * minValue;
-	Book ** tempList;
-	tempList = new Book*[numBooks+numUsedBooks];
+	attributeList = new Book*[numBooks + numUsedBooks];
 	for (int i = 0; i < numBooks; i++)
 	{
-		tempList[i] = books[i];
+		attributeList[i] = books[i];
 	}
 	for (int j = 0; j < numUsedBooks; j++)
 	{
-		tempList[j + numBooks] = usedBooks[j];
+		attributeList[j + numBooks] = usedBooks[j];
 	}
 	for (startScan = 0; startScan < numBooks + numUsedBooks - 1; startScan++)
 	{
 		minIndex = startScan;
-		minValue = tempList[startScan];
+		minValue = attributeList[startScan];
 		for (int j = startScan +1; j < numBooks + numUsedBooks; j++)
 		{
-			if (tempList[j]->getAttribute(attribute) < minValue->getAttribute(attribute))
+			if (attributeList[j]->getAttribute(attribute) < minValue->getAttribute(attribute))
 			{
 				minIndex = j;
-				minValue = tempList[j];
+				minValue = attributeList[j];
 			}
 		}
-		tempList[minIndex] = tempList[startScan];
-		tempList[startScan] = minValue;
+		attributeList[minIndex] = attributeList[startScan];
+		attributeList[startScan] = minValue;
 	}
-	return tempList;
+	return attributeList;
 }
 
 Book** Inventory::getAttributeList(int attribute)
@@ -178,8 +185,10 @@ Book * Inventory::searchAttribute(int attribute, string value) const
 
 void Inventory::updateLists()
 {
-	for (int i = 0; i <= 7; i++)
+	
+	for (int i = 0; i < 8; i++)
 	{
+		//delete lists[i];
 		lists[i] = new Book*[numBooks];
 		lists[i] = generateAttributeList(i);
 	}

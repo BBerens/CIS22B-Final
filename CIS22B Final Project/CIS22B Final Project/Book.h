@@ -20,7 +20,7 @@ protected:
 	double wholesaleCost;
 	double retailPrice;
 	time_t dateAdded;
-	enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED };
+	enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY };
 
 public:
 	static unsigned int numBooks;
