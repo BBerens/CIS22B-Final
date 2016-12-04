@@ -829,7 +829,7 @@ void sortIsbnArray(Book* array[], int size)
 		swap = false;
 		for (int count = 0; count < (size - 1); count++)
 		{
-			if ((*array[count]).isbn < (*array[count + 1]).isbn)
+			if ((*array[count]).isbn > (*array[count + 1]).isbn)
 			{
 				temp = array[count];
 				array[count] = array[count + 1];
@@ -849,7 +849,7 @@ void sortTitleArray(Book* array[], int size)
 		swap = false;
 		for (int count = 0; count < (size - 1); count++)
 		{
-			if ((*array[count]).title < (*array[count + 1]).title)
+			if ((*array[count]).title > (*array[count + 1]).title)
 			{
 				temp = array[count];
 				array[count] = array[count + 1];
@@ -871,7 +871,7 @@ void sortRetailValueArray(Book* array[], int size)
 		swap = false;
 		for (int count = 0; count < (size - 1); count++)
 		{
-			if ((*array[count]).retailPrice < (*array[count + 1]).retailPrice)
+			if ((*array[count]).retailPrice > (*array[count + 1]).retailPrice)
 			{
 				temp = array[count];
 				array[count] = array[count + 1];
@@ -892,7 +892,7 @@ void sortQuantityArray(Book* array[], int size)
 		swap = false;
 		for (int count = 0; count < (size - 1); count++)
 		{
-			if ((*array[count]).quantity < (*array[count + 1]).quantity)
+			if ((*array[count]).quantity > (*array[count + 1]).quantity)
 			{
 				temp = array[count];
 				array[count] = array[count + 1];
@@ -912,7 +912,7 @@ void sortWholesaleCostArray(Book* array[], int size)
 		swap = false;
 		for (int count = 0; count < (size - 1); count++)
 		{
-			if ((*array[count]).wholesaleCost < (*array[count + 1]).wholesaleCost)
+			if ((*array[count]).wholesaleCost > (*array[count + 1]).wholesaleCost)
 			{
 				temp = array[count];
 				array[count] = array[count + 1];
@@ -933,7 +933,7 @@ void sortAgeArray(Book* array[], int size)
 		swap = false;
 		for (int count = 0; count < (size - 1); count++)
 		{
-			if ((*array[count]).dateAdded < (*array[count + 1]).dateAdded)
+			if ((*array[count]).dateAdded > (*array[count + 1]).dateAdded)
 			{
 				temp = array[count];
 				array[count] = array[count + 1];
