@@ -783,6 +783,30 @@ void displayReport(int listSelection)
 		<< "                                                                            Wholesale Retail   Date "
 		<< "# ISBN           Title                    Author         Publisher      Qty    Cost    Price   Added"
 		<< "************************************************************************************************************************";
+	if (listSelection == 1)
+	{
+		sortIsbnArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
+	}
+	if (listSelection == 2)
+	{
+		sortTitleArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
+	}
+	if (listSelection == 3)
+	{
+		sortRetailValueArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
+	}
+	if (listSelection == 4)
+	{
+		sortQuantityArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
+	}
+	if (listSelection == 5)
+	{
+		sortWholesaleCostArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
+	}
+	if (listSelection == 6)
+	{
+		sortAgeArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
+	}
 	for (int i = 0; i < inventory.getNumBooks(); i++)
 	{
 		cout << i + 1 << " ";
@@ -795,3 +819,129 @@ void displayReport(int listSelection)
 		<< "************************************************************************************************************************";
 	system("pause");
 }
+void sortIsbnArray(Book* array[], int size)
+{
+	bool swap;
+	Book* temp;
+
+	do
+	{
+		swap = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if ((*array[count]).isbn < (*array[count + 1]).isbn)
+			{
+				temp = array[count];
+				array[count] = array[count + 1];
+				array[count + 1] = temp;
+				swap = true;
+			}
+		}
+	} while (swap);
+}
+void sortTitleArray(Book* array[], int size)
+{
+	bool swap;
+	Book* temp;
+
+	do
+	{
+		swap = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if ((*array[count]).title < (*array[count + 1]).title)
+			{
+				temp = array[count];
+				array[count] = array[count + 1];
+				array[count + 1] = temp;
+				swap = true;
+			}
+		}
+	} while (swap);
+}
+
+//The result is the same as WholesaleCost sorting. Why??
+void sortRetailValueArray(Book* array[], int size)
+{
+	bool swap;
+	Book* temp;
+
+	do
+	{
+		swap = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if ((*array[count]).retailPrice < (*array[count + 1]).retailPrice)
+			{
+				temp = array[count];
+				array[count] = array[count + 1];
+				array[count + 1] = temp;
+				swap = true;
+			}
+		}
+	} while (swap);
+}
+
+void sortQuantityArray(Book* array[], int size)
+{
+	bool swap;
+	Book* temp;
+
+	do
+	{
+		swap = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if ((*array[count]).quantity < (*array[count + 1]).quantity)
+			{
+				temp = array[count];
+				array[count] = array[count + 1];
+				array[count + 1] = temp;
+				swap = true;
+			}
+		}
+	} while (swap);
+}
+void sortWholesaleCostArray(Book* array[], int size)
+{
+	bool swap;
+	Book* temp;
+
+	do
+	{
+		swap = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if ((*array[count]).wholesaleCost < (*array[count + 1]).wholesaleCost)
+			{
+				temp = array[count];
+				array[count] = array[count + 1];
+				array[count + 1] = temp;
+				swap = true;
+			}
+		}
+	} while (swap);
+}
+//Program will break if do Age sorting. Why??
+void sortAgeArray(Book* array[], int size)
+{
+	bool swap;
+	Book* temp;
+
+	do
+	{
+		swap = false;
+		for (int count = 0; count < (size - 1); count++)
+		{
+			if ((*array[count]).dateAdded < (*array[count + 1]).dateAdded)
+			{
+				temp = array[count];
+				array[count] = array[count + 1];
+				array[count + 1] = temp;
+				swap = true;
+			}
+		}
+	} while (swap);
+}
+//Also, our report module list is different from the instruction. Should we change our report list??
+//I'm trying to fix the format of report module... 

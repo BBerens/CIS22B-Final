@@ -54,6 +54,12 @@ public:
 	void writeToFile(fstream&);
 	friend fstream& operator << (fstream&, Book&);
 	friend fstream& operator >> (fstream&, Book&);
+	friend void sortIsbnArray(Book* array[], int size);
+	friend void sortTitleArray(Book* array[], int size);
+	friend void sortRetailValueArray(Book* array[], int size);
+	friend void sortQuantityArray(Book* array[], int size);
+	friend void sortWholesaleCostArray(Book* array[], int size);
+	friend void sortAgeArray(Book* array[], int size);
 };
 
 #endif
