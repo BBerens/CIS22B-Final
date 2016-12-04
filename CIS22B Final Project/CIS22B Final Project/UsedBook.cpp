@@ -32,9 +32,30 @@ fstream& operator << (fstream& file, UsedBook& outBook)
 
 fstream& operator >> (fstream& file, UsedBook& inBook)
 {
+	long long tempIsbn;
 	string tempStr;
-	file >> (Book)inBook;
-	file.ignore();
+	double tempDouble;
+	time_t tempDate;
+
+	getline(file, tempStr, '\t');
+	tempIsbn = stoll(tempStr, nullptr, 10);
+	inBook.isbn = tempIsbn;
+	getline(file, tempStr, '\t');
+	inBook.title = tempStr;
+	getline(file, tempStr, '\t');
+	inBook.author = tempStr;
+	getline(file, tempStr, '\t');
+	inBook.publisher = tempStr;
+	getline(file, tempStr, '\t');
+	tempDouble = stod(tempStr, nullptr);
+	inBook.wholesaleCost = tempDouble;
+	getline(file, tempStr, '\t');
+	tempDouble = stod(tempStr, nullptr);
+	inBook.retailPrice = tempDouble;
+	getline(file, tempStr, '\t');
+	tempIsbn = stoll(tempStr, nullptr, 10);
+	tempDate = static_cast<time_t>(tempIsbn);
+	inBook.dateAdded = tempDate;
 	getline(file, tempStr, '\n');
 	inBook.bookCondition = static_cast<UsedBook::condition>(stoi(tempStr));
 	return file;
