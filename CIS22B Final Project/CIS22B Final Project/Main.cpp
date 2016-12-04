@@ -159,42 +159,51 @@ void displayCashierScreen(Order* currentOrder)
 		<< "*                                                                                                                      *"
 		<< "*   Date: " << dateStr << "			                                                                       *";
 
-		// Collect user Input
+	// Prompt the user for input
+	cout << "*   Please enter the ISBN of the book you are buying.                                                                  *";
+	cout << "*	 Press [exit] when you have completed the transaction.																	  \n*";
+	cin.ignore();
 
 	while (1)
 	{
-		// Collect user Input
-		cout << "*   Please enter the ISBN of the book you are buying.                                                                  *";
-		cout << "*	 Press q when you have completed the transaction.																	  \n*";
-		cin.ignore();
+		// Collect user input
 		getline(cin, newInput);
 
-		if (newInput == "q")
+		if (newInput == "exit")
 			break;
 
 		else{
 			// Pull book data from the inventory class
 			currentBook = inventory.searchAttribute(ISBN, newInput);
 
-			// Return book data and verify user input is correct.  Otherwise collect user input again.
-			cout << "You entered the following book:" << endl;
-			cout << "************************************************************************************************************************"
-				<< "*  ISBN: " << currentBook->getIsbn() << endl;
-			cout << "*  Title: " << currentBook->getTitle() << endl;
-			cout << "*  Author: " << currentBook->getAuthor() << endl;
-			cout << "*  Publisher: " << currentBook->getPublisher() << endl;
-			cout << "*" << endl;
+			if (currentBook != nullptr){
 
+				cout << "Current book address: " << currentBook;
+				// Return book data and verify user input is correct.  Otherwise collect user input again.
+				cout << "You entered the following book:" << endl;
+				cout << "************************************************************************************************************************"
+					<< "*  ISBN: " << currentBook->getIsbn() << endl;
+				cout << "*  Title: " << currentBook->getTitle() << endl;
+				cout << "*  Author: " << currentBook->getAuthor() << endl;
+				cout << "*  Publisher: " << currentBook->getPublisher() << endl;
+				cout << "*" << endl;
 
-			cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy.";
-			cin >> quantity;
+				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy.";
+				cin >> quantity;
 
-			currentOrder->addBook(currentBook, quantity);
-			// Debug Statement
+				currentOrder->addBook(currentBook, quantity);
+				cout << "Current book address: " << currentBook;
+				system("pause");
+
+				// Debug Statement
+			}
+
+			else{
+				cout << "Current book address: " << currentBook;
+				cout << "This ISBN was not found, please try again or consult the manager." << endl;
+			}
 		}
 	}
-
-	// Keep this commented for now while testing
 
 	while (bookCounter < currentOrder->getNumBooks())
 	{
@@ -204,6 +213,7 @@ void displayCashierScreen(Order* currentOrder)
 		bookCounter++;
 	}
 
+	// Calculate total cost
 	total = subtotal * (1 + TAX_RATE);
 	cout << "Your subtotal is: " << subtotal << endl;
 	cout << "Your total cost today is: " << total << endl;
