@@ -151,7 +151,7 @@ int Inventory::getNumBooks(void)
 Book * Inventory::searchAttribute(int attribute, string value) const 
 {
 	int first = 0; // First array element
-	int last = numBooks - 1; // Last array element
+	int last = numBooks + numUsedBooks - 1; // Last array element
 	int	middle; // Mid point of search
 	int position = -1; // Position of search value
 	bool found = false; // Flag
