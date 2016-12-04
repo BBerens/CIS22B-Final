@@ -16,7 +16,7 @@
 
 
 using namespace std;
-
+// Function prototypes
 void cashierModule(void);
 void inventoryModule(void);
 void reportModule(void);
@@ -31,8 +31,9 @@ void bookLookup(void);
 void displayAttributeSearch(int);
 void editBook(Book *, int);
 void displayReport(int);
-
+// access inventory class data 
 Inventory inventory;
+// create enum data type to hold data for book attributes
 enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED };
 
 
@@ -40,7 +41,7 @@ int main(void)
 {
 	int menuOption = -1;
 	system("mode 120, 50");	// sets command prompt 100 chars wide and 50 chars tall
-
+	//using while loop to prompt user to select the module they want to work with
 	while (menuOption != 4)
 	{
 		displayMainMenu();
@@ -58,6 +59,7 @@ int main(void)
 			break;
 		case (4) :
 			break;
+			// Prompt user to enter a valid choice
 		default:
 			cout << "That is not a valid choice. Please select from the menu.";
 			system("pause");
@@ -210,7 +212,7 @@ void displayCashierScreen(Order* currentOrder)
 	{
 		currentBook = currentOrder->getBook(bookCounter);
 		cout << fixed << setprecision(2);
-		cout << "*" << setw(5) << currentOrder->getQuantity(bookCounter)
+		cout << "*" << setw(5) << right << currentOrder->getQuantity(bookCounter)
 			<< setw(17) << right << currentBook->getIsbn() << "  "
 			<< setw(33) << left << currentBook->getTitle().substr(0, 32)
 			<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
@@ -684,17 +686,17 @@ void displayReportsMenu(void)
 {
 	system("cls");
 	cout << "************************************************************************************************************************"
-		<< "*                                                                                                                      *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                Serendipity Booksellers                                               *"
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
 		<< "*                                                        Reports                                                       *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                1. ISBN Listing                                                       *"
-		<< "*                                                                                                                      *" 
 		<< "*                                                                                                                      *"
-		<< "*                                                2. Title Listing                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                2. Title Listing                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                3. Author Listing                                                     *"
@@ -703,21 +705,21 @@ void displayReportsMenu(void)
 		<< "*                                                4. Publisher Listing                                                  *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                5. Listing by Wholesale Cost                                          *" 
+		<< "*                                                5. Listing by Wholesale Cost                                          *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                6. Listing by Retail Price                                            *" 
+		<< "*                                                6. Listing by Retail Price                                            *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                7. Listing by Age                                                     *" 
+		<< "*                                                7. Listing by Age                                                     *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                8. Return to the Main Menu                                            *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                8. Return to the Main Menu                                            *"
 		<< "*                                                                                                                      *"
-		<< "*                                                Enter Your Choice:                                                    *" 
-		<< "*                                                                                                                      *" 
-		<< "***********************************************************************************************************************" << endl;
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
+		<< " Enter your choice:";
+
 }
 
 void displayReport(int listSelection)
