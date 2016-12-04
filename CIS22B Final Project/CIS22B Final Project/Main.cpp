@@ -12,7 +12,7 @@
 #include "Order.h"
 #include <ctime>
 #include <string>
-
+#define TAX_RATE .0875
 
 
 using namespace std;
@@ -131,7 +131,7 @@ void displayMainMenu(void)
 
 }
 
-void displayCashierScreen(Order * currentOrder)
+void displayCashierScreen(Order* currentOrder)
 {
 	// Create a book object for the current book
 	Book * currentBook;
@@ -144,7 +144,7 @@ void displayCashierScreen(Order * currentOrder)
 	struct tm now;
 	localtime_s(&now, &rawtime);
 	char dateStr[30];
-	int bookCounter = 0;
+	int bookCounter = 0; // Variable for below while loop
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
 	// Output cashier screen
@@ -152,26 +152,30 @@ void displayCashierScreen(Order * currentOrder)
 		<< "*                                                                                                  *"
 		<< "*   Serendipity Book Sellers                                                                       *"
 		<< "*                                                                                                  *"
-		<< "*   Date: " << dateStr << "                                                                      *"
-		<< "*                                                                                                  *"
-		<< "*   Please enter the ISBN of the book you are buying.                                            *";
+		<< "*   Date: " << dateStr << "			                                                               *"
+		<< "*   Please enter the ISBN of the book you are buying.                                               *";
 
 		// Test code
 		cin.ignore();
+		
 		getline(cin, newInput);
 		Book* foundBook;
 		foundBook = inventory.searchAttribute(ISBN, newInput);
 
-			cout << "****************************************************************************************************"
-				<< "*  ISBN: " << foundBook->getIsbn() << endl;
-			cout << "*  Title: " << foundBook->getTitle() << endl;
-			cout << "*  Author: " << foundBook->getAuthor() << endl;
-			cout << "*  Publisher: " << foundBook->getPublisher() << endl;
-			cout << "*  Date Added: " << foundBook->getDateAddedStr();
-			cout << "*  Quantity On-hand: " << setw(4) << foundBook->getQuantity() << endl;
-			cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << foundBook->getWholesaleCost() << endl;
-			cout << "*  Retail Price: $" << fixed << setprecision(2) << foundBook->getRetailPrice() << endl;
-			cout << "*" << endl;
+		cout << "You entered the following book:";
+		cout << "****************************************************************************************************"
+		<< "*  ISBN: " << foundBook->getIsbn() << endl;
+		cout << "*  Title: " << foundBook->getTitle() << endl;
+		cout << "*  Author: " << foundBook->getAuthor() << endl;
+		cout << "*  Publisher: " << foundBook->getPublisher() << endl;
+		cout << "*" << endl;
+
+		int quantity;
+		cout << "Please enter the quantity of " << foundBook->getTitle() << " that you wish to buy.";
+		cin >> quantity;
+
+		currentOrder->addBook(foundBook, quantity);
+
 
 		// End Test
 
@@ -186,6 +190,13 @@ void displayCashierScreen(Order * currentOrder)
 	
 	while (bookCounter < currentOrder->getNumBooks())
 	{
+		cout << setw(6) << currentOrder->getQuantity(bookCounter);
+		bookCounter++;
+	}
+
+	/*
+	while (bookCounter < currentOrder->getNumBooks())
+	{
 		currentBook = currentOrder->getBook(bookCounter);
 		cout << "*" << setw(6) << currentOrder->getQuantity(bookCounter)
 			<< setw(14) << currentBook->getIsbn()
@@ -194,6 +205,7 @@ void displayCashierScreen(Order * currentOrder)
 			<< setw(8) << fixed << setprecision(2) << currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice() << "*";
 		bookCounter++;
 	}
+	*/
 	
 
 		cout << "*                     Subtotal                                                                     *"
