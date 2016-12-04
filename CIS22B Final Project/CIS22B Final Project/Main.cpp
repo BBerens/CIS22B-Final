@@ -579,6 +579,7 @@ void displayAddBook(void)
 	cout << "Enter the retail price of the book or press q and press enter to quit: ";
 	getline(cin, userInput);
 	currentBook->setRetailPrice(strtod(userInput.c_str(), nullptr));
+	inventory.updateLists();
 }
 
 void displayEditBook(Book * displayBook)
@@ -759,15 +760,17 @@ void displayReportsMenu(void)
 		<< "*                                                                                                                      *" 
 		<< "*                                                2. Title Listing                                                      *" 
 		<< "*                                                                                                                      *" 
-		<< "*                                                3. Inventory Retail Value                                             *" 
+		<< "*                                                3. Author Listing                                                     *"
+		<< "*                                                                                                                      *"
+		<< "*                                                4. Publisher Listing                                                  *"
 		<< "*                                                                                                                      *" 
-		<< "*                                                4. Listing by Quantity                                                *" 
+		<< "*                                                5. Listing by Wholesale Cost                                          *" 
 		<< "*                                                                                                                      *" 
-		<< "*                                                5. Listing by Cost                                                    *" 
+		<< "*                                                6. Listing by Retail Price                                            *" 
 		<< "*                                                                                                                      *" 
-		<< "*                                                6. Listing by Age                                                     *" 
+		<< "*                                                7. Listing by Age                                                     *" 
 		<< "*                                                                                                                      *" 
-		<< "*                                                7. Return to the Main Menu                                            *" 
+		<< "*                                                8. Return to the Main Menu                                            *" 
 		<< "*                                                                                                                      *" 
 		<< "*                                                Enter Your Choice:                                                    *" 
 		<< "*                                                                                                                      *" 
@@ -782,8 +785,8 @@ void displayReport(int listSelection)
 		<< "                                                                          New/                Wholesale Retail   Date   "
 		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
 		<< "************************************************************************************************************************";
-	//for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)
-	if (listSelection == 1)
+	for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)
+	/*if (listSelection == 1)
 	{
 		sortIsbnArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
 	}
@@ -806,14 +809,15 @@ void displayReport(int listSelection)
 	if (listSelection == 6)
 	{
 		sortAgeArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}
-	for (int i = 0; i < inventory.getNumBooks(); i++)
+	}*/
+	//for (int i = 0; i < inventory.getNumBooks(); i++)
 	{
 		cout << i + 1 << " ";
 		bookList[i]->print();
 	}
 	system("pause");
 }
+/*
 void sortIsbnArray(Book* array[], int size)
 {
 	bool swap;
@@ -937,6 +941,6 @@ void sortAgeArray(Book* array[], int size)
 			}
 		}
 	} while (swap);
-}
+}*/
 //Also, our report module list is different from the instruction. Should we change our report list??
 //I'm trying to fix the format of report module... 

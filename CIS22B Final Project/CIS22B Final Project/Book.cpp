@@ -128,7 +128,7 @@ string Book::getAttribute(int input) const
 		output = to_string(wholesaleCost);
 		break;
 	case (RETAIL_PRICE) :
-		output = to_string(retailPrice);
+		output = to_string(getRetailPrice());
 		break;
 	case(DATE_ADDED) :
 		output = to_string(dateAdded);
