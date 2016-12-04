@@ -24,6 +24,7 @@ public:
 	UsedBook* addUsedBook(void);
 	UsedBook* addUsedBook(int);
 	Book* getBook(int);	// temporary
+	int getNumUsedBooks(void) const;
 
 	// Temporarily commented out
 	// Book** searchAuthor(string);

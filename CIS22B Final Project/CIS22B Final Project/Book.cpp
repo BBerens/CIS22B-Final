@@ -142,11 +142,11 @@ string Book::getAttribute(int input) const
 void Book::print(void)
 {
 	cout << setw(13) << isbn;
-	cout << "  " << setw(25) << left << title.substr(0,25);
+	cout << "  " << setw(27) << left << title.substr(0,27);
 	cout << setw(15) << left << author.substr(0, 15);
 	cout << setw(15) << left << publisher.substr(0, 15);
-	cout << " " << setw(3) << quantity;
-	cout << " $" << fixed << setprecision(2) << wholesaleCost;
+	cout << " New            " << setw(3) << quantity;
+	cout << "  $" << fixed << setprecision(2) << wholesaleCost;
 	cout << "   $" << fixed << setprecision(2) << retailPrice;
-	cout << " " << setw(10) << getDateAddedStr() << endl;
+	cout << "   " << setw(10) << getDateAddedStr() << endl;
 }

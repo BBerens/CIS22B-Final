@@ -116,11 +116,15 @@ Book ** Inventory::generateAttributeList(int attribute)
 	{
 		tempList[i] = books[i];
 	}
-	for (startScan = 0; startScan < numBooks - 1; startScan++)
+	for (int j = 0; j < numUsedBooks; j++)
+	{
+		tempList[j + numBooks] = usedBooks[j];
+	}
+	for (startScan = 0; startScan < numBooks + numUsedBooks - 1; startScan++)
 	{
 		minIndex = startScan;
 		minValue = tempList[startScan];
-		for (int j = startScan +1; j < numBooks; j++)
+		for (int j = startScan +1; j < numBooks + numUsedBooks; j++)
 		{
 			if (tempList[j]->getAttribute(attribute) < minValue->getAttribute(attribute))
 			{
@@ -184,11 +188,20 @@ void Inventory::updateLists()
 void Inventory::strSearch(int attribute, string value)
 {
 	string tempStr;
+	int counter = 1;
 	for (int i = 0; i < numBooks; i++)
 	{
 		tempStr = books[i]->getAttribute(attribute);
 		if (tempStr.find(value) != -1)
+		{
+			cout << counter++ << " ";
 			books[i]->print();
+		}
 	}
+}
+
+int Inventory::getNumUsedBooks(void) const
+{
+	return numUsedBooks;
 }
 

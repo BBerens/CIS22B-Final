@@ -340,8 +340,8 @@ Book* displayAttributeSearch(int attribute)
 		<< "*  Enter the " << attributeStr << " to search for: ";
 	getline(cin, inputValue, '\n');
 	cout << "************************************************************************************************************************"
-		<< "                                                                            Wholesale Retail   Date                     "
-		<< "# ISBN           Title                    Author         Publisher      Qty    Cost    Price   Added                    "
+		<< "                                                                          New/                Wholesale Retail   Date   "
+		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
 		<< "************************************************************************************************************************";
 	inventory.strSearch(attribute, inputValue);
 	/*if (foundBook != nullptr)
@@ -747,30 +747,30 @@ void reportModule(void)
 void displayReportsMenu(void)
 {
 	system("cls");
-	cout << "***********************************************************************************************************************"
-		<< "*                                                                                                                     *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                Serendipity Booksellers                                              *"
-		<< "*                                                                                                                     *" 
-		<< "*                                                        Reports                                                      *"
-		<< "*                                                                                                                     *"
-		<< "*                                                                                                                     *"
-		<< "*                                                1. ISBN Listing                                                      *"
-		<< "*                                                                                                                     *" 
-		<< "*                                                2. Title Listing                                                     *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                3. Inventory Retail Value                                            *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                4. Listing by Quantity                                               *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                5. Listing by Cost                                                   *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                6. Listing by Age                                                    *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                7. Return to the Main Menu                                           *" 
-		<< "*                                                                                                                     *" 
-		<< "*                                                Enter Your Choice:                                                   *" 
-		<< "*                                                                                                                     *" 
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *" 
+		<< "*                                                        Reports                                                       *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                1. ISBN Listing                                                       *"
+		<< "*                                                                                                                      *" 
+		<< "*                                                2. Title Listing                                                      *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                3. Inventory Retail Value                                             *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                4. Listing by Quantity                                                *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                5. Listing by Cost                                                    *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                6. Listing by Age                                                     *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                7. Return to the Main Menu                                            *" 
+		<< "*                                                                                                                      *" 
+		<< "*                                                Enter Your Choice:                                                    *" 
+		<< "*                                                                                                                      *" 
 		<< "***********************************************************************************************************************" << endl;
 }
 
@@ -778,11 +778,11 @@ void displayReport(int listSelection)
 {
 	Book** bookList = inventory.getAttributeList(listSelection - 1);
 	system("cls");
-	cout << "New Books:" << endl
-		<< "************************************************************************************************************************"
-		<< "                                                                            Wholesale Retail   Date "
-		<< "# ISBN           Title                    Author         Publisher      Qty    Cost    Price   Added"
+	cout << "************************************************************************************************************************"
+		<< "                                                                          New/                Wholesale Retail   Date   "
+		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
 		<< "************************************************************************************************************************";
+	//for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)
 	if (listSelection == 1)
 	{
 		sortIsbnArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
@@ -812,11 +812,6 @@ void displayReport(int listSelection)
 		cout << i + 1 << " ";
 		bookList[i]->print();
 	}
-	cout << endl << endl << "Used Books:" << endl
-		<< "************************************************************************************************************************"
-		<< "                                                                                       Retail  Date "
-		<< "# ISBN           Title                    Author         Publisher      Qty Condition  Price   Added"
-		<< "************************************************************************************************************************";
 	system("pause");
 }
 void sortIsbnArray(Book* array[], int size)
