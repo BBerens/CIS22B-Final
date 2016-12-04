@@ -34,6 +34,7 @@ fstream& operator >> (fstream& file, UsedBook& inBook)
 {
 	string tempStr;
 	file >> (Book)inBook;
+	file.ignore();
 	getline(file, tempStr, '\n');
 	inBook.bookCondition = static_cast<UsedBook::condition>(stoi(tempStr));
 	return file;

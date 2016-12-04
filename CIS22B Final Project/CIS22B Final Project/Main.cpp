@@ -259,12 +259,14 @@ void bookLookup(void)
 		subMenuOption = -1;
 		displayBookLookup();
 		cin >> menuOption;
+		cin.ignore();
 		if (menuOption != 5) // Horrible. Needs to be done properly.
 		{
 			while (subMenuOption != 9)
 			{
 				foundBook = displayAttributeSearch(menuOption - 1);
 				cin >> subMenuOption;
+				cin.ignore();
 				if (subMenuOption != 9)
 					editBook(foundBook, subMenuOption);
 			}
@@ -315,7 +317,7 @@ Book* displayAttributeSearch(int attribute)
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*  Enter the " << attributeStr << " to search for: ";
-	cin >> inputValue;
+	getline(cin,inputValue,'\n');
 	foundBook = inventory.searchAttribute(attribute, inputValue);
 	if (foundBook != nullptr)
 	{
@@ -325,7 +327,7 @@ Book* displayAttributeSearch(int attribute)
 		cout << "*  Title: " << foundBook->getTitle() << endl;
 		cout << "*  Author: " << foundBook->getAuthor() << endl;
 		cout << "*  Publisher: " << foundBook->getPublisher() << endl;
-		cout << "*  Date Added: " << foundBook->getDateAddedStr();
+		cout << "*  Date Added: " << foundBook->getDateAddedStr() << endl;
 		cout << "*  Quantity On-hand: " << setw(4) << foundBook->getQuantity() << endl;
 		cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << foundBook->getWholesaleCost() << endl;
 		cout << "*  Retail Price: $" << fixed << setprecision(2) << foundBook->getRetailPrice() << endl;
