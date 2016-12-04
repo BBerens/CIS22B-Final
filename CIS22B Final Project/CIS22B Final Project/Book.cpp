@@ -35,6 +35,7 @@ void Book::writeToFile(fstream & file)
 	file << title << '\t';
 	file << author << '\t';
 	file << publisher << '\t';
+	file << quantity << '\t';
 	file << wholesaleCost << '\t';
 	file << retailPrice << '\t';
 	file << dateAdded << endl;
@@ -46,6 +47,7 @@ fstream& operator << (fstream& file, Book& outBook)
 	file << outBook.title << '\t';
 	file << outBook.author << '\t';
 	file << outBook.publisher << '\t';
+	file << outBook.quantity << '\t';
 	file << outBook.wholesaleCost << '\t';
 	file << outBook.retailPrice << '\t';
 	file << outBook.dateAdded << '\t';
@@ -56,6 +58,7 @@ fstream& operator >> (fstream& file, Book& inBook)
 {
 	long long tempIsbn;
 	string tempStr;
+	int tempInt;
 	double tempDouble;
 	time_t tempDate;
 
@@ -68,6 +71,9 @@ fstream& operator >> (fstream& file, Book& inBook)
 	inBook.author = tempStr;
 	getline(file, tempStr, '\t');
 	inBook.publisher = tempStr;
+	getline(file, tempStr, '\t');
+	tempInt = stoi(tempStr);
+	inBook.quantity = tempInt;
 	getline(file, tempStr, '\t');
 	tempDouble = stod(tempStr, nullptr);
 	inBook.wholesaleCost = tempDouble;
@@ -140,7 +146,7 @@ void Book::print(void)
 	cout << setw(15) << left << author.substr(0, 15);
 	cout << setw(15) << left << publisher.substr(0, 15);
 	cout << " " << setw(3) << quantity;
-	cout << " " << fixed << setprecision(2) << wholesaleCost;
-	cout << " " << fixed << setprecision(2) << retailPrice;
+	cout << " $" << fixed << setprecision(2) << wholesaleCost;
+	cout << "   $" << fixed << setprecision(2) << retailPrice;
 	cout << " " << setw(10) << getDateAddedStr() << endl;
 }

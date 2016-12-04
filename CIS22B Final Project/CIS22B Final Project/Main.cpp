@@ -40,7 +40,7 @@ enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRIC
 int main(void)
 {
 	int menuOption = -1;
-	system("mode 100, 50");	// sets command prompt 100 chars wide and 50 chars tall
+	system("mode 120, 50");	// sets command prompt 100 chars wide and 50 chars tall
 
 	while (menuOption != 4)
 	{
@@ -56,7 +56,6 @@ int main(void)
 			break;
 		case (3) :
 			reportModule();
-			system("pause");	//debug
 			break;
 		case (4) :
 			break;
@@ -114,6 +113,7 @@ void displayMainMenu(void)
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                      4. Exit                                                     *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
@@ -747,9 +747,9 @@ void displayReportsMenu(void)
 		<< "*                                                                             *" << endl
 		<< "*                         5. Listing by Cost                                  *" << endl
 		<< "*                                                                             *" << endl
-		<< "*                         5. Listing by Age                                   *" << endl
+		<< "*                         6. Listing by Age                                   *" << endl
 		<< "*                                                                             *" << endl
-		<< "*                         5. Return to the Main Menu                          *" << endl
+		<< "*                         7. Return to the Main Menu                          *" << endl
 		<< "*                                                                             *" << endl
 		<< "*                         Enter Your Choice:                                  *" << endl
 		<< "*                                                                             *" << endl
@@ -758,11 +758,22 @@ void displayReportsMenu(void)
 
 void displayReport(int listSelection)
 {
-	Book** bookList = inventory.getAttributeList(listSelection);
+	Book** bookList = inventory.getAttributeList(listSelection - 1);
+	system("cls");
+	cout << "New Books:" << endl
+		<< "****************************************************************************************************"
+		<< "                                                                            Wholesale Retail   Date "
+		<< "# ISBN           Title                    Author         Publisher      Qty    Cost    Price   Added"
+		<< "****************************************************************************************************";
 	for (int i = 0; i < inventory.getNumBooks(); i++)
 	{
 		cout << i + 1 << " ";
 		bookList[i]->print();
 	}
+	cout << endl << endl << "Used Books:" << endl
+		<< "****************************************************************************************************"
+		<< "                                                                                       Retail  Date "
+		<< "# ISBN           Title                    Author         Publisher      Qty Condition  Price   Added"
+		<< "****************************************************************************************************";
 	system("pause");
 }

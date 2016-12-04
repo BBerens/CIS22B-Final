@@ -34,6 +34,7 @@ fstream& operator >> (fstream& file, UsedBook& inBook)
 {
 	long long tempIsbn;
 	string tempStr;
+	int tempInt;
 	double tempDouble;
 	time_t tempDate;
 
@@ -46,6 +47,9 @@ fstream& operator >> (fstream& file, UsedBook& inBook)
 	inBook.author = tempStr;
 	getline(file, tempStr, '\t');
 	inBook.publisher = tempStr;
+	getline(file, tempStr, '\t');
+	tempInt = stoi(tempStr);
+	inBook.quantity = tempInt;
 	getline(file, tempStr, '\t');
 	tempDouble = stod(tempStr, nullptr);
 	inBook.wholesaleCost = tempDouble;
