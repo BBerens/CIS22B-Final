@@ -27,9 +27,8 @@ void displayBookInformationScreen(Book *);
 void displayReportsMenu(void);
 void displayBookLookup(void);
 void displayAddBook(void);
-void displayEditBook(Book *);
 void bookLookup(void);
-Book* displayAttributeSearch(int);
+void displayAttributeSearch(int);
 void editBook(Book *, int);
 void displayReport(int);
 
@@ -141,7 +140,8 @@ void displayCashierScreen(Order* currentOrder)
 	double lineTotal = 0;
 	double total;
 	double tax;
-	int quantity;
+	int purchaseQuantity;
+
 
 	// Declare variables for cashier input
 	string newInput; // Input book
@@ -182,9 +182,9 @@ void displayCashierScreen(Order* currentOrder)
 				cout << "Publisher: " << currentBook->getPublisher() << endl;
 
 				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
-				cin >> quantity;
+				cin >> purchaseQuantity;
 
-				currentOrder->addBook(currentBook, quantity);
+				currentOrder->addBook(currentBook, purchaseQuantity);
 				cin.ignore();
 			}
 			else{
@@ -210,26 +210,26 @@ void displayCashierScreen(Order* currentOrder)
 	{
 		currentBook = currentOrder->getBook(bookCounter);
 		cout << fixed << setprecision(2);
-		cout << "*" << setw(4) << currentOrder->getQuantity(bookCounter)
-			<< setw(15) << currentBook->getIsbn()
-			<< setw(30) << currentBook->getTitle()
-			<< setw(15) << currentBook->getRetailPrice() << "     ";
+		cout << "*" << setw(5) << currentOrder->getQuantity(bookCounter)
+			<< setw(17) << right << currentBook->getIsbn() << "  "
+			<< setw(33) << left << currentBook->getTitle().substr(0, 32)
+			<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
 		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
 		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
 		bookCounter++;
-		cout << setw(15) << lineTotal << "                                  *";
+		cout << "$" << setw(15) << lineTotal << "                         *";
 		tax = subtotal*TAX_RATE;
 		total = subtotal * (1 + TAX_RATE);
 	}
 
 	cout << "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                     Subtotal: "
-		<< subtotal << "                                                                                 *"
-		<< "*                     Tax: "
-		<< "     " << tax << "                                                                                  *"
-		<< "*                     Total: "
-		<< "   " << total << "                                                                                 *"
+		<< "*                     Subtotal: $" << setw(6) << right
+		<< subtotal << "                                                                                *"
+		<< "*                     Tax:      $" << setw(6) << right
+		<< tax << "                                                                                *"
+		<< "*                     Total:    $" << setw(6) << right
+		<< total << "                                                                                *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -272,34 +272,26 @@ void inventoryModule(void)
 
 void bookLookup(void)
 {
-	int menuOption = -1;
-	int subMenuOption;
+	int attributeSelection;
 	Book * foundBook;
-	while (menuOption != 5)
+	displayBookLookup();
+	cin >> attributeSelection;
+	cin.ignore();
+	while (attributeSelection != 5)
 	{
-		subMenuOption = -1;
-		displayBookLookup();
-		cin >> menuOption;
+		displayAttributeSearch(attributeSelection - 1);
+		cin >> attributeSelection;
 		cin.ignore();
-		if (menuOption != 5) // Horrible. Needs to be done properly.
-		{
-			while (subMenuOption != 9)
-			{
-				foundBook = displayAttributeSearch(menuOption - 1);
-				cin >> subMenuOption;
-				cin.ignore();
-				if (subMenuOption != 9)
-					editBook(foundBook, subMenuOption);
-			}
-		}
 	}
 }
 
-Book* displayAttributeSearch(int attribute)
+void displayAttributeSearch(int attribute)
 {
 	string attributeStr;
 	string inputValue;
-	Book * foundBook;
+	Book ** searchResults;
+	int bookSelection, attributeSelection;
+	int numBooksFound;
 
 	switch (attribute)
 	{
@@ -322,7 +314,7 @@ Book* displayAttributeSearch(int attribute)
 		attributeStr = "Retail Price";
 		break;
 	default:
-		return nullptr;
+		return;
 	}
 
 	system("cls");
@@ -343,57 +335,39 @@ Book* displayAttributeSearch(int attribute)
 		<< "                                                                          New/                Wholesale Retail   Date   "
 		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
 		<< "************************************************************************************************************************";
-	inventory.strSearch(attribute, inputValue);
-	/*if (foundBook != nullptr)
+	searchResults = new Book*;
+	numBooksFound = inventory.strSearch(attribute, inputValue, searchResults);
+	if (numBooksFound == 0)
 	{
-		cout << "Here's an extra output to test the function: " << foundBook->getIsbn() << endl; // Debug Statement
-		cout << "************************************************************************************************************************"
-			<< "*  ISBN: " << foundBook->getIsbn() << endl;
-		cout << "*  Title: " << foundBook->getTitle() << endl;
-		cout << "*  Author: " << foundBook->getAuthor() << endl;
-		cout << "*  Publisher: " << foundBook->getPublisher() << endl;
-		cout << "*  Date Added: " << foundBook->getDateAddedStr() << endl;
-		cout << "*  Quantity On-hand: " << setw(4) << foundBook->getQuantity() << endl;
-		cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << foundBook->getWholesaleCost() << endl;
-		cout << "*  Retail Price: $" << fixed << setprecision(2) << foundBook->getRetailPrice() << endl;
-		cout << "*" << endl;
-		cout << "************************************************************************************************************************"
-			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*   Select the record you would like to change:                                                                        *"
-			<< "*                                                                                                                      *"
-			<< "*   1. ISBN                                                                                                            *"
-			<< "*                                                                                                                      *"
-			<< "*   2. Title                                                                                                           *"
-			<< "*                                                                                                                      *"
-			<< "*   3. Author                                                                                                          *"
-			<< "*                                                                                                                      *"
-			<< "*   4. Publisher                                                                                                       *"
-			<< "*                                                                                                                      *"
-			<< "*   5. Date Added                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*   6. Quantity On-Hand                                                                                                *"
-			<< "*                                                                                                                      *"
-			<< "*   7. Wholesale Cost                                                                                                  *"
-			<< "*                                                                                                                      *"
-			<< "*   8. Retail Price                                                                                                    *"
-			<< "*                                                                                                                      *"
-			<< "*   9. Return to Inventory Menu                                                                                        *"
-			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "************************************************************************************************************************"
-			<< "Enter Your Choice: ";
-		return foundBook;
+		cout << "No Books Found";
+		system("pause");
+		displayBookLookup();
 	}
 	else
 	{
-		cout << "****************************************************************************************************"
-			<< "  No book with that " << attributeStr << " was found. Press enter to try again." << endl;
-		system("pause");
-		return nullptr;
-	}*/
+		for (int i = 0; i < numBooksFound; i++)
+		{
+			cout << i + 1 << " ";
+			searchResults[i]->print();
+		}
+		cout << "************************************************************************************************************************"
+			<< "Select the book you would like to view by its number on the left:";
+		cin >> bookSelection;
+		cin.ignore();
+		displayBookInformationScreen(searchResults[bookSelection - 1]);
+		cin >> attributeSelection;
+		cin.ignore();
+		if (attributeSelection != 9)
+		{
+			editBook(searchResults[bookSelection - 1], attributeSelection);
+			displayBookLookup();
+		}
+
+		/*for (int i = 0; i < numBooksFound; i++)
+		{
+			delete searchResults[i];
+		}*/
+	}
 }
 
 void editBook(Book * editBook, int attribute)
@@ -409,7 +383,7 @@ void editBook(Book * editBook, int attribute)
 		<< "*                                                                                                                      *"
 		<< "*                                                Serendipity Booksellers                                               *"
 		<< "*                                                                                                                      *"
-		<< "*                                                      ISBN Search                                                     *"
+		<< "*                                                    Book Information                                                  *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -417,39 +391,40 @@ void editBook(Book * editBook, int attribute)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
-		<< "*  ISBN: " << editBook->getIsbn() << endl;
-	cout << "*  Title: " << editBook->getTitle() << endl;
-	cout << "*  Author: " << editBook->getAuthor() << endl;
-	cout << "*  Publisher: " << editBook->getPublisher() << endl;
-	cout << "*  Quantity On-hand: " << setw(4) << editBook->getQuantity() << endl;
-	cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << editBook->getWholesaleCost() << endl;
-	cout << "*  Retail Price: $" << fixed << setprecision(2) << editBook->getRetailPrice() << endl;
-	cout << "*  Date Added: " << editBook->getDateAddedStr();
-	cout << "*" << endl;
-	cout << "************************************************************************************************************************";
+		<< "*  ISBN: " << setw(110) << editBook->getIsbn() << "*"
+		<< "*  Title: " << setw(109) << editBook->getTitle().substr(0, 109) << "*"
+		<< "*  Author: " << setw(108) << editBook->getAuthor() << "*"
+		<< "*  Publisher: " << setw(105) << editBook->getPublisher() << "*"
+		<< "*  Date Added: " << setw(104) << editBook->getDateAddedStr() << "*"
+		<< "*  Quantity On-hand: " << setw(98) << editBook->getQuantity() << "*"
+		<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << editBook->getWholesaleCost() << "*"
+		<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << editBook->getRetailPrice() << "*"
+		<< "*                                                                                                                      *"
+	    << "************************************************************************************************************************";
 	switch (attribute)
 	{
 	case (1) :
 		cout << "Enter the new ISBN for this book: ";
-		cin >> tempISBN;
+		getline(cin, tempStr);
+		tempISBN = stoll(tempStr);
 		editBook->setIsbn(tempISBN);
 		inventory.generateAttributeList(ISBN);
 		break;
 	case (2) :
 		cout << "Enter the new Title for this book: ";
-		cin >> tempStr;
+		getline(cin, tempStr);
 		editBook->setTitle(tempStr);
 		//inventory.generateISBNList(); need to resort by title
 		break;
 	case (3) :
 		cout << "Enter the new Author for this book: ";
-		cin >> tempStr;
+		getline(cin, tempStr);
 		editBook->setAuthor(tempStr);
 		//inventory.generateISBNList(); need to resort by author
 		break;
 	case (4) :
 		cout << "Enter the new Publisher for this book: ";
-		cin >> tempStr;
+		getline(cin, tempStr);
 		editBook->setPublisher(tempStr);
 		//inventory.generateISBNList(); need to resort by publisher
 		break;
@@ -458,18 +433,21 @@ void editBook(Book * editBook, int attribute)
 		break;
 	case(6) :
 		cout << "Enter the new Quantity On-hand for this book: ";
-		cin >> tempInt;
+		getline(cin, tempStr);
+		tempInt = stoi(tempStr);
 		editBook->setQuantity(tempInt);
 		//inventory.generateISBNList(); need to resort by Quantity? Maybe not. This changes all the time. Sort when you need it
 		break;
 	case(7) :
 		cout << "Enter the new Wholesale Cost for this book: ";
-		cin >> tempDouble;
+		getline(cin, tempStr);
+		tempDouble = stod(tempStr);
 		editBook->setWholesaleCost(tempDouble);
 		//inventory.generateISBNList(); need to resort by wholesale cost
 	case(8) :
 		cout << "Enter the new Retail Price for this book: ";
-		cin >> tempDouble;
+		getline(cin, tempStr);
+		tempDouble = stod(tempStr);
 		editBook->setRetailPrice(tempDouble);
 		//inventory.generateISBNList(); need to resort by retail price
 	case(9) :
@@ -478,6 +456,7 @@ void editBook(Book * editBook, int attribute)
 		cout << "That is not a valid option. Please try again.";
 		system("pause");
 	}
+	inventory.updateLists();
 }
 void displayBookLookup(void)
 {
@@ -519,7 +498,7 @@ void displayBookLookup(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                5. Return to Inventory Menu                                           *"
+		<< "*                                                5. Return to Previous Menu                                            *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -541,11 +520,14 @@ void displayAddBook(void)
 	system("cls");
 	cout << "Enter 'N' for a new book and 'U' for a used book and press enter: ";
 	cin >> userInput;
+	cin.ignore();
 	while (userInput != "N" && userInput != "n" && userInput != "U" && userInput != "u")
 	{
 		cout << "That is not a valid entry.";
 		cout << "Enter 'N' for a new book and 'U' for a used book and press enter: ";
 		cin >> userInput;
+		cin.ignore();
+
 	}
 	if (userInput == "U" || userInput == "u")
 	{
@@ -555,6 +537,7 @@ void displayAddBook(void)
 		cout << "3. Fair condition, obvious sign of usage, crease in binding or cover." << endl;
 		cout << "4. Poor condition, significant wear, possible water marks or ripped pages." << endl;
 		cin >> condition;
+		cin.ignore();
 		currentBook = inventory.addUsedBook(condition);
 	}
 	else
@@ -582,57 +565,6 @@ void displayAddBook(void)
 	inventory.updateLists();
 }
 
-void displayEditBook(Book * displayBook)
-{
-	system("cls");
-	cout << "************************************************************************************************************************"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                Serendipity Booksellers                                               *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                   Book Information                                                   *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*  ISBN: " << displayBook->getIsbn() << "*****************************************************************************************"
-		<< "*  Title: " << displayBook->getTitle() << "*" << endl; // need to ensure string is of a fixed length
-	cout << "*  Author: " << displayBook->getAuthor() << "*" << endl; //need to ensure string is of a fixed length
-	cout << "*  Publisher: " << displayBook->getPublisher() << "*" << endl;
-	cout << "*  Date Added: " << displayBook->getDateAddedStr() << "*" << endl;
-	cout << "*  Quantity On-hand: " << setw(4) << displayBook->getQuantity() << endl;
-	cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << displayBook->getWholesaleCost() << endl;
-	cout << "*  Retail Price: $" << fixed << setprecision(2) << displayBook->getRetailPrice() << endl;
-	cout << "*                                                                                                  *"
-		<< "************************************************************************************************************************"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*   Select the record you would like to change:                                                                        *"
-		<< "*                                                                                                                      *"
-		<< "*   1. Title                                                                                                           *"
-		<< "*                                                                                                                      *"
-		<< "*   2. Author                                                                                                          *"
-		<< "*                                                                                                                      *"
-		<< "*   3. Publisher                                                                                                       *"
-		<< "*                                                                                                                      *"
-		<< "*   4. Date Added                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*   5. Quantity On-Hand                                                                                                *"
-		<< "*                                                                                                                      *"
-		<< "*   6. Wholesale Cost                                                                                                  *"
-		<< "*                                                                                                                      *"
-		<< "*   7. Retail Price                                                                                                    *"
-		<< "*                                                                                                                      *"
-		<< "*   8. Return to Inventory Menu                                                                                        *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "************************************************************************************************************************";
-}
 void displayInventoryMenu(void)
 {
 	system("cls");
@@ -701,35 +633,38 @@ void displayBookInformationScreen(Book * displayBook)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*  ISBN: " << displayBook->getIsbn() << "***************************************************************************************************"
-		<< "*  Title: " << displayBook->getTitle() << "*" << endl; // need to ensure string is of a fixed length
-	cout << "*  Author: " << displayBook->getAuthor() << "*" << endl; //need to ensure string is of a fixed length
-	cout << "*  Publisher: " << displayBook->getPublisher() << "*" << endl;
-	cout << "*  Date Added: " << displayBook->getDateAddedStr() << "*" << endl;
-	cout << "*  Quantity On-hand: " << setw(4) << displayBook->getQuantity() << endl;
-	cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << displayBook->getWholesaleCost() << endl;
-	cout << "*  Retail Price: $" << fixed << setprecision(2) << displayBook->getRetailPrice() << endl;
-	cout << "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
+		<< "*  ISBN: " << setw(110) << displayBook->getIsbn() << "*"
+		<< "*  Title: " << setw(109) << displayBook->getTitle().substr(0,109) << "*"
+	    << "*  Author: " << setw(108) << displayBook->getAuthor() << "*"
+	    << "*  Publisher: " << setw(105) <<  displayBook->getPublisher() << "*"
+	    << "*  Date Added: " << setw(104) << displayBook->getDateAddedStr() << "*"
+	    << "*  Quantity On-hand: " << setw(98) << displayBook->getQuantity() << "*"
+		<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << displayBook->getWholesaleCost() << "*"
+		<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << displayBook->getRetailPrice() << "*"
+	    << "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*   Select the record you would like to change:                                                                        *"
 		<< "*                                                                                                                      *"
-		<< "*   1. Title                                                                                                           *"
+		<< "*   1. ISBN                                                                                                            *"
 		<< "*                                                                                                                      *"
-		<< "*   2. Author                                                                                                          *"
+		<< "*   2. Title                                                                                                           *"
 		<< "*                                                                                                                      *"
-		<< "*   3. Publisher                                                                                                       *"
+		<< "*   3. Author                                                                                                          *"
 		<< "*                                                                                                                      *"
-		<< "*   4. Date Added                                                                                                      *"
+		<< "*   4. Publisher                                                                                                       *"
 		<< "*                                                                                                                      *"
-		<< "*   5. Quantity On-Hand                                                                                                *"
+		<< "*   5. Date Added                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*   6. Wholesale Cost                                                                                                  *"
+		<< "*   6. Quantity On-Hand                                                                                                *"
 		<< "*                                                                                                                      *"
-		<< "*   7. Retail Price                                                                                                    *"
+		<< "*   7. Wholesale Cost                                                                                                  *"
 		<< "*                                                                                                                      *"
-		<< "*   8. Return to Inventory Menu                                                                                        *"
+		<< "*   8. Retail Price                                                                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*   9. Return to Previous Menu                                                                                         *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -758,20 +693,28 @@ void displayReportsMenu(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                1. ISBN Listing                                                       *"
 		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
 		<< "*                                                2. Title Listing                                                      *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                3. Author Listing                                                     *"
 		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                4. Publisher Listing                                                  *"
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                5. Listing by Wholesale Cost                                          *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                6. Listing by Retail Price                                            *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                7. Listing by Age                                                     *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
 		<< "*                                                8. Return to the Main Menu                                            *" 
 		<< "*                                                                                                                      *" 
+		<< "*                                                                                                                      *"
 		<< "*                                                Enter Your Choice:                                                    *" 
 		<< "*                                                                                                                      *" 
 		<< "***********************************************************************************************************************" << endl;

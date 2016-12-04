@@ -179,25 +179,24 @@ void Inventory::updateLists()
 {
 	for (int i = 0; i <= 7; i++)
 	{
-		delete *lists[i];
 		lists[i] = new Book*[numBooks];
 		lists[i] = generateAttributeList(i);
 	}
 }
 
-void Inventory::strSearch(int attribute, string value)
+int Inventory::strSearch(int attribute, string value, Book** searchList)
 {
 	string tempStr;
-	int counter = 1;
+	int counter = 0;
 	for (int i = 0; i < numBooks; i++)
 	{
 		tempStr = books[i]->getAttribute(attribute);
 		if (tempStr.find(value) != -1)
 		{
-			cout << counter++ << " ";
-			books[i]->print();
+			searchList[counter++]=books[i];
 		}
 	}
+	return counter;
 }
 
 int Inventory::getNumUsedBooks(void) const
