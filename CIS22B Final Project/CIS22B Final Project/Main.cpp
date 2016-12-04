@@ -82,22 +82,22 @@ void displayMainMenu(void)
 	system("cls");
 	cout << "****************************************************************************************************"
 		<< "*                                                                                                  *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                      Serendipity Booksellers                                     *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                             Main Menu                                            *"
-		<< "*                                                                                                  *" 
 		<< "*                                                                                                  *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
@@ -106,25 +106,25 @@ void displayMainMenu(void)
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                      2. Inventory Database Module                                *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                      3. Report Module                                            *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*                                      4. Exit                                                     *"
 		<< "*                                                                                                  *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
-		<< "*                                                                                                  *" 
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
+		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "****************************************************************************************************"
 		<< " Enter Your Choice:";
@@ -135,6 +135,10 @@ void displayCashierScreen(Order* currentOrder)
 {
 	// Create a book object for the current book
 	Book * currentBook;
+
+	// Create variables for total cost
+	double subtotal = 0;
+	double total;
 
 	// Declare variables for cashier input
 	string newInput; // Input book
@@ -153,71 +157,76 @@ void displayCashierScreen(Order* currentOrder)
 		<< "*   Serendipity Book Sellers                                                                       *"
 		<< "*                                                                                                  *"
 		<< "*   Date: " << dateStr << "			                                                               *"
+
+		// Collect user Input
 		<< "*   Please enter the ISBN of the book you are buying.                                               *";
+	cin.ignore();
+	getline(cin, newInput);
 
-		// Test code
-		cin.ignore();
-		
-		getline(cin, newInput);
-		Book* foundBook;
-		foundBook = inventory.searchAttribute(ISBN, newInput);
+	// Pull book data from the inventory class
+	currentBook = inventory.searchAttribute(ISBN, newInput);
 
-		cout << "You entered the following book:";
-		cout << "****************************************************************************************************"
-		<< "*  ISBN: " << foundBook->getIsbn() << endl;
-		cout << "*  Title: " << foundBook->getTitle() << endl;
-		cout << "*  Author: " << foundBook->getAuthor() << endl;
-		cout << "*  Publisher: " << foundBook->getPublisher() << endl;
-		cout << "*" << endl;
+	// Return book data and verify user input is correct.  Otherwise collect user input again.
+	cout << "You entered the following book:" << endl;
+	cout << "****************************************************************************************************"
+		<< "*  ISBN: " << currentBook->getIsbn() << endl;
+	cout << "*  Title: " << currentBook->getTitle() << endl;
+	cout << "*  Author: " << currentBook->getAuthor() << endl;
+	cout << "*  Publisher: " << currentBook->getPublisher() << endl;
+	cout << "*" << endl;
 
-		int quantity;
-		cout << "Please enter the quantity of " << foundBook->getTitle() << " that you wish to buy.";
-		cin >> quantity;
+	int quantity;
+	cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy.";
+	cin >> quantity;
 
-		currentOrder->addBook(foundBook, quantity);
+	currentOrder->addBook(currentBook, quantity);
 
-
-		// End Test
-
-		/*
-		<< "*   Qty   ISBN           Title                                                     Price   Total   *"
-		<< "*   ______________________________________________________________________________________________ *";
-		*/
-	    
 	system("pause");	// Debug Statement
 
 	// Keep this commented for now while testing
-	
+
 	while (bookCounter < currentOrder->getNumBooks())
 	{
-		cout << setw(6) << currentOrder->getQuantity(bookCounter);
+		currentBook = currentOrder->getBook(bookCounter);
+		cout << fixed << setprecision(2);
+		cout << "Current price is: " << currentBook->getRetailPrice() << endl;
+		cout << "Current book counter is: " << bookCounter << endl;
+		system("pause");
+		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
 		bookCounter++;
 	}
+
+	total = subtotal * (1 + TAX_RATE);
+	cout << "Your subtotal is: " << subtotal << endl;
+	cout << "Your total cost today is: " << total << endl;
+	cout << "Thank you for choosing serndepity books." << endl;
 
 	/*
 	while (bookCounter < currentOrder->getNumBooks())
 	{
-		currentBook = currentOrder->getBook(bookCounter);
-		cout << "*" << setw(6) << currentOrder->getQuantity(bookCounter)
-			<< setw(14) << currentBook->getIsbn()
-			<< setw(60) << currentBook->getTitle()
-			<< setw(8) << fixed << setprecision(2) << currentBook->getRetailPrice()
-			<< setw(8) << fixed << setprecision(2) << currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice() << "*";
-		bookCounter++;
+	currentBook = currentOrder->getBook(bookCounter);
+	cout << "*" << setw(6) << currentOrder->getQuantity(bookCounter)
+	<< setw(14) << currentBook->getIsbn()
+	<< setw(60) << currentBook->getTitle()
+	<< setw(8) << fixed << setprecision(2) << currentBook->getRetailPrice()
+	<< setw(8) << fixed << setprecision(2) << currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice() << "*";
+	bookCounter++;
 	}
 	*/
-	
 
-		cout << "*                     Subtotal                                                                     *"
-		<< "*                     Tax                                                                          *"
-		<< "*                     Total                                                                        *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*                                                                                                  *"
-		<< "*  Thank You for Shopping at Serendipity!                                                          *"
-		<< "*                                                                                                  *"
-		<< "****************************************************************************************************" << endl;
-		system("pause");	// Debug Statement
+	/*
+	cout << "*                     Subtotal                                                                     *"
+	<< "*                     Tax                                                                          *"
+	<< "*                     Total                                                                        *"
+	<< "*                                                                                                  *"
+	<< "*                                                                                                  *"
+	<< "*                                                                                                  *"
+	<< "*  Thank You for Shopping at Serendipity!                                                          *"
+	<< "*                                                                                                  *"
+	<< "****************************************************************************************************" << endl;
+	*/
+
+	system("pause");	// Debug Statement
 }
 
 void inventoryModule(void)
@@ -230,21 +239,21 @@ void inventoryModule(void)
 		cin.ignore();
 		switch (menuOption)
 		{
-			case (1) :
-				bookLookup();
-				break;
-			case (2) :
-				displayAddBook();
-				break;
-			case (3) :
-				//displayEditBook();
-				break;
-			case (4) :
-				break;
-			case (5) :
-				break;
-			default:
-				cout << "That is not a valid option. Please select from the menu.";
+		case (1) :
+			bookLookup();
+			break;
+		case (2) :
+			displayAddBook();
+			break;
+		case (3) :
+			//displayEditBook();
+			break;
+		case (4) :
+			break;
+		case (5) :
+			break;
+		default:
+			cout << "That is not a valid option. Please select from the menu.";
 		}
 	}
 }
@@ -317,13 +326,13 @@ Book* displayAttributeSearch(int attribute)
 		<< "*                                                                                                  *"
 		<< "*                                                                                                  *"
 		<< "*  Enter the " << attributeStr << " to search for: ";
-	getline(cin,inputValue,'\n');
+	getline(cin, inputValue, '\n');
 	foundBook = inventory.searchAttribute(attribute, inputValue);
 	if (foundBook != nullptr)
 	{
 		cout << "Here's an extra output to test the function: " << foundBook->getIsbn() << endl; // Debug Statement
 		cout << "****************************************************************************************************"
-			 << "*  ISBN: " << foundBook->getIsbn() << endl;
+			<< "*  ISBN: " << foundBook->getIsbn() << endl;
 		cout << "*  Title: " << foundBook->getTitle() << endl;
 		cout << "*  Author: " << foundBook->getAuthor() << endl;
 		cout << "*  Publisher: " << foundBook->getPublisher() << endl;
@@ -332,7 +341,7 @@ Book* displayAttributeSearch(int attribute)
 		cout << "*  Wholesale Cost: $" << fixed << setprecision(2) << foundBook->getWholesaleCost() << endl;
 		cout << "*  Retail Price: $" << fixed << setprecision(2) << foundBook->getRetailPrice() << endl;
 		cout << "*" << endl;
-		cout<< "****************************************************************************************************"
+		cout << "****************************************************************************************************"
 			<< "*                                                                                                  *"
 			<< "*                                                                                                  *"
 			<< "*   Select the record you would like to change:                                                    *"
@@ -353,7 +362,7 @@ Book* displayAttributeSearch(int attribute)
 			<< "*                                                                                                  *"
 			<< "*   8. Retail Price                                                                                *"
 			<< "*                                                                                                  *"
-			<< "*   9. Return to Inventory Menu                                                                    *" 
+			<< "*   9. Return to Inventory Menu                                                                    *"
 			<< "*                                                                                                  *"
 			<< "*                                                                                                  *"
 			<< "*                                                                                                  *"
@@ -448,7 +457,7 @@ void editBook(Book * editBook, int attribute)
 		//inventory.generateISBNList(); need to resort by retail price
 	case(9) :
 		break;
-	default :
+	default:
 		cout << "That is not a valid option. Please try again.";
 		system("pause");
 	}
