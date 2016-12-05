@@ -26,7 +26,6 @@ Inventory::~Inventory()
 	for (int i = 0; i < numBooks; i++)
 	{
 		delete books[i];
-		delete lists[i];
 	}
 	for (int i = 0; i < numUsedBooks; i++)
 	{

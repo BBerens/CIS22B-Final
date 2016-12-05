@@ -393,6 +393,7 @@ void editBook(Book * editBook, int attribute)
 	long long tempISBN;
 	int tempInt;
 	double tempDouble;
+	tm tempDate;
 	system("cls");
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
@@ -446,7 +447,9 @@ void editBook(Book * editBook, int attribute)
 		//inventory.generateISBNList(); need to resort by publisher
 		break;
 	case(5) :
-		//This is tricky. Need to get date added in specific format and convert it to time_t
+		cout << "Enter the date the book was added in MM/DD/YY format. Include the '/':";
+		getline(cin, tempStr);
+		// Need to parse the input string and store each data point in the tm struct
 		break;
 	case(6) :
 		cout << "Enter the new Quantity On-hand for this book: ";
