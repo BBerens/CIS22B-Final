@@ -12,6 +12,7 @@
 #include "Order.h"
 #include <ctime>
 #include <string>
+#include <cstring>
 #define TAX_RATE .0875
 
 
@@ -33,7 +34,8 @@ void editBook(Book *, int);
 void displayReport(int);
 // access inventory class data 
 Inventory inventory;
-enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY};
+// create enum data type to hold data for book attributes
+enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED };
 
 
 int main(void)
@@ -67,7 +69,7 @@ int main(void)
 	inventory.writeBooks();
 	return 0;
 }
-
+// 
 void cashierModule(void)
 {
 	Order newOrder;
@@ -155,8 +157,11 @@ void displayCashierScreen(Order* currentOrder)
 	int bookCounter = 0; // Variable for below while loop
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
+	// Collect user Input
+	//cout << "Please enter the ISBN of the book you are buying: ";
 
 	cin.ignore();
+
 	while (1)
 	{
 		// Collect user Input
@@ -178,26 +183,35 @@ void displayCashierScreen(Order* currentOrder)
 				cout << "Title: " << currentBook->getTitle() << endl;
 				cout << "Author: " << currentBook->getAuthor() << endl;
 				cout << "Publisher: " << currentBook->getPublisher() << endl;
-				
-				// Collect the quantity of books being purchased by the user
+
 				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
 				cin >> purchaseQuantity;
+				try {
 
-				// Add the current book to the order
-				currentOrder->addBook(currentBook, purchaseQuantity);
+				if (purchaseQuantity > currentBook-> getQuantity()||purchaseQuantity < 0)
+		//		if (!isdigit(purchaseQuantity))  // This is not working
+					{
+						string exceptionString = "Error: Invalid Quantity!";
+						throw exceptionString;
+					}
+
+					currentOrder->addBook(currentBook, purchaseQuantity);
+				}
+				catch (string exceptionString)
+				{
+					cout << exceptionString << endl;
+				}
+
 				cin.ignore();
 			}
 			else{
-				// Check that the ISBN is valid
 				cout << "This ISBN is invalid, please try another ISBN: " << endl;
 			}
 		}
 	}
 
-	// Clear the last screen
 	system("cls");
-
-	// Display receipt format
+	// Display receipt
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*   Serendipity Book Sellers                                                                                           *"
@@ -208,8 +222,7 @@ void displayCashierScreen(Order* currentOrder)
 		<< "*   Qty   ISBN           Title                             Price               Total                                   *"
 		<< "*   ___________________________________________________________________________________________________________________*";
 	cout << endl;
-
-	// Print line by line items for the receipt
+	// using a while loop to call the function from order class
 	while (bookCounter < currentOrder->getNumBooks())
 	{
 		currentBook = currentOrder->getBook(bookCounter);
@@ -218,15 +231,14 @@ void displayCashierScreen(Order* currentOrder)
 			<< setw(17) << right << currentBook->getIsbn() << "  "
 			<< setw(33) << left << currentBook->getTitle().substr(0, 32)
 			<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
-		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice(); // Calculate line total
-		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice(); // Calculate subtotal
+		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
+		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
 		bookCounter++;
 		cout << "$" << setw(15) << lineTotal << "                         *";
-		tax = subtotal*TAX_RATE; // Calculate the tax
-		total = subtotal + tax; // Calculate the total
+		tax = subtotal*TAX_RATE;
+		total = subtotal * (1 + TAX_RATE);
 	}
 
-	// Print out subtotal
 	cout << "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                     Subtotal: $" << setw(6) << right
@@ -278,6 +290,7 @@ void inventoryModule(void)
 void bookLookup(void)
 {
 	int attributeSelection;
+	Book * foundBook;
 	displayBookLookup();
 	cin >> attributeSelection;
 	cin.ignore();
@@ -380,7 +393,6 @@ void editBook(Book * editBook, int attribute)
 	long long tempISBN;
 	int tempInt;
 	double tempDouble;
-	Book** bookList;
 	system("cls");
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
@@ -412,23 +424,26 @@ void editBook(Book * editBook, int attribute)
 		cout << "Enter the new ISBN for this book: ";
 		getline(cin, tempStr);
 		tempISBN = stoll(tempStr);
+		editBook->setIsbn(tempISBN);
+		inventory.generateAttributeList(ISBN);
 		break;
 	case (2) :
 		cout << "Enter the new Title for this book: ";
 		getline(cin, tempStr);
 		editBook->setTitle(tempStr);
+		//inventory.generateISBNList(); need to resort by title
 		break;
 	case (3) :
 		cout << "Enter the new Author for this book: ";
 		getline(cin, tempStr);
 		editBook->setAuthor(tempStr);
-		bookList = inventory.getAttributeList(AUTHOR);
+		//inventory.generateISBNList(); need to resort by author
 		break;
 	case (4) :
 		cout << "Enter the new Publisher for this book: ";
 		getline(cin, tempStr);
 		editBook->setPublisher(tempStr);
-		bookList = inventory.getAttributeList(PUBLISHER);
+		//inventory.generateISBNList(); need to resort by publisher
 		break;
 	case(5) :
 		//This is tricky. Need to get date added in specific format and convert it to time_t
@@ -714,11 +729,7 @@ void displayReportsMenu(void)
 		<< "*                                                7. Listing by Age                                                     *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                8. Listing by Quantity                                                *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                9. Return to the Main Menu                                            *" 
-		<< "*                                                                                                                      *" 
+		<< "*                                                8. Return to the Main Menu                                            *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
