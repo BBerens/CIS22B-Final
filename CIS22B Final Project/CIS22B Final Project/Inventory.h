@@ -12,8 +12,8 @@ using namespace std;
 class Inventory
 {
 private:
-	int bookArrSize = 100;
-	int usedBookArrSize = 100;
+	int bookArrSize = 10;
+	int usedBookArrSize = 10;
 	Book** books = new Book*[bookArrSize];	// unsorted array, in order of when they were added
 	UsedBook** usedBooks = new UsedBook*[usedBookArrSize];
 	int numBooks;
@@ -25,6 +25,7 @@ public:
 	Book* addBook(void);
 	UsedBook* addUsedBook(void);
 	UsedBook* addUsedBook(int);
+	UsedBook* addUsedBook(Book*);
 	Book* getBook(int);	// temporary
 	int getNumUsedBooks(void) const;
 
@@ -39,12 +40,13 @@ public:
 	Book** generateAttributeList(int);
 	Book** getAttributeList(int);
 	int getNumBooks(void);
-	Book * searchAttribute(int, string) const;
-	void Inventory::updateLists();
+	Book* searchAttribute(int, string) const;
+	void updateLists();
 	int strSearch(int, string, Book**);
 	void deleteBook(Book*);
 
-	void increaseArrSize();
+	void increaseNewArrSize();
+	void increaseUsedArrSize();
 
 };
 #endif

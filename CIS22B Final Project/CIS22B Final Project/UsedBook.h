@@ -14,11 +14,13 @@ public:
 	static unsigned int usedBooks;
 	UsedBook();
 	UsedBook(int);
+	UsedBook(Book*);
 	~UsedBook();
 	
 	void setCondition(int);
 	int getCondition(void) const;
 
+	double getWholesaleCost(void) const;
 	double getRetailPrice(void) const;
 
 	virtual void print(void);

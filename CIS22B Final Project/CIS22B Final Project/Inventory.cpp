@@ -41,26 +41,52 @@ Book* Inventory::addBook(void)
 	books[numBooks] = newBook;
 	newBook->setBookNumber(numBooks);
 	numBooks++;
+	if (numBooks >= bookArrSize - 2)
+	{
+		increaseNewArrSize();
+	}
 	return newBook;
 }
 
 UsedBook* Inventory::addUsedBook(int condition)
 {
-	// when we add a new book we should generate a new dynamically allocated array of book pointers(books)
 	UsedBook* newUsedBook;
-	newUsedBook = new UsedBook(condition); // temporary, need to do this with dynamic allocation
+	newUsedBook = new UsedBook(condition); 
 	usedBooks[numUsedBooks] = newUsedBook;
+	newUsedBook->setBookNumber(numUsedBooks);
 	numUsedBooks++;
+	if (numUsedBooks >= usedBookArrSize - 2)
+	{
+		increaseUsedArrSize();
+	}
 	return newUsedBook;
 }
 
+UsedBook* Inventory::addUsedBook(Book* newBook)
+{
+	UsedBook* newUsedBook;
+	newUsedBook = new UsedBook(newBook);
+	usedBooks[numUsedBooks] = newUsedBook;
+	newUsedBook->setBookNumber(numUsedBooks);
+	numUsedBooks++;
+	if (numUsedBooks >= usedBookArrSize - 2)
+	{
+		increaseUsedArrSize();
+	}
+	return newUsedBook;
+}
 UsedBook* Inventory::addUsedBook(void)
 {
-	// when we add a new book we should generate a new dynamically allocated array of book pointers(books)
+
 	UsedBook* newUsedBook;
-	newUsedBook = new UsedBook(); // temporary, need to do this with dynamic allocation
+	newUsedBook = new UsedBook(); 
 	usedBooks[numUsedBooks] = newUsedBook;
+	newUsedBook->setBookNumber(numUsedBooks);
 	numUsedBooks++;
+	if (numUsedBooks >= usedBookArrSize - 2)
+	{
+		increaseUsedArrSize();
+	}
 	return newUsedBook;
 }
 
@@ -218,13 +244,46 @@ void Inventory::deleteBook(Book* deletionBook)
 {
 	Book** tempBooks;
 	tempBooks = new Book*;
-	int deleteBookNum =deletionBook->getBookNumber();
-	delete books[deleteBookNum];
-	--numBooks;
-	for (int i = deleteBookNum; i < numBooks; i++)
+	int deleteBookNum =deletionBook->getBookNumber(); // get the book number of the book to be deleted
+	delete books[deleteBookNum];	// delete that book
+	--numBooks;		// decrement the number of books
+	for (int i = deleteBookNum; i < numBooks; i++)	// start at where the book was deleted and copy each book pointer from the index one more
 	{
 		books[i] = books[i + 1];
 	}
-	updateLists();
+	updateLists();	// update all the sorted lists to account for the deleted book
 }
 
+void Inventory::increaseNewArrSize()
+{
+	bookArrSize *= 2;	// double the size of the book array
+	Book** tempBooks = new Book*[bookArrSize];
+	for (int i = 0; i < numBooks; i++)
+	{
+		tempBooks[i] = books[i];
+	}
+	delete books;
+	books = new Book*[bookArrSize];
+	for (int i = 0; i < numBooks; i++)
+	{
+		books[i] = tempBooks[i];
+	}
+	delete tempBooks;
+}
+
+void Inventory::increaseUsedArrSize()
+{
+	usedBookArrSize *= 2;	// double the size of the book array
+	UsedBook** tempBooks = new UsedBook*[usedBookArrSize];
+	for (int i = 0; i < numUsedBooks; i++)
+	{
+		tempBooks[i] = usedBooks[i];
+	}
+	delete usedBooks;
+	usedBooks = new UsedBook*[bookArrSize];
+	for (int i = 0; i < numUsedBooks; i++)
+	{
+		usedBooks[i] = tempBooks[i];
+	}
+	delete tempBooks;
+}

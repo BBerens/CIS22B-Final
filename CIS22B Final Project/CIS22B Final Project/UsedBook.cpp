@@ -7,6 +7,18 @@ UsedBook::UsedBook(int n1) : Book()
 	bookCondition = static_cast<condition>(n1); 
 }
 
+UsedBook::UsedBook(Book* bookPtr) : Book()
+{
+	isbn = bookPtr->getIsbn();
+	title = bookPtr->getTitle();
+	author = bookPtr->getAuthor();
+	publisher = bookPtr->getPublisher();
+	quantity = bookPtr->getQuantity();
+	wholesaleCost = bookPtr->Book::getWholesaleCost();
+	retailPrice = bookPtr->Book::getRetailPrice();
+	dateAdded = bookPtr->getDateAdded();
+}
+
 UsedBook::~UsedBook(){ Book::~Book(); }
 
 void UsedBook::setCondition(int n1)
@@ -21,6 +33,11 @@ int UsedBook::getCondition(void) const
 double UsedBook::getRetailPrice(void) const
 {
 	return retailPrice * (0.8 - (bookCondition * 0.1));
+}
+
+double UsedBook::getWholesaleCost(void) const
+{
+	return retailPrice * 0.25;
 }
 
 fstream& operator << (fstream& file, UsedBook& outBook)
@@ -67,11 +84,11 @@ fstream& operator >> (fstream& file, UsedBook& inBook)
 
 void UsedBook::print(void)
 {
-	cout << setw(13) << isbn;
-	cout << "  " << setw(27) << left << title.substr(0, 27);
-	cout << setw(15) << left << author.substr(0, 15);
-	cout << setw(15) << left << publisher.substr(0, 15);
-	cout << setw(4) << left << "Used" << "  ";
+	cout << setw(13) << left << isbn;
+	cout << "  " << setw(26) << left << title.substr(0, 25);
+	cout << setw(15) << left << author.substr(0, 14);
+	cout << setw(13) << left << publisher.substr(0, 13);
+	cout << " Used  ";
 	switch (bookCondition)
 	{
 	case(LIKE_NEW) :
@@ -89,8 +106,8 @@ void UsedBook::print(void)
 	default:
 		cout << "         ";
 	}
-	cout << " " << setw(3) << quantity;
-	cout << "  $" << fixed << setprecision(2) << wholesaleCost;
-	cout << "   $" << fixed << setprecision(2) << getRetailPrice();
-	cout << "   " << setw(10) << getDateAddedStr() << endl;
+	cout << setw(3) << quantity;
+	cout << "  $" << right << fixed << setw(6) << setprecision(2) << getWholesaleCost();
+	cout << "   $" << fixed << setw(6) << setprecision(2) << getRetailPrice();
+	cout << setw(9) << right << getDateAddedStr() << endl;
 }

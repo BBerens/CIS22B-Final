@@ -125,7 +125,7 @@ string Book::getAttribute(int input) const
 		output = publisher;
 		break;
 	case (WHOLESALE_COST) :
-		output = to_string(wholesaleCost);
+		output = to_string(getWholesaleCost());
 		break;
 	case (RETAIL_PRICE) :
 		output = to_string(getRetailPrice());
@@ -145,13 +145,13 @@ string Book::getAttribute(int input) const
 void Book::print(void)
 {
 	cout << setw(13) << isbn;
-	cout << "  " << setw(27) << left << title.substr(0,27);
-	cout << setw(15) << left << author.substr(0, 15);
-	cout << setw(15) << left << publisher.substr(0, 15);
+	cout << "  " << setw(26) << left << title.substr(0,25);
+	cout << setw(15) << left << author.substr(0, 14);
+	cout << setw(13) << left << publisher.substr(0, 13);
 	cout << " New            " << setw(3) << quantity;
-	cout << "  $" << fixed << setprecision(2) << wholesaleCost;
-	cout << "   $" << fixed << setprecision(2) << retailPrice;
-	cout << "   " << setw(10) << getDateAddedStr() << endl;
+	cout << "  $" << right << fixed << setw(6) << setprecision(2) << wholesaleCost;
+	cout << "   $" << fixed << setw(6) << setprecision(2) << retailPrice;
+	cout << right << setw(9) << getDateAddedStr() << endl;
 }
 
 void Book::setBookNumber(int bookNum)

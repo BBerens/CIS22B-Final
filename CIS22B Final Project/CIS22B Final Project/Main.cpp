@@ -353,14 +353,14 @@ void displayAttributeSearch(int attribute)
 		<< "*  Enter the " << attributeStr << " to search for: ";
 	getline(cin, inputValue, '\n');
 	cout << "************************************************************************************************************************"
-		<< "                                                                          New/                Wholesale Retail   Date   "
-		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
+		<< "                                                                          New/                Wholesale  Retail   Date  "
+		<< " #  ISBN           Title                     Author         Publisher     Used Condition Qty    Cost     Price    Added "
 		<< "************************************************************************************************************************";
 	searchResults = new Book*;
 	numBooksFound = inventory.strSearch(attribute, inputValue, searchResults);
 	if (numBooksFound == 0)
 	{
-		cout << "No Books Found";
+		cout << "No Books Found" << endl;
 		system("pause");
 		displayBookLookup();
 	}
@@ -383,11 +383,9 @@ void displayAttributeSearch(int attribute)
 			editBook(searchResults[bookSelection - 1], attributeSelection);
 			displayBookLookup();
 		}
-
-		/*for (int i = 0; i < numBooksFound; i++)
-		{
-			delete searchResults[i];
-		}*/
+		else{
+			displayBookLookup();
+		}
 	}
 }
 
@@ -413,14 +411,14 @@ void editBook(Book * editBook, int attribute)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
-		<< "*  ISBN: " << setw(110) << editBook->getIsbn() << "*"
-		<< "*  Title: " << setw(109) << editBook->getTitle().substr(0, 109) << "*"
-		<< "*  Author: " << setw(108) << editBook->getAuthor() << "*"
-		<< "*  Publisher: " << setw(105) << editBook->getPublisher() << "*"
-		<< "*  Date Added: " << setw(104) << editBook->getDateAddedStr() << "*"
-		<< "*  Quantity On-hand: " << setw(98) << editBook->getQuantity() << "*"
-		<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << editBook->getWholesaleCost() << "*"
-		<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << editBook->getRetailPrice() << "*"
+		<< "*  ISBN:               " << left << setw(96) << editBook->getIsbn() << "*"
+		<< "*  Title:              " << setw(96) << editBook->getTitle().substr(0, 109) << "*"
+		<< "*  Author:             " << setw(96) << editBook->getAuthor() << "*"
+		<< "*  Publisher:          " << setw(96) << editBook->getPublisher() << "*"
+		<< "*  Date Added:         " << setw(96) << editBook->getDateAddedStr() << "*"
+		<< "*  Quantity On-hand:   " << setw(96) << editBook->getQuantity() << "*"
+		<< "*  Wholesale Cost:    $" << setw(96) << fixed << setprecision(2) << editBook->getWholesaleCost() << "*"
+		<< "*  Retail Price:      $" << setw(96) << fixed << setprecision(2) << editBook->getRetailPrice() << "*"
 		<< "*                                                                                                                      *"
 	    << "************************************************************************************************************************";
 	switch (attribute)
@@ -540,27 +538,95 @@ void displayAddNewBook(void)
 	string userInput;
 	Book* currentBook;
 	string tempStr;
-	int condition;
 	system("cls");
-	cout << "Enter the 13 digit ISBN for the book to be added: ";
-	getline(cin, userInput); 
-	currentBook = new Book;
-	currentBook->setIsbn(strtoll(userInput.c_str(), nullptr, 10)); // doesn't perform any checks on what the user inputs. Needs to be broken up
-	cout << "Enter the title of the book or press q and press enter to quit: ";
-	getline(cin, userInput); // check less than 200 chars. Or whatever the max is.
-	currentBook->setTitle(userInput);
-	cout << "Enter the name of the author of the book or press q and press enter to quit: "; // what do I do if they want to enter multiple authors?
-	getline(cin, userInput);
-	currentBook->setAuthor(userInput);
-	cout << "Enter the publisher of the book or press q and press enter to quit: ";
-	getline(cin, userInput);
-	currentBook->setPublisher(userInput);
-	cout << "Enter the wholesale cost of the book or press q and press enter to quit: ";
-	getline(cin, userInput);
-	currentBook->setWholesaleCost(strtod(userInput.c_str(), nullptr));
-	cout << "Enter the retail price of the book or press q and press enter to quit: ";
-	getline(cin, userInput);
-	currentBook->setRetailPrice(strtod(userInput.c_str(), nullptr));
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                    Add a New Book                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "* Enter the 13 digit ISBN for the book to be added: ";
+
+	getline(cin, tempStr);
+	currentBook = inventory.searchAttribute(ISBN, tempStr);
+	if (currentBook != nullptr)
+	{
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "* A book with that ISBN is in the database with the following information:                                             *"
+			<< "************************************************************************************************************************"
+			<< "*  ISBN:               " << left << setw(96) << currentBook->getIsbn() << "*"
+			<< "*  Title:              " << setw(96) << currentBook->getTitle().substr(0, 109) << "*"
+			<< "*  Author:             " << setw(96) << currentBook->getAuthor() << "*"
+			<< "*  Publisher:          " << setw(96) << currentBook->getPublisher() << "*"
+			<< "*  Date Added:         " << setw(96) << currentBook->getDateAddedStr() << "*"
+			<< "*  Quantity On-hand:   " << setw(96) << currentBook->getQuantity() << "*"
+			<< "*  Wholesale Cost:    $" << setw(96) << fixed << setprecision(2) << currentBook->getWholesaleCost() << "*"
+			<< "*  Retail Price:      $" << setw(96) << fixed << setprecision(2) << currentBook->getRetailPrice() << "*"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
+			<< "* If you wish to edit the book go through the Search Books Menu" << endl;
+		system("pause");
+	}
+	else
+	{
+		currentBook = inventory.addBook();
+		currentBook->setIsbn(stoll(tempStr));
+		cout << "*                                                                                                                      *"
+			<< "*  No book with that ISBN could be located in the database. A new book will be created.                                *"
+			<< "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the title of the book : ";
+		getline(cin, userInput);
+		currentBook->setTitle(userInput);
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the name of the author of the book: ";
+		getline(cin, userInput);
+		currentBook->setAuthor(userInput);
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the publisher of the book: ";
+		getline(cin, userInput);
+		currentBook->setPublisher(userInput);
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the wholesale cost of the book: ";
+		getline(cin, userInput);
+		currentBook->setWholesaleCost(stod(userInput));
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the retail price of the book: ";
+		getline(cin, userInput);
+		currentBook->setRetailPrice(stod(userInput));
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the quantity of books on-hand: ";
+		getline(cin, userInput);
+		currentBook->setQuantity(stoi(userInput));
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                          Book has been added to the database                                         *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************";
+		system("pause");
+	}
 	inventory.updateLists();
 }
 
@@ -568,63 +634,137 @@ void displayAddUsedBook(void)
 {
 	string userInput;
 	Book* currentBook;
+	UsedBook* newUsedBook;
 	string tempStr;
 	int condition;
 	system("cls");
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                   Add a Used Book                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "* Enter the 13 digit ISBN for the book to be added: ";
 
-	cout << "Enter the 13 digit ISBN for the book to be added: ";
 	getline(cin, tempStr);
 	currentBook = inventory.searchAttribute(ISBN, tempStr);
 	if (currentBook != nullptr)
 	{
-		cout << "A book with that ISBN is in the database with the following information." << endl;
-		cout << "Add a used copy of this book? Y/N: ";
+		cout << "*                                                                                                                      *"
+			<< "* A book with that ISBN is in the database with the following information:                                             *" 
+			<< "************************************************************************************************************************"
+			<< "*  ISBN:               " << left << setw(96) << currentBook->getIsbn() << "*"
+			<< "*  Title:              " << setw(96) << currentBook->getTitle().substr(0, 109) << "*"
+			<< "*  Author:             " << setw(96) << currentBook->getAuthor() << "*"
+			<< "*  Publisher:          " << setw(96) << currentBook->getPublisher() << "*"
+			<< "*  Date Added:         " << setw(96) << currentBook->getDateAddedStr() << "*"
+			<< "*  Quantity On-hand:   " << setw(96) << currentBook->getQuantity() << "*"
+			<< "*  Wholesale Cost:    $" << setw(96) << fixed << setprecision(2) << currentBook->getWholesaleCost() << "*"
+			<< "*  Retail Price:      $" << setw(96) << fixed << setprecision(2) << currentBook->getRetailPrice() << "*"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
+			<< "* Add a used copy of this book? Y/N: ";
 		getline(cin, tempStr);
-		if (tempStr == "Y" || tempStr == "N")
+		if (tempStr == "Y" || tempStr == "y")
 		{
-			inventory.addUsedBook();
-			cout << "Please enter the condition of the book from the menu and press enter." << endl;
-			cout << "1: Like new, no visible damage." << endl;
-			cout << "2: Good condition, small folds in pages, slightly worn cover." << endl;
-			cout << "3. Fair condition, obvious sign of usage, crease in binding or cover." << endl;
-			cout << "4. Poor condition, significant wear, possible water marks or ripped pages." << endl;
+			newUsedBook = inventory.addUsedBook(currentBook);
+			cout << "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*   Enter the Quantity of books on-hand:";
 			getline(cin, tempStr);
-			
+			newUsedBook->setQuantity(stoi(tempStr));
+			cout << "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*   Please enter the condition of the book from the menu and press enter.                                              *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*   1: Like new, no visible damage.                                                                                    *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*   2: Good condition, small folds in pages, slightly worn cover.                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*   3. Fair condition, obvious sign of usage, crease in binding or cover.                                              *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*   4. Poor condition, significant wear, possible water marks or ripped pages.                                         *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "*                                                                                                                      *"
+				<< "************************************************************************************************************************";
+			cout << "Enter the condition: ";
+			getline(cin, tempStr);
+			condition = stoi(tempStr);
+			newUsedBook->setCondition(condition);			
 		}
 	}
 	else
 	{
-		cout << "No book with that ISBN could be located in the database";
+		newUsedBook = inventory.addUsedBook();
+		newUsedBook->setIsbn(stoll(tempStr));
+		cout << "*                                                                                                                      *" 
+			<< "*  No book with that ISBN could be located in the database. A new book will be created.                                *"
+			<< "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the title of the book : ";
+		getline(cin, userInput); 
+		newUsedBook->setTitle(userInput);
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the name of the author of the book: ";
+		getline(cin, userInput);
+		newUsedBook->setAuthor(userInput);
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the publisher of the book: ";
+		getline(cin, userInput);
+		newUsedBook->setPublisher(userInput);
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the wholesale cost of the book: ";
+		getline(cin, userInput);
+		newUsedBook->setWholesaleCost(stod(userInput));
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the retail price of the book: ";
+		getline(cin, userInput);
+		newUsedBook->setRetailPrice(stod(userInput));
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Enter the quantity of books on-hand: ";
+		getline(cin, userInput);
+		newUsedBook->setQuantity(stoi(userInput));
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Please enter the condition of the book from the menu below and press enter.                                        *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   1: Like new, no visible damage.                                                                                    *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   2: Good condition, small folds in pages, slightly worn cover.                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   3. Fair condition, obvious sign of usage, crease in binding or cover.                                              *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   4. Poor condition, significant wear, possible water marks or ripped pages.                                         *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
+			<< "Enter the condition: ";
+		getline(cin, userInput);
+		condition = stoi(userInput);
+		newUsedBook->setCondition(condition);
 	}
-
-
-	/*	cout << "Please enter the condition of the book from the menu and press enter." << endl;
-		cout << "1: Like new, no visible damage." << endl;
-		cout << "2: Good condition, small folds in pages, slightly worn cover." << endl;
-		cout << "3. Fair condition, obvious sign of usage, crease in binding or cover." << endl;
-		cout << "4. Poor condition, significant wear, possible water marks or ripped pages." << endl;
-		cin >> condition;
-		cin.ignore();
-		currentBook = inventory.addUsedBook(condition);
-	cout << "Enter the 13 digit ISBN for the book to be added or press q and press enter to quit: ";
-	getline(cin, userInput); // check for quit and follow up actions, also needs formatting
-	currentBook->setIsbn(strtoll(userInput.c_str(), nullptr, 10)); // doesn't perform any checks on what the user inputs. Needs to be broken up
-	cout << "Enter the title of the book or press q and press enter to quit: ";
-	getline(cin, userInput); // check less than 200 chars. Or whatever the max is.
-	currentBook->setTitle(userInput);
-	cout << "Enter the name of the author of the book or press q and press enter to quit: "; // what do I do if they want to enter multiple authors?
-	getline(cin, userInput);
-	currentBook->setAuthor(userInput);
-	cout << "Enter the publisher of the book or press q and press enter to quit: ";
-	getline(cin, userInput);
-	currentBook->setPublisher(userInput);
-	cout << "Enter the wholesale cost of the book or press q and press enter to quit: ";
-	getline(cin, userInput);
-	currentBook->setWholesaleCost(strtod(userInput.c_str(), nullptr));
-	cout << "Enter the retail price of the book or press q and press enter to quit: ";
-	getline(cin, userInput);
-	currentBook->setRetailPrice(strtod(userInput.c_str(), nullptr));
-	inventory.updateLists();*/
+	inventory.updateLists();
 }
 
 void displayInventoryMenu(void)
@@ -696,15 +836,15 @@ void displayBookInformationScreen(Book * displayBook)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
-		<< "*  ISBN: " << setw(110) << displayBook->getIsbn() << "*"
-		<< "*  Title: " << setw(109) << displayBook->getTitle().substr(0,109) << "*"
-	    << "*  Author: " << setw(108) << displayBook->getAuthor() << "*"
-	    << "*  Publisher: " << setw(105) <<  displayBook->getPublisher() << "*"
-	    << "*  Date Added: " << setw(104) << displayBook->getDateAddedStr() << "*"
-	    << "*  Quantity On-hand: " << setw(98) << displayBook->getQuantity() << "*"
-		<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << displayBook->getWholesaleCost() << "*"
-		<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << displayBook->getRetailPrice() << "*"
-	    << "*                                                                                                                      *"
+		<< "*  ISBN:               " << left << setw(96) << displayBook->getIsbn() << "*"
+		<< "*  Title:              " << setw(96) << displayBook->getTitle().substr(0, 109) << "*"
+		<< "*  Author:             " << setw(96) << displayBook->getAuthor() << "*"
+		<< "*  Publisher:          " << setw(96) << displayBook->getPublisher() << "*"
+		<< "*  Date Added:         " << setw(96) << displayBook->getDateAddedStr() << "*"
+		<< "*  Quantity On-hand:   " << setw(96) << displayBook->getQuantity() << "*"
+		<< "*  Wholesale Cost:    $" << setw(96) << fixed << setprecision(2) << displayBook->getWholesaleCost() << "*"
+		<< "*  Retail Price:      $" << setw(96) << fixed << setprecision(2) << displayBook->getRetailPrice() << "*"
+		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -787,12 +927,12 @@ void displayReport(int listSelection)
 	Book** bookList = inventory.getAttributeList(listSelection - 1);
 	system("cls");
 	cout << "************************************************************************************************************************"
-		<< "                                                                          New/                Wholesale Retail   Date   "
-		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
+		<< "                                                                          New/                Wholesale  Retail   Date  "
+		<< " #  ISBN           Title                     Author         Publisher     Used Condition Qty    Cost     Price    Added "
 		<< "************************************************************************************************************************";
 	for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)
 	{
-		cout << i + 1 << " ";
+		cout << setw(3) << right << i + 1 << " ";
 		bookList[i]->print();
 	}
 	system("pause");
@@ -849,7 +989,7 @@ void displayDeleteBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
-		<< "*  ISBN: " << setw(110) << deletionBook->getIsbn() << "*"
+		<< "*  ISBN: " << left << setw(110) << deletionBook->getIsbn() << "*"
 		<< "*  Title: " << setw(109) << deletionBook->getTitle().substr(0, 109) << "*"
 		<< "*  Author: " << setw(108) << deletionBook->getAuthor() << "*"
 		<< "*  Publisher: " << setw(105) << deletionBook->getPublisher() << "*"

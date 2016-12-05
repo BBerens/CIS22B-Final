@@ -48,7 +48,7 @@ public:
 	string getDateAddedStr(void) const;
 	time_t getDateAdded(void) const;
 	int getQuantity(void) const;
-	double getWholesaleCost(void) const;
+	virtual double getWholesaleCost(void) const;
 	virtual double getRetailPrice(void) const;
 	string getAttribute(int) const;
 	int getBookNumber(void) const;
