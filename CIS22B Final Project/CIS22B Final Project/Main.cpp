@@ -71,7 +71,7 @@ int main(void)
 	inventory.writeBooks();
 	return 0;
 }
-// 
+
 void cashierModule(void)
 {
 	Order newOrder;
@@ -79,7 +79,7 @@ void cashierModule(void)
 }
 
 
-
+// display main menu
 void displayMainMenu(void)
 {
 	system("cls");
@@ -188,8 +188,8 @@ void displayCashierScreen(Order* currentOrder)
 
 				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
 				cin >> purchaseQuantity;
+				// Exception handling for purchaseQuantity input
 				try {
-
 				if (purchaseQuantity > currentBook-> getQuantity()||purchaseQuantity < 0)
 		//		if (!isdigit(purchaseQuantity))  // This is not working
 					{
