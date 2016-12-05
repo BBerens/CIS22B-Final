@@ -232,6 +232,7 @@ void displayCashierScreen(Order* currentOrder)
 			<< setw(33) << left << currentBook->getTitle().substr(0, 32)
 			<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
 		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
+		currentBook->setQuantity(currentBook->getQuantity() - currentOrder->getQuantity(bookCounter)); // Subtract the quantity of books being purchased
 		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
 		bookCounter++;
 		cout << "$" << setw(15) << lineTotal << "                         *";
