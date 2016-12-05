@@ -153,3 +153,13 @@ void Book::print(void)
 	cout << "   $" << fixed << setprecision(2) << retailPrice;
 	cout << "   " << setw(10) << getDateAddedStr() << endl;
 }
+
+void Book::setBookNumber(int bookNum)
+{
+	bookNumber = bookNum;
+}
+
+int Book::getBookNumber(void) const
+{
+	return bookNumber;
+}

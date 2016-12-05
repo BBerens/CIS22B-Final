@@ -23,13 +23,13 @@ Inventory::~Inventory()
 	{
 		delete lists[i];
 	}
-	for (int i = 0; i < numBooks; i++)
+	for (int j = 0; j < numBooks; j++)
 	{
-		delete books[i];
+		delete books[j];
 	}
-	for (int i = 0; i < numUsedBooks; i++)
+	for (int k = 0; k < numUsedBooks; k++)
 	{
-		delete usedBooks[i];
+		delete usedBooks[k];
 	}
 }
 
@@ -39,6 +39,7 @@ Book* Inventory::addBook(void)
 	Book* newBook;
 	newBook = new Book(); // temporary, need to do this with dynamic allocation
 	books[numBooks] = newBook;
+	newBook->setBookNumber(numBooks);
 	numBooks++;
 	return newBook;
 }
@@ -184,12 +185,12 @@ Book * Inventory::searchAttribute(int attribute, string value) const
 
 void Inventory::updateLists()
 {
-	
+	//delete []lists;
 	for (int i = 0; i < 8; i++)
 	{
-		//delete lists[i];
 		lists[i] = new Book*[numBooks];
 		lists[i] = generateAttributeList(i);
+		//generateAttributeList(i, lists[i]);
 	}
 }
 
@@ -211,5 +212,19 @@ int Inventory::strSearch(int attribute, string value, Book** searchList)
 int Inventory::getNumUsedBooks(void) const
 {
 	return numUsedBooks;
+}
+
+void Inventory::deleteBook(Book* deletionBook)
+{
+	Book** tempBooks;
+	tempBooks = new Book*;
+	int deleteBookNum =deletionBook->getBookNumber();
+	delete books[deleteBookNum];
+	--numBooks;
+	for (int i = deleteBookNum; i < numBooks; i++)
+	{
+		books[i] = books[i + 1];
+	}
+	updateLists();
 }
 

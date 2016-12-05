@@ -27,7 +27,9 @@ void displayInventoryMenu(void);
 void displayBookInformationScreen(Book *);
 void displayReportsMenu(void);
 void displayBookLookup(void);
-void displayAddBook(void);
+void displayAddNewBook(void);
+void displayAddUsedBook(void);
+void displayDeleteBook(void);
 void bookLookup(void);
 void displayAttributeSearch(int);
 void editBook(Book *, int);
@@ -273,12 +275,13 @@ void inventoryModule(void)
 			bookLookup();
 			break;
 		case (2) :
-			displayAddBook();
+			displayAddNewBook();
 			break;
 		case (3) :
-			//displayEditBook();
+			displayAddUsedBook();
 			break;
 		case (4) :
+			displayDeleteBook();
 			break;
 		case (5) :
 			break;
@@ -291,7 +294,7 @@ void inventoryModule(void)
 void bookLookup(void)
 {
 	int attributeSelection;
-	Book * foundBook;
+	//Book * foundBook;
 	displayBookLookup();
 	cin >> attributeSelection;
 	cin.ignore();
@@ -394,7 +397,7 @@ void editBook(Book * editBook, int attribute)
 	long long tempISBN;
 	int tempInt;
 	double tempDouble;
-	tm tempDate;
+	//tm tempDate;
 	system("cls");
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
@@ -427,7 +430,6 @@ void editBook(Book * editBook, int attribute)
 		getline(cin, tempStr);
 		tempISBN = stoll(tempStr);
 		editBook->setIsbn(tempISBN);
-		inventory.generateAttributeList(ISBN);
 		break;
 	case (2) :
 		cout << "Enter the new Title for this book: ";
@@ -533,26 +535,70 @@ void displayBookLookup(void)
 		<< " Enter Your Choice:";
 }
 
-void displayAddBook(void)
+void displayAddNewBook(void)
 {
 	string userInput;
 	Book* currentBook;
+	string tempStr;
 	int condition;
 	system("cls");
-	cout << "Enter 'N' for a new book and 'U' for a used book and press enter: ";
-	cin >> userInput;
-	cin.ignore();
-	while (userInput != "N" && userInput != "n" && userInput != "U" && userInput != "u")
-	{
-		cout << "That is not a valid entry.";
-		cout << "Enter 'N' for a new book and 'U' for a used book and press enter: ";
-		cin >> userInput;
-		cin.ignore();
+	cout << "Enter the 13 digit ISBN for the book to be added: ";
+	getline(cin, userInput); 
+	currentBook = new Book;
+	currentBook->setIsbn(strtoll(userInput.c_str(), nullptr, 10)); // doesn't perform any checks on what the user inputs. Needs to be broken up
+	cout << "Enter the title of the book or press q and press enter to quit: ";
+	getline(cin, userInput); // check less than 200 chars. Or whatever the max is.
+	currentBook->setTitle(userInput);
+	cout << "Enter the name of the author of the book or press q and press enter to quit: "; // what do I do if they want to enter multiple authors?
+	getline(cin, userInput);
+	currentBook->setAuthor(userInput);
+	cout << "Enter the publisher of the book or press q and press enter to quit: ";
+	getline(cin, userInput);
+	currentBook->setPublisher(userInput);
+	cout << "Enter the wholesale cost of the book or press q and press enter to quit: ";
+	getline(cin, userInput);
+	currentBook->setWholesaleCost(strtod(userInput.c_str(), nullptr));
+	cout << "Enter the retail price of the book or press q and press enter to quit: ";
+	getline(cin, userInput);
+	currentBook->setRetailPrice(strtod(userInput.c_str(), nullptr));
+	inventory.updateLists();
+}
 
-	}
-	if (userInput == "U" || userInput == "u")
+void displayAddUsedBook(void)
+{
+	string userInput;
+	Book* currentBook;
+	string tempStr;
+	int condition;
+	system("cls");
+
+	cout << "Enter the 13 digit ISBN for the book to be added: ";
+	getline(cin, tempStr);
+	currentBook = inventory.searchAttribute(ISBN, tempStr);
+	if (currentBook != nullptr)
 	{
-		cout << "Please enter the condition of the book from the menu and press enter." << endl;
+		cout << "A book with that ISBN is in the database with the following information." << endl;
+		cout << "Add a used copy of this book? Y/N: ";
+		getline(cin, tempStr);
+		if (tempStr == "Y" || tempStr == "N")
+		{
+			inventory.addUsedBook();
+			cout << "Please enter the condition of the book from the menu and press enter." << endl;
+			cout << "1: Like new, no visible damage." << endl;
+			cout << "2: Good condition, small folds in pages, slightly worn cover." << endl;
+			cout << "3. Fair condition, obvious sign of usage, crease in binding or cover." << endl;
+			cout << "4. Poor condition, significant wear, possible water marks or ripped pages." << endl;
+			getline(cin, tempStr);
+			
+		}
+	}
+	else
+	{
+		cout << "No book with that ISBN could be located in the database";
+	}
+
+
+	/*	cout << "Please enter the condition of the book from the menu and press enter." << endl;
 		cout << "1: Like new, no visible damage." << endl;
 		cout << "2: Good condition, small folds in pages, slightly worn cover." << endl;
 		cout << "3. Fair condition, obvious sign of usage, crease in binding or cover." << endl;
@@ -560,11 +606,6 @@ void displayAddBook(void)
 		cin >> condition;
 		cin.ignore();
 		currentBook = inventory.addUsedBook(condition);
-	}
-	else
-	{
-		currentBook = inventory.addBook();
-	}
 	cout << "Enter the 13 digit ISBN for the book to be added or press q and press enter to quit: ";
 	getline(cin, userInput); // check for quit and follow up actions, also needs formatting
 	currentBook->setIsbn(strtoll(userInput.c_str(), nullptr, 10)); // doesn't perform any checks on what the user inputs. Needs to be broken up
@@ -583,7 +624,7 @@ void displayAddBook(void)
 	cout << "Enter the retail price of the book or press q and press enter to quit: ";
 	getline(cin, userInput);
 	currentBook->setRetailPrice(strtod(userInput.c_str(), nullptr));
-	inventory.updateLists();
+	inventory.updateLists();*/
 }
 
 void displayInventoryMenu(void)
@@ -614,11 +655,11 @@ void displayInventoryMenu(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                2. Add a Book                                                         *"
+		<< "*                                                2. Add a New Book                                                     *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                3. Edit a Book's Record                                               *"
+		<< "*                                                3. Add a Used Book                                                    *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -750,161 +791,104 @@ void displayReport(int listSelection)
 		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
 		<< "************************************************************************************************************************";
 	for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)
-	/*if (listSelection == 1)
-	{
-		sortIsbnArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}
-	if (listSelection == 2)
-	{
-		sortTitleArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}
-	if (listSelection == 3)
-	{
-		sortRetailValueArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}
-	if (listSelection == 4)
-	{
-		sortQuantityArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}
-	if (listSelection == 5)
-	{
-		sortWholesaleCostArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}
-	if (listSelection == 6)
-	{
-		sortAgeArray(inventory.getAttributeList(listSelection - 1), (listSelection - 1));
-	}*/
-	//for (int i = 0; i < inventory.getNumBooks(); i++)
 	{
 		cout << i + 1 << " ";
 		bookList[i]->print();
 	}
 	system("pause");
 }
-/*
-void sortIsbnArray(Book* array[], int size)
-{
-	bool swap;
-	Book* temp;
 
-	do
+void displayDeleteBook(void)
+{
+	string tempStr;
+	int tempInt;
+	Book ** searchResults = new Book*;
+	Book * deletionBook;
+	int numResults;
+	system("cls");
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                     Book Deletion                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*  Enter the ISBN of the book to be deleted: ";
+	getline(cin, tempStr);
+	numResults = inventory.strSearch(ISBN, tempStr, searchResults);
+	cout << "The following books match that ISBN:                                                                                    "
+		<< "************************************************************************************************************************"
+		<< "                                                                          New/                Wholesale Retail   Date   "
+		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
+		<< "************************************************************************************************************************";
+	for (int i = 0; i < numResults; i++)
 	{
-		swap = false;
-		for (int count = 0; count < (size - 1); count++)
-		{
-			if ((*array[count]).isbn > (*array[count + 1]).isbn)
-			{
-				temp = array[count];
-				array[count] = array[count + 1];
-				array[count + 1] = temp;
-				swap = true;
-			}
-		}
-	} while (swap);
+		cout << i + 1 << " ";
+		searchResults[i]->print();
+	}
+	cout << "************************************************************************************************************************"
+		<< "Select the book you would like to delete using the number on the far left: ";
+	getline(cin, tempStr);
+	tempInt = stoi(tempStr);
+	deletionBook = searchResults[tempInt-1];
+	system("cls");
+	cout << "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                Serendipity Booksellers                                               *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                     Book Deletion                                                    *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
+		<< "*  ISBN: " << setw(110) << deletionBook->getIsbn() << "*"
+		<< "*  Title: " << setw(109) << deletionBook->getTitle().substr(0, 109) << "*"
+		<< "*  Author: " << setw(108) << deletionBook->getAuthor() << "*"
+		<< "*  Publisher: " << setw(105) << deletionBook->getPublisher() << "*"
+		<< "*  Date Added: " << setw(104) << deletionBook->getDateAddedStr() << "*"
+		<< "*  Quantity On-hand: " << setw(98) << deletionBook->getQuantity() << "*"
+		<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << deletionBook->getWholesaleCost() << "*"
+		<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << deletionBook->getRetailPrice() << "*"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                      Are you sure you want to delete this book?                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                       Enter [YES] to delete or [NO] to cancel                                        *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "************************************************************************************************************************";
+	getline(cin, tempStr);
+	if (tempStr == "YES")
+	{
+		inventory.deleteBook(deletionBook);
+	}
+
 }
-void sortTitleArray(Book* array[], int size)
-{
-	bool swap;
-	Book* temp;
-
-	do
-	{
-		swap = false;
-		for (int count = 0; count < (size - 1); count++)
-		{
-			if ((*array[count]).title > (*array[count + 1]).title)
-			{
-				temp = array[count];
-				array[count] = array[count + 1];
-				array[count + 1] = temp;
-				swap = true;
-			}
-		}
-	} while (swap);
-}
-
-//The result is the same as WholesaleCost sorting. Why??
-void sortRetailValueArray(Book* array[], int size)
-{
-	bool swap;
-	Book* temp;
-
-	do
-	{
-		swap = false;
-		for (int count = 0; count < (size - 1); count++)
-		{
-			if ((*array[count]).retailPrice > (*array[count + 1]).retailPrice)
-			{
-				temp = array[count];
-				array[count] = array[count + 1];
-				array[count + 1] = temp;
-				swap = true;
-			}
-		}
-	} while (swap);
-}
-
-void sortQuantityArray(Book* array[], int size)
-{
-	bool swap;
-	Book* temp;
-
-	do
-	{
-		swap = false;
-		for (int count = 0; count < (size - 1); count++)
-		{
-			if ((*array[count]).quantity > (*array[count + 1]).quantity)
-			{
-				temp = array[count];
-				array[count] = array[count + 1];
-				array[count + 1] = temp;
-				swap = true;
-			}
-		}
-	} while (swap);
-}
-void sortWholesaleCostArray(Book* array[], int size)
-{
-	bool swap;
-	Book* temp;
-
-	do
-	{
-		swap = false;
-		for (int count = 0; count < (size - 1); count++)
-		{
-			if ((*array[count]).wholesaleCost > (*array[count + 1]).wholesaleCost)
-			{
-				temp = array[count];
-				array[count] = array[count + 1];
-				array[count + 1] = temp;
-				swap = true;
-			}
-		}
-	} while (swap);
-}
-//Program will break if do Age sorting. Why??
-void sortAgeArray(Book* array[], int size)
-{
-	bool swap;
-	Book* temp;
-
-	do
-	{
-		swap = false;
-		for (int count = 0; count < (size - 1); count++)
-		{
-			if ((*array[count]).dateAdded > (*array[count + 1]).dateAdded)
-			{
-				temp = array[count];
-				array[count] = array[count + 1];
-				array[count + 1] = temp;
-				swap = true;
-			}
-		}
-	} while (swap);
-}*/
-//Also, our report module list is different from the instruction. Should we change our report list??
-//I'm trying to fix the format of report module... 

@@ -17,6 +17,7 @@ protected:
 	string author;
 	string publisher;
 	int quantity;
+	int bookNumber;
 	double wholesaleCost;
 	double retailPrice;
 	time_t dateAdded;
@@ -37,6 +38,7 @@ public:
 	void setWholesaleCost(double);
 	void setRetailPrice(double);
 	void setDateAdded(time_t);
+	void setBookNumber(int);
 
 	// Getters
 	long long getIsbn(void) const;
@@ -49,6 +51,7 @@ public:
 	double getWholesaleCost(void) const;
 	virtual double getRetailPrice(void) const;
 	string getAttribute(int) const;
+	int getBookNumber(void) const;
 
 	virtual void print(void);
 	void writeToFile(fstream&);
