@@ -146,10 +146,10 @@ void displayCashierScreen(Order* currentOrder)
 	double total;
 	double tax;
 	int purchaseQuantity;
-
+	int initialQuantity;
 
 	// Declare variables for cashier input
-	string newInput; // Input book
+	string newInput = ""; // Input book
 
 	// Get the current system time
 	time_t rawtime = time(NULL);
@@ -164,31 +164,45 @@ void displayCashierScreen(Order* currentOrder)
 
 	cin.ignore();
 
-	while (1)
+	// Loop for user order
+	while (newInput != "EXIT" && newInput != "CANCEL")
 	{
 		// Collect user Input
+		cout << "Enter [EXIT] if you are ready to checkout or [CANCEL] to cancel the order." << endl;
 		cout << "Please enter the ISBN of the book you are buying: ";
-		cout << "Enter [EXIT] if you are ready to checkout.";
 		getline(cin, newInput);
 
-		if (newInput == "EXIT")
-			break;
+		// Pull book data from the inventory class
+		currentBook = inventory.searchAttribute(ISBN, newInput);
 
-		else{
-			// Pull book data from the inventory class
-			currentBook = inventory.searchAttribute(ISBN, newInput);
+		if (currentBook != nullptr){
+			// Return book data and verify user input is correct.  Otherwise collect user input again.
+			cout << "You entered the following book:" << endl;
+			cout << "ISBN: " << currentBook->getIsbn() << endl;
+			cout << "Title: " << currentBook->getTitle() << endl;
+			cout << "Author: " << currentBook->getAuthor() << endl;
+			cout << "Publisher: " << currentBook->getPublisher() << endl;
 
-			if (currentBook != nullptr){
-				// Return book data and verify user input is correct.  Otherwise collect user input again.
-				cout << "You entered the following book:" << endl;
-				cout << "ISBN: " << currentBook->getIsbn() << endl;
-				cout << "Title: " << currentBook->getTitle() << endl;
-				cout << "Author: " << currentBook->getAuthor() << endl;
-				cout << "Publisher: " << currentBook->getPublisher() << endl;
-
+			while (1){
 				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
 				cin >> purchaseQuantity;
+
+				if (purchaseQuantity > currentBook->getQuantity()){
+					cout << "This is an invalid entry" << endl;
+				}
+				else{
+					currentOrder->addBook(currentBook, purchaseQuantity);
+					break;
+				}
+
+
+			}
+
+				// currentOrder->addBook(currentBook, purchaseQuantity);  // Add the current book to current order
+
 				// Exception handling for purchaseQuantity input
+				// This needs to be improved.  User needs to re-enter the ISBN to get back to the quantity screen
+				/*
 				try {
 				if (purchaseQuantity > currentBook-> getQuantity()||purchaseQuantity < 0)
 		//		if (!isdigit(purchaseQuantity))  // This is not working
@@ -203,62 +217,85 @@ void displayCashierScreen(Order* currentOrder)
 				{
 					cout << exceptionString << endl;
 				}
+				*/
 
-				cin.ignore();
-			}
-			else{
-				cout << "This ISBN is invalid, please try another ISBN: " << endl;
-			}
+			currentBook->setQuantity(currentBook->getQuantity() - purchaseQuantity); // Subtract the quantity of books being purchased
+			// cout << "The new quantity of this book is " << currentBook->getQuantity() << endl;
+			cin.ignore();
+		}
+		
+
+		else{
+			cout << "This ISBN is invalid, please try another ISBN: " << endl;
 		}
 	}
 
-	system("cls");
-	// Display receipt
-	cout << "************************************************************************************************************************"
-		<< "*                                                                                                                      *"
-		<< "*   Serendipity Book Sellers                                                                                           *"
-		<< "*                                                                                                                      *"
-		<< "*   Date: " << dateStr << "                                                                                          *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*   Qty   ISBN           Title                             Price               Total                                   *"
-		<< "*   ___________________________________________________________________________________________________________________*";
-	cout << endl;
-	// using a while loop to call the function from order class
-	while (bookCounter < currentOrder->getNumBooks())
-	{
-		currentBook = currentOrder->getBook(bookCounter);
-		cout << fixed << setprecision(2);
-		cout << "*" << setw(5) << right << currentOrder->getQuantity(bookCounter)
-			<< setw(17) << right << currentBook->getIsbn() << "  "
-			<< setw(33) << left << currentBook->getTitle().substr(0, 32)
-			<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
-		lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
-		currentBook->setQuantity(currentBook->getQuantity() - currentOrder->getQuantity(bookCounter)); // Subtract the quantity of books being purchased
-		subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
-		bookCounter++;
-		cout << "$" << setw(15) << lineTotal << "                         *";
-		tax = subtotal*TAX_RATE;
-		total = subtotal * (1 + TAX_RATE);
+	// Check if ordered was canceled
+	if (newInput == "CANCEL"){
+		
+		// Reset book quantity to originally book quantity
+		while (bookCounter < currentOrder->getNumBooks()){
+			currentBook = currentOrder->getBook(bookCounter);
+			currentBook->setQuantity(currentBook->getQuantity() + currentOrder->getQuantity(bookCounter));
+			bookCounter++;
+		}
+		cout << "Your order has been canceled." << endl;
+		system("pause");
 	}
 
-	cout << "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                     Subtotal: $" << setw(6) << right
-		<< subtotal << "                                                                                *"
-		<< "*                     Tax:      $" << setw(6) << right
-		<< tax << "                                                                                *"
-		<< "*                     Total:    $" << setw(6) << right
-		<< total << "                                                                                *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*  Thank You for Shopping at Serendipity!                                                                              *"
-		<< "*                                                                                                                      *"
-		<< "************************************************************************************************************************"
-		<< endl;
-	system("pause");
+	else if (newInput == "EXIT" && currentOrder->getNumBooks() != 0){
+		system("cls");
+		// Display receipt
+		cout << "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*   Serendipity Book Sellers                                                                                           *"
+			<< "*                                                                                                                      *"
+			<< "*   Date: " << dateStr << "                                                                                          *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*   Qty   ISBN           Title                             Price               Total                                   *"
+			<< "*   ___________________________________________________________________________________________________________________*";
+		cout << endl;
+		// using a while loop to call the function from order class
+		bookCounter = 0;
+		while (bookCounter < currentOrder->getNumBooks())
+		{
+			currentBook = currentOrder->getBook(bookCounter);
+			cout << fixed << setprecision(2);
+			cout << "*" << setw(5) << right << currentOrder->getQuantity(bookCounter)
+				<< setw(17) << right << currentBook->getIsbn() << "  "
+				<< setw(33) << left << currentBook->getTitle().substr(0, 32)
+				<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
+			lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
+			// currentBook->setQuantity(currentBook->getQuantity() - currentOrder->getQuantity(bookCounter)); // Subtract the quantity of books being purchased
+			subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
+			bookCounter++;
+			cout << "$" << setw(15) << lineTotal << "                         *";
+			tax = subtotal*TAX_RATE;
+			total = subtotal * (1 + TAX_RATE);
+		}
 
+		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                     Subtotal: $" << setw(6) << right
+			<< subtotal << "                                                                                *"
+			<< "*                     Tax:      $" << setw(6) << right
+			<< tax << "                                                                                *"
+			<< "*                     Total:    $" << setw(6) << right
+			<< total << "                                                                                *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*  Thank You for Shopping at Serendipity!                                                                              *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
+			<< endl;
+		system("pause");
+	}
+
+	else{
+		system("pause");
+	}
 }
 
 void inventoryModule(void)
