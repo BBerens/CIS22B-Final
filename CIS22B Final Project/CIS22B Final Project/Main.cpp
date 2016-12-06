@@ -1,10 +1,14 @@
 #define _CRT_SECURE_NO_WARNINGS
+#define _CRTDBG_MAP_ALLOC  
+#include <stdlib.h>  
+#include <crtdbg.h>  
 // CIS22B Final Project
 // This is a test 
 // This is another test
 // Yet another test
 
 #include <iostream>
+#include <sstream>
 #include <iomanip>
 #include "Book.h"
 #include "UsedBook.h"
@@ -34,21 +38,25 @@ void bookLookup(void);
 void displayAttributeSearch(int);
 void editBook(Book *, int);
 void displayReport(int);
+time_t convertDate(string);
 // access inventory class data 
 Inventory inventory;
 // create enum data type to hold data for book attributes
-enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED };
+enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY};
 
 
 int main(void)
 {
 	int menuOption = -1;
+	string userInput;
 	system("mode 120, 50");	// sets command prompt 100 chars wide and 50 chars tall
 	//using while loop to prompt user to select the module they want to work with
 	while (menuOption != 4)
 	{
-		displayMainMenu();
-		cin >> menuOption;
+		displayMainMenu();	// draws the main menu and prompts user to select an option
+		getline(cin, userInput);	// get user's selection
+		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
+			menuOption = stoi(userInput);	// convert the string to an int and store it in menuOption
 		switch (menuOption)
 		{
 		case (1) :
@@ -79,10 +87,11 @@ void cashierModule(void)
 }
 
 
-// display main menu
+// draws the main menu
 void displayMainMenu(void)
 {
-	system("cls");
+
+	system("cls");	// clear the screen
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -147,6 +156,7 @@ void displayCashierScreen(Order* currentOrder)
 	double tax;
 	int purchaseQuantity;
 	int initialQuantity;
+	string userInput;
 
 	// Declare variables for cashier input
 	string newInput = ""; // Input book
@@ -185,17 +195,23 @@ void displayCashierScreen(Order* currentOrder)
 
 			while (1){
 				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
-				cin >> purchaseQuantity;
+				try{
+					getline(cin, userInput);
+					purchaseQuantity = stoi(userInput);
 
-				if (purchaseQuantity > currentBook->getQuantity()){
-					cout << "This is an invalid entry" << endl;
+					if (purchaseQuantity > currentBook->getQuantity()){
+						cout << "This is an invalid entry" << endl;
+					}
+					else{
+						currentOrder->addBook(currentBook, purchaseQuantity);
+						break;
+					}
 				}
-				else{
-					currentOrder->addBook(currentBook, purchaseQuantity);
-					break;
+				catch (...)
+				{
+					cout << "That is not a valid quanity." << endl;
 				}
-
-
+				
 			}
 
 				// currentOrder->addBook(currentBook, purchaseQuantity);  // Add the current book to current order
@@ -300,12 +316,14 @@ void displayCashierScreen(Order* currentOrder)
 
 void inventoryModule(void)
 {
+	string userInput;
 	int menuOption = -1;
 	while (menuOption != 5)
 	{
 		displayInventoryMenu();
-		cin >> menuOption;
-		cin.ignore();
+		getline(cin, userInput);	// get user's selection
+		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
+			menuOption = stoi(userInput);	// convert the string to an int and store it in menuOption
 		switch (menuOption)
 		{
 		case (1) :
@@ -330,25 +348,34 @@ void inventoryModule(void)
 
 void bookLookup(void)
 {
-	int attributeSelection;
-	//Book * foundBook;
-	displayBookLookup();
-	cin >> attributeSelection;
-	cin.ignore();
-	while (attributeSelection != 5)
-	{
-		displayAttributeSearch(attributeSelection - 1);
-		cin >> attributeSelection;
-		cin.ignore();
-	}
+	/*
+		Draws bookLookup screen to prompt user to select an attribute to search for a book by
+		Loops until user selects 5 to exit back to inventory menu
+	*/
+	int attributeSelection = -1;
+	string userInput;
+	
+	while (attributeSelection != 5) {
+		displayBookLookup();	// draw bookLookup screen where user selects attribute to search for book with
+		getline(cin, userInput);	// get user's selection
+		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
+		{
+			attributeSelection = stoi(userInput);	// convert the string to an int and store it in menuOption
+			if (attributeSelection != 5) // user has not selected to return to the previous menu
+				displayAttributeSearch(attributeSelection - 1);	// subtract one to convert from option on menu to corresponding attribute and go to attribute search screen
+		}
+	} 
 }
 
 void displayAttributeSearch(int attribute)
 {
 	string attributeStr;
 	string inputValue;
+	string userInput;
 	Book ** searchResults;
-	int bookSelection, attributeSelection;
+	bool tryAgain = true;
+	int bookSelection; 
+	int attributeSelection = -1;
 	int numBooksFound;
 
 	switch (attribute)
@@ -410,20 +437,44 @@ void displayAttributeSearch(int attribute)
 		}
 		cout << "************************************************************************************************************************"
 			<< "Select the book you would like to view by its number on the left:";
-		cin >> bookSelection;
-		cin.ignore();
-		displayBookInformationScreen(searchResults[bookSelection - 1]);
-		cin >> attributeSelection;
-		cin.ignore();
-		if (attributeSelection != 9)
+		while (tryAgain)
 		{
-			editBook(searchResults[bookSelection - 1], attributeSelection);
-			displayBookLookup();
+			try{
+				getline(cin, userInput);	// get user's selection
+				bookSelection = stoi(userInput);	// convert the string to an int and store it in menuOption
+				if (bookSelection > numBooksFound || bookSelection < 1)
+				{
+					string stringException = "That is not a valid book number. Try again.";
+					throw stringException;
+				}
+				tryAgain = false;
+			}
+			catch (string stringException)
+			{
+				cout << stringException;
+			}
+			catch (...)
+			{
+				cout << "That is not a valid book number. Try again:";
+			}
 		}
-		else{
-			displayBookLookup();
+
+		while (attributeSelection != 9)
+		{
+			displayBookInformationScreen(searchResults[bookSelection - 1]);
+			getline(cin, userInput);	// get user's selection
+			if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
+			{
+				attributeSelection = stoi(userInput);	// convert the string to an int and store it in menuOption
+				if (attributeSelection != 9)
+				{
+					editBook(searchResults[bookSelection - 1], attributeSelection);
+					displayBookLookup();
+				}
+			}
 		}
 	}
+	
 }
 
 void editBook(Book * editBook, int attribute)
@@ -431,6 +482,7 @@ void editBook(Book * editBook, int attribute)
 	string tempStr;
 	long long tempISBN;
 	int tempInt;
+	time_t tempDate;
 	double tempDouble;
 	//tm tempDate;
 	system("cls");
@@ -487,7 +539,8 @@ void editBook(Book * editBook, int attribute)
 	case(5) :
 		cout << "Enter the date the book was added in MM/DD/YY format. Include the '/':";
 		getline(cin, tempStr);
-		// Need to parse the input string and store each data point in the tm struct
+		tempDate = convertDate(tempStr);
+		editBook->setDateAdded(tempDate);
 		break;
 	case(6) :
 		cout << "Enter the new Quantity On-hand for this book: ";
@@ -753,7 +806,7 @@ void displayAddUsedBook(void)
 		newUsedBook->setTitle(userInput);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*   Enter the name of the author of the book: ";
+			<< "*   Enter the  name of the author of the book: ";
 		getline(cin, userInput);
 		newUsedBook->setAuthor(userInput);
 		cout << "*                                                                                                                      *"
@@ -914,10 +967,20 @@ void displayBookInformationScreen(Book * displayBook)
 
 void reportModule(void)
 {
-	int menuOption;
-	displayReportsMenu();
-	cin >> menuOption;
-	displayReport(menuOption);
+	string userInput;
+	int menuOption = -1;
+	
+	while (menuOption != 9)
+	{
+		displayReportsMenu();
+		getline(cin, userInput);	// get user's selection
+		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
+		{
+			menuOption = stoi(userInput);	// convert the string to an int and store it in menuOption
+			if (menuOption >= 1 && menuOption < 9)
+				displayReport(menuOption);
+		}
+	}
 }
 void displayReportsMenu(void)
 {
@@ -951,7 +1014,10 @@ void displayReportsMenu(void)
 		<< "*                                                7. Listing by Age                                                     *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                8. Return to the Main Menu                                            *"
+		<< "*                                                8. Listing by Quantity                                                *"
+		<< "*                                                                                                                      *"
+		<< "*                                                                                                                      *"
+		<< "*                                                9. Return to the Main Menu                                            *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************"
@@ -1067,5 +1133,66 @@ void displayDeleteBook(void)
 	{
 		inventory.deleteBook(deletionBook);
 	}
+	delete searchResults;
 
+}
+
+
+time_t convertDate(string inString)
+{
+	/*
+	Takes a string in MM/DD/YY format and returns a time_t format.
+	Performs checks to ensure that format matches and prompts user to re-enter if not
+	Exception will be thrown if input format cannot be parsed
+	*/
+	string dateString = inString;
+	struct tm tm;
+	time_t convertedTime;
+	string tempMonth, tempDay, tempYear;
+	int pos;
+	bool tryAgain = true;
+	string exceptionString;
+
+	while (tryAgain)	// loop until exception is not thrown
+	{
+		try{
+			if (dateString.length() != 8)
+			{
+				exceptionString = "The date entered is too short or too long.  Make sure to use MM/DD/YY format. Put a '0' in front of single digit days.";
+				throw exceptionString;	// throw exception
+			}
+			pos = dateString.find('/');	// find the position that the first '/' occurs
+			if (pos != 2)
+			{
+				exceptionString = "The month entered was invalid. Make sure to use MM/DD/YY format. Put a '0' in front of single digit months.";
+				throw exceptionString;	// throw exception
+			}
+			tempMonth = dateString.substr(0, pos);	// create a substring of chars up to '/' but not including				
+			dateString.erase(0, pos + 1);	// delete chars up to and including '/'
+			pos = dateString.find('/');	// find the position that the next '/' occurs
+			if (pos != 2)
+			{
+				exceptionString = "The day entered was invalid. Make sure to use MM/DD/YY format. Put a '0' in front of single digit months.";
+				throw exceptionString;	// throw exception
+			}
+			tempDay = dateString.substr(0, pos);	// create a substring of chars up to '/' but not including		
+			dateString.erase(0, pos + 1);	// delete chars up to and including '/'
+			tempYear = dateString;
+			istringstream ss(tempMonth + ":" + tempDay + ":" + tempYear + ":" + "12:00:00");	// combine time information into a stringstream to be parsed by get_time
+			ss >> get_time(&tm, "%m:%d:%y:%H:%M:%S");	// parse the stringstream into tm using the format provided
+			if (ss.fail())
+			{
+				exceptionString = "The date entered was invalid. Make sure to use MM/DD/YY format. Put a '0' in front of single digit months.";
+				throw exceptionString;
+			}
+			convertedTime = mktime(&tm);	// convert the struct tm to time_t
+			tryAgain = false;
+		}
+		catch (string exceptionString){	
+			cout << exceptionString << endl;	// print thrown exception
+			cout << "Enter the date the book was added in MM/DD/YY format. Include the '/':";	// Prompt user to properly enter the date
+			getline(cin, dateString);	// gets user's input
+		}
+	}
+	return convertedTime;	// return converted time_t
 }

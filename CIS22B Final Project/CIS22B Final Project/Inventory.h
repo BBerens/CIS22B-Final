@@ -14,8 +14,8 @@ class Inventory
 private:
 	int bookArrSize = 10;
 	int usedBookArrSize = 10;
-	Book** books = new Book*[bookArrSize];	// unsorted array, in order of when they were added
-	UsedBook** usedBooks = new UsedBook*[usedBookArrSize];
+	Book** books;	// unsorted array, in order of when they were added
+	UsedBook** usedBooks;
 	int numBooks;
 	int numUsedBooks;
 	Book ** lists[8];
@@ -37,7 +37,7 @@ public:
 
 	void writeBooks(void);
 	void readBooksFromFile(void);
-	Book** generateAttributeList(int);
+	void generateAttributeList(int, Book**);
 	Book** getAttributeList(int);
 	int getNumBooks(void);
 	Book* searchAttribute(int, string) const;

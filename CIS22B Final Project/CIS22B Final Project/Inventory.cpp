@@ -9,11 +9,13 @@ Inventory::Inventory(void)
 {
 	numBooks = 0;
 	numUsedBooks = 0;
+	books = new Book*[bookArrSize];
+	usedBooks = new UsedBook*[usedBookArrSize];
 	readBooksFromFile();
 	for (int i = 0; i < 8; i++)
 	{
-		lists[i] = new Book*[numBooks];
-		lists[i] = generateAttributeList(i);
+		lists[i] = new Book*[numBooks + numUsedBooks];
+		generateAttributeList(i, lists[i]);
 	}
 }
 
@@ -27,10 +29,13 @@ Inventory::~Inventory()
 	{
 		delete books[j];
 	}
+	delete[] books;
 	for (int k = 0; k < numUsedBooks; k++)
 	{
 		delete usedBooks[k];
 	}
+	delete[] usedBooks;
+	_CrtDumpMemoryLeaks();
 }
 
 Book* Inventory::addBook(void)
@@ -139,13 +144,12 @@ void Inventory::writeBooks()
 	bookDatabase.close();
 }
 
-Book** Inventory::generateAttributeList(int attribute)
+void Inventory::generateAttributeList(int attribute, Book** attributeList)
 {
-	Book** attributeList;
+
 	int startScan;
 	int minIndex;
 	Book * minValue;
-	attributeList = new Book*[numBooks + numUsedBooks];
 	for (int i = 0; i < numBooks; i++)
 	{
 		attributeList[i] = books[i];
@@ -169,7 +173,6 @@ Book** Inventory::generateAttributeList(int attribute)
 		attributeList[minIndex] = attributeList[startScan];
 		attributeList[startScan] = minValue;
 	}
-	return attributeList;
 }
 
 Book** Inventory::getAttributeList(int attribute)
@@ -211,12 +214,11 @@ Book * Inventory::searchAttribute(int attribute, string value) const
 
 void Inventory::updateLists()
 {
-	//delete []lists;
 	for (int i = 0; i < 8; i++)
 	{
-		lists[i] = new Book*[numBooks];
-		lists[i] = generateAttributeList(i);
-		//generateAttributeList(i, lists[i]);
+		delete lists[i];
+		lists[i] = new Book*[numBooks + numUsedBooks];
+		generateAttributeList(i, lists[i]);		
 	}
 }
 
@@ -262,13 +264,13 @@ void Inventory::increaseNewArrSize()
 	{
 		tempBooks[i] = books[i];
 	}
-	delete books;
+	delete[] books;
 	books = new Book*[bookArrSize];
 	for (int i = 0; i < numBooks; i++)
 	{
 		books[i] = tempBooks[i];
 	}
-	delete tempBooks;
+	delete[] tempBooks;
 }
 
 void Inventory::increaseUsedArrSize()
@@ -279,11 +281,11 @@ void Inventory::increaseUsedArrSize()
 	{
 		tempBooks[i] = usedBooks[i];
 	}
-	delete usedBooks;
-	usedBooks = new UsedBook*[bookArrSize];
-	for (int i = 0; i < numUsedBooks; i++)
+	delete[] usedBooks;
+	usedBooks = new UsedBook*[usedBookArrSize];
+	for (int i = 0; i < usedBookArrSize; i++)
 	{
 		usedBooks[i] = tempBooks[i];
 	}
-	delete tempBooks;
+	delete[] tempBooks;
 }
