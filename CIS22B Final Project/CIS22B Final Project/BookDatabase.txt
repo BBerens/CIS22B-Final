@@ -1,1 +1,19 @@
 6 New Books
+9799812358751	Design Patterns	Erich Gamma	Addison Wesley	30	12.99	15.65	1479096890	
+9780133769395	Starting Out With C++	Tony Gaddiss	Pearson	25	52.5	65	1479098495	
+9780139798092	Thinking in C++	Bruce Eckel	Prentice Hall	50	45.1	55.5	1479098555	
+9780672326967	C Primer Plus	Stephen Prata	Sams	75	48.21	94.54	1479098593	
+9780471457572	A Brief Introduction to Fluid Mechanics	Donald Young	Wiley	2	50	58.99	1480925444	
+9780534372811	Probability and Statistics	Jay Devore	Duxbury Thomson Learning	32	45	84.99	1480925606	
+11 Used Books
+9780133085044	A Practical Guide to Linux Commands, Editors, and Shell Programming	Mark Sobell	Prentice Hall	2	50	51	1480757581		0
+9780133085044	A Practical Guide to Linux Commands, Editors, and Shell Programming	Mark Sobell	Prentice Hall	2	50	51	1480757581		3
+9780131103627	The C Programming Language	Brian W. Kernighan	Prentice Hall	0	45.25	50	1480917369		4
+9780782143270	Coder to Developer	Mike Gunderloy	Sybex	3	22.05	35.99	1480917902		3
+9781449355739	Learning Python	Mark Lutz	O'Reilly	5	60	78.99	1480918079		1
+9781449355739	Learning Python	Mark Lutz	O'Reilly	5	60	78.99	1480918079		2
+9780139798092	Thinking in C++	Bruce Eckel	Prentice Hall	4	46.75	54.5	1479098555		2
+9780471332367	Fundamentals of Physics	David Halliday	Wiley	4	42	100.99	1480923931		1
+9780471170556	Elementary Linear Algebra	Howard Anton	Wiley	10	23	54.99	1480924047		4
+9780534166960	Organic Chemistry	William Brown	Brooks/Cole	8	37.48	89.99	1480924290		3
+9780130255339	Solid State Electronic Devices	Beng Streetman	Prentice Hall	9	75	101.99	1480925003		2

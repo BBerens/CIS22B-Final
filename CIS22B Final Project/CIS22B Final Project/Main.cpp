@@ -420,7 +420,7 @@ void displayAttributeSearch(int attribute)
 		<< "                                                                          New/                Wholesale  Retail   Date  "
 		<< " #  ISBN           Title                     Author         Publisher     Used Condition Qty    Cost     Price    Added "
 		<< "************************************************************************************************************************";
-	searchResults = new Book*;
+	searchResults = new Book*[1000];
 	numBooksFound = inventory.strSearch(attribute, inputValue, searchResults);
 	if (numBooksFound == 0)
 	{
@@ -474,7 +474,7 @@ void displayAttributeSearch(int attribute)
 			}
 		}
 	}
-	
+	delete[] searchResults;
 }
 
 void editBook(Book * editBook, int attribute)
