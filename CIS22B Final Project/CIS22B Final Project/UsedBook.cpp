@@ -1,14 +1,15 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "UsedBook.h"
 
-UsedBook::UsedBook() : Book(){};
-UsedBook::UsedBook(int n1) : Book()
+UsedBook::UsedBook() : Book(){};		// default constructor uses Book default constructor
+UsedBook::UsedBook(int n1) : Book()		// constructor to initiliaze constructor
 { 
 	bookCondition = static_cast<condition>(n1); 
 }
 
-UsedBook::UsedBook(Book* bookPtr) : Book()
+UsedBook::UsedBook(Book* bookPtr) : Book()	// constructor to initialize from an already constructed book
 {
+	// set each attribute of UsedBook to that of bookPtr
 	isbn = bookPtr->getIsbn();
 	title = bookPtr->getTitle();
 	author = bookPtr->getAuthor();
@@ -19,31 +20,20 @@ UsedBook::UsedBook(Book* bookPtr) : Book()
 	dateAdded = bookPtr->getDateAdded();
 }
 
-UsedBook::~UsedBook(){ Book::~Book(); }
+void UsedBook::setCondition(int n1){ bookCondition = static_cast<condition>(n1);}	// cast from int to condition and set bookCondition
+int UsedBook::getCondition(void) const{	return bookCondition; }	
+// returned retail price is calculated as a factor of retail price and book condition
+// better condition results in higher retail price
+double UsedBook::getRetailPrice(void) const { return retailPrice * (0.8 - (bookCondition * 0.1));} 
+// books are bought at 25% of retailPrice(price on the sticker) wholesale
+double UsedBook::getWholesaleCost(void) const { return retailPrice * 0.25; }
+string UsedBook::getBookType(void) const { return "used";}		// overridden from Book class
 
-void UsedBook::setCondition(int n1)
-{
-	bookCondition = static_cast<condition>(n1);
-}
-int UsedBook::getCondition(void) const
-{
-	return bookCondition;
-}
-
-double UsedBook::getRetailPrice(void) const
-{
-	return retailPrice * (0.8 - (bookCondition * 0.1));
-}
-
-double UsedBook::getWholesaleCost(void) const
-{
-	return retailPrice * 0.25;
-}
-
+// overloaded left shift operator used to write to file
 fstream& operator << (fstream& file, UsedBook& outBook)
 {
-	file << (Book)outBook;
-	file << '\t' << outBook.bookCondition;
+	file << (Book)outBook;	// write all book attributes to file
+	file << '\t' << outBook.bookCondition;	// then write condition to file
 	return file;
 }
 

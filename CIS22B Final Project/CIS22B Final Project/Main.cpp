@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS 
 
 #include <iostream>
 #include <sstream>
@@ -1452,21 +1452,22 @@ void reportModule(void)
 	string userInput;
 	int menuOption = -1;
 	
-	while (menuOption != 9)
+	while (menuOption != 9)		// loop until the user chooses to exit (9)
 	{
-		displayReportsMenu();
+		displayReportsMenu();	// draw reports menu to show user what reports are available and prompt them to select one
 		getline(cin, userInput);	// get user's selection
-		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
+		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit else fall through back to display
 		{
 			menuOption = stoi(userInput);	// convert the string to an int and store it in menuOption
-			if (menuOption >= 1 && menuOption < 9)
-				displayReport(menuOption);
+			if (menuOption >= 1 && menuOption < 9)	// if the user entered one of the attributes on the screen..
+				displayReport(menuOption);	// pass the menuOption to display report to display that attribute report
 		}
 	}
+	// return to main menu
 }
 void displayReportsMenu(void)
 {
-	system("cls");
+	system("cls");	// clear screen and draw reports menu
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -1509,29 +1510,37 @@ void displayReportsMenu(void)
 
 void displayReport(int listSelection)
 {
-	Book** bookList = inventory.getAttributeList(listSelection - 1);
-	system("cls");
+	// take the listselection and convert it to an attribute ( subtract 1) 
+	// get the corresponding attribute list and write each book in order to screen
+
+	Book** bookList = inventory.getAttributeList(listSelection - 1);	// pass attribute (listSelection -1) to get sorted attribute list back
+	system("cls");	// clear screen and draw header to screen
 	cout << "************************************************************************************************************************"
 		<< "                                                                          New/                Wholesale  Retail   Date  "
 		<< " #  ISBN           Title                     Author         Publisher     Used Condition Qty    Cost     Price    Added "
 		<< "************************************************************************************************************************";
-	for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)
+	for (int i = 0; i < inventory.getNumBooks()+inventory.getNumUsedBooks(); i++)	//	step through each book in the sorted attribute list (combined new and used books)
 	{
-		cout << setw(3) << right << i + 1 << " ";
-		bookList[i]->print();
+		cout << setw(3) << right << i + 1 << " ";	// print the listing number (just for display purposes)
+		bookList[i]->print();	// call print function. This function is overridden usedBook class so it will print different for new and used books
 	}
-	system("pause");
+	system("pause");	// pause to allow user to read the report
+	// return displayReportMenu
 }
 
 void displayDeleteBook(void)
 {
+	// guides user through deleting a book
 	string tempStr;
 	int tempInt;
 	Book ** searchResults;
 	Book * deletionBook;
+	UsedBook * usedDeletionBook;
+	long long tempISBN;
 	bool tryAgain = true;
 	int numResults;
-	system("cls");
+
+	system("cls");	// clear screen and draw top of book deletion screen.
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -1542,23 +1551,36 @@ void displayDeleteBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                     Book Deletion                                                    *"
 		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*  Enter the ISBN of the book to be deleted: ";
-	getline(cin, tempStr);
+		<< "*                                                                                                                      *";
+	while (tryAgain)	// loop until exception is not thrown
+	{
+		try{
+			cout << "*  Enter the ISBN of the book to be deleted: ";
+			getline(cin, tempStr);
+			tempISBN = stoll(tempStr);	// possible general exceptin thrown here if valid long long was not entered.
+			tryAgain = false;	// only executes if no exception is thrown
+		}
+		catch (...)	// catches general exception for invalid ISBN format
+		{
+			cout << "That is not a valid ISBN. Enter the 13 digit ISBN and press enter." << endl;
+		}
+	}
 	searchResults = new Book*[MAX_SEARCH_RESULTS];	// dynamically allocates an array to store search results
-	numResults = inventory.strSearch(ISBN, tempStr, searchResults);
+	numResults = inventory.strSearch(ISBN, tempStr, searchResults);	// pass ISBN (0), ISBN to search for, and searchResults list to strSearch for matching ISBNs
+	// print the index reference for user to read results
 	cout << "The following books match that ISBN:                                                                                    "
 		<< "************************************************************************************************************************"
 		<< "                                                                          New/                Wholesale Retail   Date   "
 		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
 		<< "************************************************************************************************************************";
-	for (int i = 0; i < numResults; i++)
+	for (int i = 0; i < numResults; i++)	// for each found book..
 	{
-		cout << i + 1 << " ";
-		searchResults[i]->print();
+		cout << setw(3) << right << i + 1 << " ";	// print book reference number for user to select book from list
+		searchResults[i]->print();	// print each books data
 	}
 	cout << "************************************************************************************************************************"
 		<< "Select the book you would like to delete using the number on the far left: ";
+	tryAgain = true;
 	while (tryAgain)	// loop until exception is not thrown
 	{
 		try{
@@ -1622,7 +1644,7 @@ void displayDeleteBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************";
-	// Menu asked if user really wants to delete the book. only the characters YES
+	// Menu asked if user really wants to delete the book. only the characters YES get a book deleted
 	getline(cin, tempStr);
 	if (tempStr == "YES")	// user really wants to delete the book
 	{

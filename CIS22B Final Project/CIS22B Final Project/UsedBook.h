@@ -11,22 +11,23 @@ private:
 	enum condition { LIKE_NEW, GOOD, FAIR, POOR };
 	condition bookCondition;
 public:
-	static unsigned int usedBooks;
-	UsedBook();
-	UsedBook(int);
-	UsedBook(Book*);
-	~UsedBook();
+	UsedBook();		// default constructor
+	UsedBook(int);	// constructor to initialize condition
+	UsedBook(Book*);	// constructor to initialize from an already constructed book 
+	virtual ~UsedBook(){};	// destructor
 	
+	//Setters
 	void setCondition(int);
+
+	//Getters
 	int getCondition(void) const;
+	virtual double getWholesaleCost(void) const;	// overridden from Book class
+	virtual double getRetailPrice(void) const;		// overridden from Book class
+	virtual string getBookType(void) const;			// overridden from Book class
 
-	double getWholesaleCost(void) const;
-	double getRetailPrice(void) const;
-
-	virtual void print(void);
-	virtual void printCashier(void);
-	friend fstream& operator << (fstream&, UsedBook&);
-	friend fstream& operator >> (fstream&, UsedBook&);
+	virtual void print(void);		// overridden from Book class
+	friend fstream& operator << (fstream&, UsedBook&);	// overload left shift operator to write to file
+	friend fstream& operator >> (fstream&, UsedBook&);	// overload right shift operator to read from file
 };
 
 #endif

@@ -32,10 +32,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="BookDatabase.txt">
+    <Text Include="BookDatabaseReference.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="BookDatabaseReference.txt">
+    <Text Include="BookDatabase.txt">
       <Filter>Resource Files</Filter>
     </Text>
   </ItemGroup>
@@ -43,19 +43,13 @@
     <ClInclude Include="Book.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Edition.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Inventory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Order.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="UsedBook.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

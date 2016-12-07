@@ -12,7 +12,7 @@ using namespace std;
 class Book
 {
 protected:
-	long long isbn;
+	long long isbn;		
 	string title;
 	string author;
 	string publisher;
@@ -23,12 +23,13 @@ protected:
 	time_t dateAdded;
 	int bookType;
 	enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY };
+	// bookAttribute enum is used in getAttribute function to tell what attribute you want to get
 
 public:
 	static unsigned int numBooks;
 	Book();	// Default Constructor
 	Book(long long);	// Overloaded Constructor
-	virtual ~Book();			// Destructor
+	virtual ~Book(){};	// Destructor
 
 	// Setters
 	void setIsbn(long long);
@@ -46,26 +47,21 @@ public:
 	string getTitle(void) const;
 	string getAuthor(void) const;
 	string getPublisher(void) const;
-	string getDateAddedStr(void) const;
-	time_t getDateAdded(void) const;
+	time_t getDateAdded(void) const;		// used to write to file
 	int getQuantity(void) const;
-	virtual double getWholesaleCost(void) const;
+	virtual double getWholesaleCost(void) const;	
 	virtual double getRetailPrice(void) const;
-	string getAttribute(int) const;
 	int getBookNumber(void) const;
-	string getBookType(void) const;
+	virtual string getBookType(void) const;
+	string getDateAddedStr(void) const;		// used to print readable dates
+	string getAttribute(int) const;
+	
+	 
 
-	virtual void print(void);
+	virtual void print(void);	// prints book attributes to stream
+	friend fstream& operator << (fstream&, Book&);	// left shift operator overload
+	friend fstream& operator >> (fstream&, Book&);	// right shift operator overload
 	virtual void printCashier(void);
-	void writeToFile(fstream&);
-	friend fstream& operator << (fstream&, Book&);
-	friend fstream& operator >> (fstream&, Book&);
-	friend void sortIsbnArray(Book* array[], int size);
-	friend void sortTitleArray(Book* array[], int size);
-	friend void sortRetailValueArray(Book* array[], int size);
-	friend void sortQuantityArray(Book* array[], int size);
-	friend void sortWholesaleCostArray(Book* array[], int size);
-	friend void sortAgeArray(Book* array[], int size);
 };
 
 #endif
