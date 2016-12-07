@@ -733,6 +733,8 @@ void displayAddNewBook(void)
 	string tempStr;
 	bool tryAgain = true;
 	long long tempISBN;
+	double tempDouble;
+	int tempInt;
 	system("cls"); // clear screen and draw top portion of add new book screen
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
@@ -801,8 +803,7 @@ void displayAddNewBook(void)
 			<< "*  No book with that ISBN could be located in the database. A new book will be created.                                *"
 			<< "************************************************************************************************************************"
 			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*   Enter the title of the book : ";
+			<< "*                                                                                                                      *";
 		while (tryAgain)	// loop until exception is not thrown
 		{
 			try{
@@ -861,22 +862,74 @@ void displayAddNewBook(void)
 		currentBook->setPublisher(userInput);	// set publisher for book
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*   Enter the wholesale cost of the book: ";
-		getline(cin, userInput);
-		currentBook->setWholesaleCost(stod(userInput));
+			<< "*                                                                                                                      *";
+			
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "*   Enter the wholesale cost of the book: ";
+				getline(cin, userInput);
+				tempDouble = stod(userInput);	// possibility to throw a general exception here if a non double(or int) number is entered
+				if (tempDouble < 0)	// Wholesale Cost cannot be a negative number
+					string stringException = "Wholesale Cost must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Wholesale Cost format. Wholesale Cost must be a positive double. Try again" << endl;
+			}
+		}
+		currentBook->setWholesaleCost(tempDouble);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*   Enter the retail price of the book: ";
-		getline(cin, userInput);
-		currentBook->setRetailPrice(stod(userInput));
+			<< "*                                                                                                                      *";
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "*   Enter the retail price of the book: ";
+				getline(cin, userInput);
+				tempDouble = stod(userInput);	// possibility to throw a general exception here if a non double(or int) number is entered
+				if (tempDouble < 0)	// Retail Price cannot be a negative number
+					string stringException = "Retail Price must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Retail Price format. Retail Price must be a positive double. Try again" << endl;
+			}
+		}
+		currentBook->setRetailPrice(tempDouble);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*                                                                                                                      *"
-			<< "*   Enter the quantity of books on-hand: ";
-		getline(cin, userInput);
-		currentBook->setQuantity(stoi(userInput));
+			<< "*                                                                                                                      *";
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "*   Enter the quantity of books on-hand: ";
+				getline(cin, userInput);
+				tempInt = stoi(userInput);	// possibility to throw a general exception here if a non integer number is entered
+				if (tempInt < 0)	// Quantity cannot be a negative number
+					string stringException = "Quantity on-hand must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Quantity On-hand format. Quanity On-hand must be a positive integer. Try again" << endl;
+			}
+		}
+		currentBook->setQuantity(tempInt);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
@@ -884,9 +937,10 @@ void displayAddNewBook(void)
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "************************************************************************************************************************";
-		system("pause");
+		system("pause");	// Give user feedback that book has been added and pause to let them read it
 	}
-	inventory.updateLists();
+	inventory.updateLists();	//	now that there is a new book we need to update our attribute lists
+	//returns to inventory module
 }
 
 void displayAddUsedBook(void)
@@ -895,8 +949,12 @@ void displayAddUsedBook(void)
 	Book* currentBook;
 	UsedBook* newUsedBook;
 	string tempStr;
+	int tempInt;
 	int condition;
-	system("cls");
+	long long tempISBN;
+	double tempDouble;
+	bool tryAgain = true;
+	system("cls");	// clear the screen and print the top of the add used book screen
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                Serendipity Booksellers                                               *"
@@ -904,13 +962,34 @@ void displayAddUsedBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                   Add a Used Book                                                    *"
 		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "* Enter the 13 digit ISBN for the book to be added: ";
-
-	getline(cin, tempStr);
-	currentBook = inventory.searchAttribute(ISBN, tempStr);
-	if (currentBook != nullptr)
+		<< "*                                                                                                                      *";
+	while (tryAgain)	// loop until exception is not thrown
 	{
+		try{
+			cout << "Enter the new 13 ISBN for the book to be added: ";
+			getline(cin, tempStr);
+			if (tempStr.length() != 13)	// we only accept 13 digit ISBNs
+			{
+				string stringException = "Only 13 digit ISBNs are accepted. Please check the number of digits and try again.";
+				throw stringException;
+			}
+			tempISBN = stoll(tempStr);	// possible general exceptin thrown here if valid long long was not entered.
+			tryAgain = false;	// only executes if no exception is thrown
+		}
+		catch (string stringException)	// catches string exceptions for incorrect ISBN length
+		{
+			cout << stringException << endl;
+		}
+		catch (...)	// catches general exception for invalid ISBN format
+		{
+			cout << "That is not a valid ISBN. Enter the 13 digit ISBN and press enter." << endl;
+		}
+	}
+	
+	currentBook = inventory.searchAttribute(ISBN, tempStr);	// pass int corresponding to ISBN and search ISBN if this book already exists
+	if (currentBook != nullptr)	// if a book is returned it means one with that ISBN already exists
+	{
+		//print out the found book's information for user reference
 		cout << "*                                                                                                                      *"
 			<< "* A book with that ISBN is in the database with the following information:                                             *" 
 			<< "************************************************************************************************************************"
@@ -925,16 +1004,37 @@ void displayAddUsedBook(void)
 			<< "*                                                                                                                      *"
 			<< "************************************************************************************************************************"
 			<< "* Add a used copy of this book? Y/N: ";
-		getline(cin, tempStr);
-		if (tempStr == "Y" || tempStr == "y")
+			// ask the user if they want to make a used copy of the found book
+		getline(cin, tempStr);	// get user input
+		if (tempStr == "Y" || tempStr == "y")	// if y or Y are entered..
 		{
-			newUsedBook = inventory.addUsedBook(currentBook);
+			newUsedBook = inventory.addUsedBook(currentBook);	// usedBook constructor through inventory.addUsedBook will use attributes of currentBook to initialize the usedBook.
 			cout << "*                                                                                                                      *"
 				<< "*                                                                                                                      *"
-				<< "*                                                                                                                      *"
-				<< "*   Enter the Quantity of books on-hand:";
-			getline(cin, tempStr);
-			newUsedBook->setQuantity(stoi(tempStr));
+				<< "*                                                                                                                      *";
+			
+			tryAgain = true; 
+			while (tryAgain)	// loop until exception is not thrown
+			{
+				try{
+					cout << "*   Enter the quantity of books on-hand: ";
+					getline(cin, userInput);
+					tempInt = stoi(userInput);	// possibility to throw a general exception here if a non integer number is entered
+					if (tempInt < 0)	// Quantity cannot be a negative number
+						string stringException = "Quantity on-hand must be a positive number. Try again.";	// create exception string
+					tryAgain = false;	// only executes if no exception is thrown
+				}
+				catch (string stringException)	// catches string exceptions for quantity < 0
+				{
+					cout << stringException << endl;
+				}
+				catch (...)	// catches general exceptions for invalid format
+				{
+					cout << "Invalid Quantity On-hand format. Quanity On-hand must be a positive integer. Try again" << endl;
+				}
+			}
+			currentBook->setQuantity(tempInt);	// set book quantity
+			// Prompt user to enter the 
 			cout << "*                                                                                                                      *"
 				<< "*                                                                                                                      *"
 				<< "*   Please enter the condition of the book from the menu and press enter.                                              *"
@@ -957,47 +1057,166 @@ void displayAddUsedBook(void)
 				<< "*                                                                                                                      *"
 				<< "************************************************************************************************************************";
 			cout << "Enter the condition: ";
-			getline(cin, tempStr);
-			condition = stoi(tempStr);
-			newUsedBook->setCondition(condition);			
+			tryAgain = true;
+			while (tryAgain)	// loop until exception is not thrown
+			{
+				try{
+					getline(cin, userInput);	// get user's selection
+					condition = stoi(userInput);	// convert the string to an int and store it in menuOption, possible exception thrown here if user did not enter a number
+					if (condition > 4 || condition < 1)	// user can only select from the conditions displayed on screen
+					{
+						string stringException = "That is not a valid condition. Try again.";
+						throw stringException;
+					}
+					tryAgain = false;
+				}
+				catch (string stringException)	// catches invalid book number entered and prompts user
+				{
+					cout << stringException << endl;
+				}
+				catch (...)	// catches a non-number user entry and prompts them to try again
+				{
+					cout << "That is not a valid book number. Try again:" << endl;
+				}
+			}
+			newUsedBook->setCondition(condition);	// set book condition
 		}
 	}
 	else
 	{
-		newUsedBook = inventory.addUsedBook();
-		newUsedBook->setIsbn(stoll(tempStr));
-		cout << "*                                                                                                                      *" 
+		newUsedBook = inventory.addUsedBook();	// construct a new used book through inventory.addUsedBook
+		newUsedBook->setIsbn(tempISBN);	// set book ISBN already ensured it was a good value
+		// tell user that we are creating a new usedbook in the database
+		cout << "*                                                                                                                      *"
 			<< "*  No book with that ISBN could be located in the database. A new book will be created.                                *"
 			<< "************************************************************************************************************************"
-			<< "*                                                                                                                      *"
-			<< "*   Enter the title of the book : ";
-		getline(cin, userInput); 
-		newUsedBook->setTitle(userInput);
+			<< "*                                                                                                                      *";
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Title for this book: ";
+				getline(cin, userInput);
+				if (userInput.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions with tabs
+			{
+				cout << stringException << endl;
+			}
+		}
+		tryAgain = true;
+		newUsedBook->setTitle(userInput);	// set title for the book
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*   Enter the  name of the author of the book: ";
-		getline(cin, userInput);
-		newUsedBook->setAuthor(userInput);
+			<< "*                                                                                                                      *"
+			<< "*   Enter the name of the author of the book: ";
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Author for this book: ";
+				getline(cin, userInput);
+				if (userInput.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings 
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions with tabs
+			{
+				cout << stringException << endl;
+			}
+		}
+		tryAgain = true;
+		newUsedBook->setAuthor(userInput);	// set author for the book
 		cout << "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*   Enter the publisher of the book: ";
-		getline(cin, userInput);
-		newUsedBook->setPublisher(userInput);
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Publisher for this book: ";
+				getline(cin, userInput);
+				if (userInput.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings 
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions
+			{
+				cout << stringException << endl;
+			}
+		}
+		tryAgain = true;
+		newUsedBook->setPublisher(userInput);	// set publisher for book
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*   Enter the wholesale cost of the book: ";
-		getline(cin, userInput);
-		newUsedBook->setWholesaleCost(stod(userInput));
+			<< "*                                                                                                                      *";
+
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "*   Enter the wholesale cost of the book: ";
+				getline(cin, userInput);
+				tempDouble = stod(userInput);	// possibility to throw a general exception here if a non double(or int) number is entered
+				if (tempDouble < 0)	// Wholesale Cost cannot be a negative number
+					string stringException = "Wholesale Cost must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Wholesale Cost format. Wholesale Cost must be a positive double. Try again" << endl;
+			}
+		}
+		newUsedBook->setWholesaleCost(tempDouble);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*   Enter the retail price of the book: ";
-		getline(cin, userInput);
-		newUsedBook->setRetailPrice(stod(userInput));
+			<< "*                                                                                                                      *";
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "*   Enter the retail price of the book: ";
+				getline(cin, userInput);
+				tempDouble = stod(userInput);	// possibility to throw a general exception here if a non double(or int) number is entered
+				if (tempDouble < 0)	// Retail Price cannot be a negative number
+					string stringException = "Retail Price must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Retail Price format. Retail Price must be a positive double. Try again" << endl;
+			}
+		}
+		newUsedBook->setRetailPrice(tempDouble);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
-			<< "*   Enter the quantity of books on-hand: ";
-		getline(cin, userInput);
-		newUsedBook->setQuantity(stoi(userInput));
+			<< "*                                                                                                                      *";
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "*   Enter the quantity of books on-hand: ";
+				getline(cin, userInput);
+				tempInt = stoi(userInput);	// possibility to throw a general exception here if a non integer number is entered
+				if (tempInt < 0)	// Quantity cannot be a negative number
+					string stringException = "Quantity on-hand must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Quantity On-hand format. Quanity On-hand must be a positive integer. Try again" << endl;
+			}
+		}
+		newUsedBook->setQuantity(tempInt);
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
@@ -1019,11 +1238,32 @@ void displayAddUsedBook(void)
 			<< "*                                                                                                                      *"
 			<< "************************************************************************************************************************"
 			<< "Enter the condition: ";
-		getline(cin, userInput);
-		condition = stoi(userInput);
-		newUsedBook->setCondition(condition);
+		tryAgain = true;
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				getline(cin, userInput);	// get user's selection
+				condition = stoi(userInput);	// convert the string to an int and store it in menuOption, possible exception thrown here if user did not enter a number
+				if (condition > 4 || condition < 1)	// user can only select from the conditions displayed on screen
+				{
+					string stringException = "That is not a valid condition. Try again.";
+					throw stringException;
+				}
+				tryAgain = false;
+			}
+			catch (string stringException)	// catches invalid book number entered and prompts user
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches a non-number user entry and prompts them to try again
+			{
+				cout << "That is not a valid book number. Try again:" << endl;
+			}
+		}
+		newUsedBook->setCondition(condition);	// set book condition
 	}
-	inventory.updateLists();
+	inventory.updateLists();	// After adding a book we need to resort the attribute lists
+	// returns to inventory module
 }
 
 void displayInventoryMenu(void)
@@ -1131,10 +1371,12 @@ void displayBookInformationScreen(Book * displayBook)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************";
+	// returns to previous menu
 }
 
 void reportModule(void)
 {
+	// used to print reports sorted by various reports
 	string userInput;
 	int menuOption = -1;
 	

@@ -234,6 +234,14 @@ int Inventory::strSearch(int attribute, string value, Book** searchList)
 			searchList[counter++]=books[i];
 		}
 	}
+	for (int i = 0; i < numUsedBooks; i++)
+	{
+		tempStr = usedBooks[i]->getAttribute(attribute);
+		if (tempStr.find(value) != -1)
+		{
+			searchList[counter++] = usedBooks[i];
+		}
+	}
 	return counter;
 }
 
