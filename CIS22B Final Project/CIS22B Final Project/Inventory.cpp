@@ -269,7 +269,7 @@ void Inventory::increaseNewArrSize()
 	delete[] tempBooks;	// delete temporary array of book pointers
 }
 
-// reallocates memory to double the size of books[]
+// reallocates memory to double the size of usedbooks[]
 void Inventory::increaseUsedArrSize()
 {
 	usedBookArrSize *= 2;	// double the size of the usedbook array
