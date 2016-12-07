@@ -1,11 +1,4 @@
 #define _CRT_SECURE_NO_WARNINGS
-#define _CRTDBG_MAP_ALLOC  
-#include <stdlib.h>  
-#include <crtdbg.h>  
-// CIS22B Final Project
-// This is a test 
-// This is another test
-// Yet another test
 
 #include <iostream>
 #include <sstream>
@@ -18,9 +11,11 @@
 #include <string>
 #include <cstring>
 #define TAX_RATE .0875
+#define MAX_SEARCH_RESULTS 100
 
 
 using namespace std;
+
 // Function prototypes
 void cashierModule(void);
 void inventoryModule(void);
@@ -39,7 +34,8 @@ void displayAttributeSearch(int);
 void editBook(Book *, int);
 void displayReport(int);
 time_t convertDate(string);
-// access inventory class data 
+
+
 Inventory inventory;
 // create enum data type to hold data for book attributes
 enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY};
@@ -51,7 +47,7 @@ int main(void)
 	string userInput;
 	system("mode 120, 50");	// sets command prompt 100 chars wide and 50 chars tall
 	//using while loop to prompt user to select the module they want to work with
-	while (menuOption != 4)
+	while (menuOption != 4)	// while user does not select to exit the program
 	{
 		displayMainMenu();	// draws the main menu and prompts user to select an option
 		getline(cin, userInput);	// get user's selection
@@ -60,30 +56,30 @@ int main(void)
 		switch (menuOption)
 		{
 		case (1) :
-			cashierModule();
+			cashierModule();	// go to cashier module
 			break;
 		case (2) :
-			inventoryModule();
+			inventoryModule();	// go to inventory module
 			break;
 		case (3) :
-			reportModule();
+			reportModule();		// go to report module
 			break;
 		case (4) :
-			break;
-			// Prompt user to enter a valid choice
+			break;		// User selected to exit, will fall through and exit while loop
 		default:
+			// Prompt user to enter a valid choice
 			cout << "That is not a valid choice. Please select from the menu.";
 			system("pause");
 		}
 	}
-	inventory.writeBooks();
+	inventory.writeBooks();	// write books to file
 	return 0;
 }
 
-void cashierModule(void)
+void cashierModule(void)	// allows cashier to place orders and displays receipt
 {
-	Order newOrder;
-	displayCashierScreen(&newOrder);
+	Order newOrder;		// declares a new order to be filled with books
+	displayCashierScreen(&newOrder);	// draws cashier screen and prompts user for entries
 }
 
 
@@ -312,38 +308,42 @@ void displayCashierScreen(Order* currentOrder)
 	else{
 		system("pause");
 	}
+
+	// return to cashier module
 }
 
-void inventoryModule(void)
+void inventoryModule(void)	// handles all manual book operations such as searching, adding, deleting, and editing
 {
 	string userInput;
 	int menuOption = -1;
-	while (menuOption != 5)
+	while (menuOption != 5)		// until the user selects to go to previous menu (5)
 	{
-		displayInventoryMenu();
+		displayInventoryMenu();	// draw inventory menu and prompt user input
 		getline(cin, userInput);	// get user's selection
 		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
 			menuOption = stoi(userInput);	// convert the string to an int and store it in menuOption
-		switch (menuOption)
+		switch (menuOption)	// based on user input go to correct function
 		{
-		case (1) :
-			bookLookup();
+		case (1) :	// user selected to search for books
+			bookLookup();	// go to bookLookup module
 			break;
 		case (2) :
-			displayAddNewBook();
+			displayAddNewBook();	// go to add New book module
 			break;
 		case (3) :
-			displayAddUsedBook();
+			displayAddUsedBook();	// go to add Used book module
 			break;
 		case (4) :
-			displayDeleteBook();
+			displayDeleteBook();	// go to delete book module
 			break;
 		case (5) :
-			break;
+			break;		// user selected to return to previous menu will fall out of while loop
 		default:
+			// prompt user of invalid selection
 			cout << "That is not a valid option. Please select from the menu.";
 		}
 	}
+	// returns to main menu
 }
 
 void bookLookup(void)
@@ -355,7 +355,7 @@ void bookLookup(void)
 	int attributeSelection = -1;
 	string userInput;
 	
-	while (attributeSelection != 5) {
+	while (attributeSelection != 5) {	// until the user selects to exit the bookloop screen (5)
 		displayBookLookup();	// draw bookLookup screen where user selects attribute to search for book with
 		getline(cin, userInput);	// get user's selection
 		if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
@@ -365,6 +365,7 @@ void bookLookup(void)
 				displayAttributeSearch(attributeSelection - 1);	// subtract one to convert from option on menu to corresponding attribute and go to attribute search screen
 		}
 	} 
+	// returns to inventory module
 }
 
 void displayAttributeSearch(int attribute)
@@ -373,12 +374,12 @@ void displayAttributeSearch(int attribute)
 	string inputValue;
 	string userInput;
 	Book ** searchResults;
-	bool tryAgain = true;
+	bool tryAgain = true;	
 	int bookSelection; 
 	int attributeSelection = -1;
 	int numBooksFound;
 
-	switch (attribute)
+	switch (attribute)	// from the attribute passed store the correllating string for printing to screen to attributeStr
 	{
 	case (ISBN) :
 		attributeStr = "ISBN";
@@ -402,90 +403,92 @@ void displayAttributeSearch(int attribute)
 		return;
 	}
 
-	system("cls");
+	system("cls");	// clear the screen and draw the top portion of the search screen
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                Serendipity Booksellers                                               *"
 		<< "*                                                                                                                      *"
-		<< "*                                                   " << attributeStr << " Search" << endl;
+		<< "*                                                   " << attributeStr << " Search" << endl;	// prints the attribute we are searching by
 	cout << "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*  Enter the " << attributeStr << " to search for: ";
-	getline(cin, inputValue, '\n');
+	getline(cin, inputValue, '\n');	// get the user's input
 	cout << "************************************************************************************************************************"
 		<< "                                                                          New/                Wholesale  Retail   Date  "
 		<< " #  ISBN           Title                     Author         Publisher     Used Condition Qty    Cost     Price    Added "
 		<< "************************************************************************************************************************";
-	searchResults = new Book*[1000];
-	numBooksFound = inventory.strSearch(attribute, inputValue, searchResults);
-	if (numBooksFound == 0)
+	searchResults = new Book*[MAX_SEARCH_RESULTS];	// dynamically allocates an array to store search results
+	numBooksFound = inventory.strSearch(attribute, inputValue, searchResults);	//pass the attribute to search by, the value, and the array to store results to search algorithm
+	// store the number of books found
+	if (numBooksFound == 0)	// search found no books with that substring
 	{
-		cout << "No Books Found" << endl;
-		system("pause");
-		displayBookLookup();
+		cout << "No books found with \"" << inputValue << "\" in their " << attributeStr << endl;	// let the user know nothing was found
+		system("pause");	// pause to let them read the results
 	}
 	else
 	{
-		for (int i = 0; i < numBooksFound; i++)
+		for (int i = 0; i < numBooksFound; i++)	// for each book found (stored in searchResults)
 		{
-			cout << i + 1 << " ";
-			searchResults[i]->print();
+			cout << setw(3) << right << i + 1 << " ";	// add a result number to facilitate user selecting a book
+			searchResults[i]->print();	// print each book to screen 
 		}
 		cout << "************************************************************************************************************************"
-			<< "Select the book you would like to view by its number on the left:";
-		while (tryAgain)
+			<< "Select the book you would like to view by its number on the left:";	// prompt user to pick a book to look at
+		while (tryAgain)	// loop until exception is not thrown
 		{
 			try{
 				getline(cin, userInput);	// get user's selection
-				bookSelection = stoi(userInput);	// convert the string to an int and store it in menuOption
-				if (bookSelection > numBooksFound || bookSelection < 1)
+				bookSelection = stoi(userInput);	// convert the string to an int and store it in menuOption, possible exception thrown here if user did not enter a number
+				if (bookSelection > numBooksFound || bookSelection < 1)	// user can only select from the books displayed on screen
 				{
 					string stringException = "That is not a valid book number. Try again.";
 					throw stringException;
 				}
 				tryAgain = false;
 			}
-			catch (string stringException)
+			catch (string stringException)	// catches invalid book number entered and prompts user
 			{
 				cout << stringException;
 			}
-			catch (...)
+			catch (...)	// catches a non-number user entry and prompts them to try again
 			{
 				cout << "That is not a valid book number. Try again:";
 			}
 		}
 
-		while (attributeSelection != 9)
+		while (attributeSelection != 9)	// stay on bookInformation screen until user selects to exit (9)
 		{
-			displayBookInformationScreen(searchResults[bookSelection - 1]);
+			displayBookInformationScreen(searchResults[bookSelection - 1]);	// pass book to bookInformation screen to prompt user if they want to edit an attribute
 			getline(cin, userInput);	// get user's selection
 			if (userInput.length() == 1 && isdigit(userInput[0]))	// check a single char was entered and that is was a digit
 			{
 				attributeSelection = stoi(userInput);	// convert the string to an int and store it in menuOption
-				if (attributeSelection != 9)
+				if (attributeSelection > 0 && attributeSelection < 9)	// if the user selects one of the attributes to be edited..
 				{
-					editBook(searchResults[bookSelection - 1], attributeSelection);
-					displayBookLookup();
+					editBook(searchResults[bookSelection - 1], attributeSelection);	// pass the book and attribute to be edited to editBook
 				}
 			}
 		}
 	}
-	delete[] searchResults;
+	delete[] searchResults;	// delete the dynamically allocated searchResults array
+	// returns to bookLookup
 }
 
 void editBook(Book * editBook, int attribute)
 {
+	// given a book and an int this screen will prompt the user to enter the new value they want the attribute to be
 	string tempStr;
 	long long tempISBN;
 	int tempInt;
 	time_t tempDate;
 	double tempDouble;
-	//tm tempDate;
-	system("cls");
+	bool tryAgain = true;
+	
+	system("cls");	// clear screen and print current book information for reference 
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -508,70 +511,170 @@ void editBook(Book * editBook, int attribute)
 		<< "*  Quantity On-hand:   " << setw(96) << editBook->getQuantity() << "*"
 		<< "*  Wholesale Cost:    $" << setw(96) << fixed << setprecision(2) << editBook->getWholesaleCost() << "*"
 		<< "*  Retail Price:      $" << setw(96) << fixed << setprecision(2) << editBook->getRetailPrice() << "*"
-		<< "*                                                                                                                      *"
+		<< "*  Book Type:          " << setw(96) << editBook->getBookType() << "*"
 	    << "************************************************************************************************************************";
 	switch (attribute)
 	{
-	case (1) :
-		cout << "Enter the new ISBN for this book: ";
-		getline(cin, tempStr);
-		tempISBN = stoll(tempStr);
-		editBook->setIsbn(tempISBN);
+	case (1) :	// ISBN selected
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new 13 ISBN for this book: ";
+				getline(cin, tempStr);	// get user input
+				if (tempStr.length() != 13)	// we only accept 13 digit ISBNs for our database
+				{
+					string stringException = "Only 13 digit ISBNs are accepted. Please check the number of digits and try again.";	// create exception string
+					throw stringException;	// throw string exception
+				}
+				tempISBN = stoll(tempStr);	// possible general exception thrown here if user did not enter a valid long long integer number
+				tryAgain = false;	// only executes if exception is not thrown
+			}
+
+			catch (string stringException)	// catches string exception for wrong length entry and prompts user to try again.
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exception due to wrong format and prompts user to try again
+			{
+				cout << "That is not a valid ISBN. Enter the 13 digit ISBN and press enter." << endl;
+			}
+		}
+		editBook->setIsbn(tempISBN);	// set the ISBN for the book
 		break;
 	case (2) :
-		cout << "Enter the new Title for this book: ";
-		getline(cin, tempStr);
-		editBook->setTitle(tempStr);
-		//inventory.generateISBNList(); need to resort by title
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Title for this book: ";
+				getline(cin, tempStr);
+				if (tempStr.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions with tabs
+			{
+				cout << stringException << endl;
+			}
+		}
+		editBook->setTitle(tempStr);	// set the title for the book
 		break;
 	case (3) :
-		cout << "Enter the new Author for this book: ";
-		getline(cin, tempStr);
-		editBook->setAuthor(tempStr);
-		//inventory.generateISBNList(); need to resort by author
+		 while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Author for this book: ";
+				getline(cin, tempStr);
+				if (tempStr.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings 
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions with tabs
+			{
+				cout << stringException << endl;
+			}
+		}
+		editBook->setAuthor(tempStr);	// set the author for the book
 		break;
 	case (4) :
-		cout << "Enter the new Publisher for this book: ";
-		getline(cin, tempStr);
-		editBook->setPublisher(tempStr);
-		//inventory.generateISBNList(); need to resort by publisher
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Publisher for this book: ";
+				getline(cin, tempStr);
+				if (tempStr.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings 
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions
+			{
+				cout << stringException << endl;
+			}
+		}
+		editBook->setPublisher(tempStr);	// set the publisher for the book
 		break;
 	case(5) :
 		cout << "Enter the date the book was added in MM/DD/YY format. Include the '/':";
 		getline(cin, tempStr);
-		tempDate = convertDate(tempStr);
-		editBook->setDateAdded(tempDate);
+		tempDate = convertDate(tempStr);	// exception handling is within the convertDate function. Converts a string to time_t datatype for storage
+		editBook->setDateAdded(tempDate);	// set the date added (time_t) for the book
 		break;
 	case(6) :
-		cout << "Enter the new Quantity On-hand for this book: ";
-		getline(cin, tempStr);
-		tempInt = stoi(tempStr);
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Quantity On-hand for this book: ";
+				getline(cin, tempStr);
+				tempInt = stoi(tempStr);	// possibility to throw a general exception here if a non integer number is entered
+				if (tempInt < 0)	// Quantity cannot be a negative number
+					string stringException = "Quantity on-hand must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Quantity On-hand format. Quanity On-hand must be a positive integer. Try again" << endl;
+			}
+		}
 		editBook->setQuantity(tempInt);
-		//inventory.generateISBNList(); need to resort by Quantity? Maybe not. This changes all the time. Sort when you need it
 		break;
 	case(7) :
-		cout << "Enter the new Wholesale Cost for this book: ";
-		getline(cin, tempStr);
-		tempDouble = stod(tempStr);
+		
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Wholesale Cost for this book: ";
+				getline(cin, tempStr);
+				tempDouble = stod(tempStr);	// possibility to throw a general exception here if a non double(or int) number is entered
+				if (tempDouble < 0)	// Wholesale Cost cannot be a negative number
+					string stringException = "Wholesale Cost must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Wholesale Cost format. Wholesale Cost must be a positive double. Try again" << endl;
+			}
+		}
 		editBook->setWholesaleCost(tempDouble);
-		//inventory.generateISBNList(); need to resort by wholesale cost
 	case(8) :
-		cout << "Enter the new Retail Price for this book: ";
-		getline(cin, tempStr);
-		tempDouble = stod(tempStr);
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Retail Price for this book: ";
+				getline(cin, tempStr);
+				tempDouble = stod(tempStr);	// possibility to throw a general exception here if a non double(or int) number is entered
+				if (tempDouble < 0)	// Retail Price cannot be a negative number
+					string stringException = "Retail Price must be a positive number. Try again.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions for quantity < 0
+			{
+				cout << stringException << endl;
+			}
+			catch (...)	// catches general exceptions for invalid format
+			{
+				cout << "Invalid Retail Price format. Retail Price must be a positive double. Try again" << endl;
+			}
+		}
 		editBook->setRetailPrice(tempDouble);
-		//inventory.generateISBNList(); need to resort by retail price
 	case(9) :
-		break;
+		break;	// user selected to exit. will fall out of while loop
 	default:
 		cout << "That is not a valid option. Please try again.";
 		system("pause");
 	}
-	inventory.updateLists();
+	inventory.updateLists();	// after changing an attribute, we need to resort the attribute lists
+	// returns to displayAttributeSearch screen
 }
 void displayBookLookup(void)
 {
-	system("cls");
+	system("cls");	// clear screen and draw booklookup screen
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -628,7 +731,9 @@ void displayAddNewBook(void)
 	string userInput;
 	Book* currentBook;
 	string tempStr;
-	system("cls");
+	bool tryAgain = true;
+	long long tempISBN;
+	system("cls"); // clear screen and draw top portion of add new book screen
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -642,13 +747,34 @@ void displayAddNewBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "* Enter the 13 digit ISBN for the book to be added: ";
-
-	getline(cin, tempStr);
-	currentBook = inventory.searchAttribute(ISBN, tempStr);
-	if (currentBook != nullptr)
+		<< "*                                                                                                                      *";
+	while (tryAgain)	// loop until exception is not thrown
 	{
+		try{
+			cout << "Enter the new 13 ISBN for the book to be added: ";
+			getline(cin, tempStr);
+			if (tempStr.length() != 13)	// we only accept 13 digit ISBNs
+			{
+				string stringException = "Only 13 digit ISBNs are accepted. Please check the number of digits and try again.";
+				throw stringException;
+			}
+			tempISBN = stoll(tempStr);	// possible general exceptin thrown here if valid long long was not entered.
+			tryAgain = false;	// only executes if no exception is thrown
+		}
+		catch (string stringException)	// catches string exceptions for incorrect ISBN length
+		{
+			cout << stringException << endl;
+		}
+		catch (...)	// catches general exception for invalid ISBN format
+		{
+			cout << "That is not a valid ISBN. Enter the 13 digit ISBN and press enter." << endl;
+		}
+	}
+	tryAgain = true;
+	currentBook = inventory.searchAttribute(ISBN, tempStr);	// pass int corresponding to ISBN and search ISBN if this book already exists
+	if (currentBook != nullptr)	// if a book is returned it means one with that ISBN already exists
+	{
+		// tell the user a book with that ISBN already exists and show them its information
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "* A book with that ISBN is in the database with the following information:                                             *"
@@ -665,31 +791,74 @@ void displayAddNewBook(void)
 			<< "************************************************************************************************************************"
 			<< "* If you wish to edit the book go through the Search Books Menu" << endl;
 		system("pause");
+		// let user look at information and tell them they can edit it through the book search screen, pause so they can read it.
 	}
 	else
 	{
-		currentBook = inventory.addBook();
-		currentBook->setIsbn(stoll(tempStr));
+		currentBook = inventory.addBook();	// add a new book through inventory using default constructor.
+		currentBook->setIsbn(stoll(tempStr));	// set ISBN for the book we already checked that it is valid
 		cout << "*                                                                                                                      *"
 			<< "*  No book with that ISBN could be located in the database. A new book will be created.                                *"
 			<< "************************************************************************************************************************"
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*   Enter the title of the book : ";
-		getline(cin, userInput);
-		currentBook->setTitle(userInput);
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Title for this book: ";
+				getline(cin, userInput);
+				if (userInput.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions with tabs
+			{
+				cout << stringException << endl;
+			}
+		}
+		tryAgain = true;
+		currentBook->setTitle(userInput);	// set title for the book
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*   Enter the name of the author of the book: ";
-		getline(cin, userInput);
-		currentBook->setAuthor(userInput);
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Author for this book: ";
+				getline(cin, userInput);
+				if (userInput.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings 
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions with tabs
+			{
+				cout << stringException << endl;
+			}
+		}
+		tryAgain = true;
+		currentBook->setAuthor(userInput);	// set author for the book
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*   Enter the publisher of the book: ";
-		getline(cin, userInput);
-		currentBook->setPublisher(userInput);
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				cout << "Enter the new Publisher for this book: ";
+				getline(cin, userInput);
+				if (userInput.find('\t') != -1)	// our database is tab separated so we can't accept tabs in strings 
+					string stringException = "Tab characters are not accepted in this entry. Try again without the tab.";	// create exception string
+				tryAgain = false;	// only executes if no exception is thrown
+			}
+			catch (string stringException)	// catches string exceptions
+			{
+				cout << stringException << endl;
+			}
+		}
+		tryAgain = true;
+		currentBook->setPublisher(userInput);	// set publisher for book
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
@@ -859,7 +1028,7 @@ void displayAddUsedBook(void)
 
 void displayInventoryMenu(void)
 {
-	system("cls");
+	system("cls");	// clear screen and draw inventory menu
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -912,7 +1081,7 @@ void displayInventoryMenu(void)
 
 void displayBookInformationScreen(Book * displayBook)
 {
-	system("cls");
+	system("cls");	// clear screen and draw information for book passed as an argument
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -957,7 +1126,6 @@ void displayBookInformationScreen(Book * displayBook)
 		<< "*   8. Retail Price                                                                                                    *"
 		<< "*                                                                                                                      *"
 		<< "*   9. Return to Previous Menu                                                                                         *"
-		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -1045,8 +1213,9 @@ void displayDeleteBook(void)
 {
 	string tempStr;
 	int tempInt;
-	Book ** searchResults = new Book*;
+	Book ** searchResults;
 	Book * deletionBook;
+	bool tryAgain = true;
 	int numResults;
 	system("cls");
 	cout << "************************************************************************************************************************"
@@ -1062,6 +1231,7 @@ void displayDeleteBook(void)
 		<< "*                                                                                                                      *"
 		<< "*  Enter the ISBN of the book to be deleted: ";
 	getline(cin, tempStr);
+	searchResults = new Book*[MAX_SEARCH_RESULTS];	// dynamically allocates an array to store search results
 	numResults = inventory.strSearch(ISBN, tempStr, searchResults);
 	cout << "The following books match that ISBN:                                                                                    "
 		<< "************************************************************************************************************************"
@@ -1075,10 +1245,29 @@ void displayDeleteBook(void)
 	}
 	cout << "************************************************************************************************************************"
 		<< "Select the book you would like to delete using the number on the far left: ";
-	getline(cin, tempStr);
-	tempInt = stoi(tempStr);
-	deletionBook = searchResults[tempInt-1];
-	system("cls");
+	while (tryAgain)	// loop until exception is not thrown
+	{
+		try{
+			getline(cin, tempStr);	// get user's selection
+			tempInt = stoi(tempStr);	// convert the string to an int and store it in tempInt, possible exception thrown here if user did not enter a number
+			if (tempInt > numResults || tempInt < 1)	// user can only select from the books displayed on screen
+			{
+				string stringException = "That is not a valid book number. Try again.";
+				throw stringException;
+			}
+			tryAgain = false;
+		}
+		catch (string stringException)	// catches invalid book number entered and prompts user
+		{
+			cout << stringException;
+		}
+		catch (...)	// catches a non-number user entry and prompts them to try again
+		{
+			cout << "That is not a valid book number. Try again:";
+		}
+	}
+	deletionBook = searchResults[tempInt-1];	// set deletion book equal to the option selected by the user
+	system("cls");	// clear screen and redraw with book information
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -1109,16 +1298,7 @@ void displayDeleteBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
-		<< "*                                       Enter [YES] to delete or [NO] to cancel                                        *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
+		<< "*                                    Type [YES] to delete or anything else to cancel                                   *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
@@ -1128,13 +1308,28 @@ void displayDeleteBook(void)
 		<< "*                                                                                                                      *"
 		<< "*                                                                                                                      *"
 		<< "************************************************************************************************************************";
+	// Menu asked if user really wants to delete the book. only the characters YES
 	getline(cin, tempStr);
-	if (tempStr == "YES")
+	if (tempStr == "YES")	// user really wants to delete the book
 	{
-		inventory.deleteBook(deletionBook);
+		inventory.deleteBook(deletionBook);	// pass book to inventory to be deleted.
+		cout << "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*                                               Book was deleted                                                       *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************";
+		system("pause");	// pause to view results
 	}
-	delete searchResults;
-
+	else // user selected not to delete book it was cancelled.
+	{
+		cout << "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*                                             Book was not deleted                                                     *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************";
+		system("pause");	// pause to view results
+	}
+	delete[] searchResults;	// delete the dynamically allocated array storing search results
 }
 
 

@@ -163,3 +163,8 @@ int Book::getBookNumber(void) const
 {
 	return bookNumber;
 }
+
+string Book::getBookType(void) const
+{
+	return "New";
+}

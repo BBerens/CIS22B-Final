@@ -21,6 +21,7 @@ protected:
 	double wholesaleCost;
 	double retailPrice;
 	time_t dateAdded;
+	int bookType;
 	enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY };
 
 public:
@@ -52,6 +53,7 @@ public:
 	virtual double getRetailPrice(void) const;
 	string getAttribute(int) const;
 	int getBookNumber(void) const;
+	string getBookType(void) const;
 
 	virtual void print(void);
 	void writeToFile(fstream&);

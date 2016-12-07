@@ -3,7 +3,7 @@
 9780133769395	Starting Out With C++	Tony Gaddiss	Pearson	25	52.5	65	1479098495	
 9780139798092	Thinking in C++	Bruce Eckel	Prentice Hall	50	45.1	55.5	1479098555	
 9780672326967	C Primer Plus	Stephen Prata	Sams	75	48.21	94.54	1479098593	
-9780471457572	A Brief Introduction to Fluid Mechanics	Donald Young	Wiley	2	50	58.99	1480925444	
+9780471457572	A Brief Intro to Fluid Mechanics	Donald Yong	Wiley	2	50	58.99	1480925444	
 9780534372811	Probability and Statistics	Jay Devore	Duxbury Thomson Learning	32	45	84.99	1480925606	
 11 Used Books
 9780133085044	A Practical Guide to Linux Commands, Editors, and Shell Programming	Mark Sobell	Prentice Hall	2	50	51	1480757581		0
