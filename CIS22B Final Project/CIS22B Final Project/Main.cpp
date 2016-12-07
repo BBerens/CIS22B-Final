@@ -168,9 +168,101 @@ void displayCashierScreen(Order* currentOrder)
 	// Collect user Input
 	//cout << "Please enter the ISBN of the book you are buying: ";
 
-	cin.ignore();
+	// cin.ignore();
+
+	// Test Code
+	// *************************************************************************************************************//
+	Book ** searchResults;
+
+	while (1){
+		int numBooksFound;
+		bool tryAgain = true;
+		int bookSelection;
+		searchResults = new Book*[MAX_SEARCH_RESULTS];	// dynamically allocates an array to store search results
+
+		cout << "Enter [EXIT] if you are ready to checkout or [CANCEL] to cancel the order." << endl;
+		cout << "Please enter the ISBN of the book you are buying: ";
+		getline(cin, newInput);
+		cout << "************************************************************************************************************************" << endl;
+		numBooksFound = inventory.strSearch(ISBN, newInput, searchResults);	//pass the attribute to search by, the value, and the array to store results to search algorithm
+		if (newInput == "EXIT" || newInput == "CANCEL")
+			break;
+		else{
+			// store the number of books found
+			if (numBooksFound == 0)	// search found no books with that substring
+			{
+				cout << "No books found with \"" << newInput << "\" in their " << ISBN << endl;	// let the user know nothing was found
+				system("pause");	// pause to let them read the results
+			}
+			else
+			{
+				for (int i = 0; i < numBooksFound; i++)	// for each book found (stored in searchResults)
+				{
+					cout << setw(3) << right << i + 1 << " ";	// add a result number to facilitate user selecting a book
+					searchResults[i]->print();	// print each book to screen 
+				}
+				cout << "************************************************************************************************************************"
+					<< "Select the book you would like to view by its number on the left:";	// prompt user to pick a book to look at
+				while (tryAgain)	// loop until exception is not thrown
+				{
+					try{
+						getline(cin, userInput);	// get user's selection
+						bookSelection = stoi(userInput);	// convert the string to an int and store it in menuOption, possible exception thrown here if user did not enter a number
+						if (bookSelection > numBooksFound || bookSelection < 1)	// user can only select from the books displayed on screen
+						{
+							string stringException = "That is not a valid book number. Try again.";
+							throw stringException;
+						}
+						tryAgain = false;
+					}
+					catch (string stringException)	// catches invalid book number entered and prompts user
+					{
+						cout << stringException;
+					}
+					catch (...)	// catches a non-number user entry and prompts them to try again
+					{
+						cout << "That is not a valid book number. Try again:";
+					}
+				}
+
+				currentBook = searchResults[bookSelection - 1];
+
+				while (1){
+					cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
+					try{
+						getline(cin, userInput);
+						purchaseQuantity = stoi(userInput);
+
+						if (purchaseQuantity > currentBook->getQuantity()){
+							cout << "This is an invalid entry" << endl;
+						}
+						else{
+							currentOrder->addBook(currentBook, purchaseQuantity);
+							break;
+						}
+					}
+					catch (...)
+					{
+						cout << "That is not a valid quanity." << endl;
+					}
+
+				}
+
+				currentBook->setQuantity(currentBook->getQuantity() - purchaseQuantity); // Subtract the quantity of books being purchased
+
+			}
+			delete[] searchResults;	// delete the dynamically allocated searchResults array
+			system("cls");
+		}
+	}
+	// ****************************************************************************************************************
+	// End test
+
+
+
 
 	// Loop for user order
+	/*
 	while (newInput != "EXIT" && newInput != "CANCEL")
 	{
 		// Collect user Input
@@ -210,27 +302,6 @@ void displayCashierScreen(Order* currentOrder)
 				
 			}
 
-				// currentOrder->addBook(currentBook, purchaseQuantity);  // Add the current book to current order
-
-				// Exception handling for purchaseQuantity input
-				// This needs to be improved.  User needs to re-enter the ISBN to get back to the quantity screen
-				/*
-				try {
-				if (purchaseQuantity > currentBook-> getQuantity()||purchaseQuantity < 0)
-		//		if (!isdigit(purchaseQuantity))  // This is not working
-					{
-						string exceptionString = "Error: Invalid Quantity!";
-						throw exceptionString;
-					}
-
-					currentOrder->addBook(currentBook, purchaseQuantity);
-				}
-				catch (string exceptionString)
-				{
-					cout << exceptionString << endl;
-				}
-				*/
-
 			currentBook->setQuantity(currentBook->getQuantity() - purchaseQuantity); // Subtract the quantity of books being purchased
 			// cout << "The new quantity of this book is " << currentBook->getQuantity() << endl;
 			cin.ignore();
@@ -241,6 +312,7 @@ void displayCashierScreen(Order* currentOrder)
 			cout << "This ISBN is invalid, please try another ISBN: " << endl;
 		}
 	}
+	*/
 
 	// Check if ordered was canceled
 	if (newInput == "CANCEL"){

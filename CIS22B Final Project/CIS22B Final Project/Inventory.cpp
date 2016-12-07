@@ -56,7 +56,7 @@ Book* Inventory::addBook(void)
 UsedBook* Inventory::addUsedBook(int condition)
 {
 	UsedBook* newUsedBook;
-	newUsedBook = new UsedBook(condition); 
+	newUsedBook = new UsedBook(condition);
 	usedBooks[numUsedBooks] = newUsedBook;
 	newUsedBook->setBookNumber(numUsedBooks);
 	numUsedBooks++;
@@ -84,7 +84,7 @@ UsedBook* Inventory::addUsedBook(void)
 {
 
 	UsedBook* newUsedBook;
-	newUsedBook = new UsedBook(); 
+	newUsedBook = new UsedBook();
 	usedBooks[numUsedBooks] = newUsedBook;
 	newUsedBook->setBookNumber(numUsedBooks);
 	numUsedBooks++;
@@ -116,7 +116,7 @@ void Inventory::readBooksFromFile()
 		bookDatabase >> *bookPtr;
 		bookDatabase.ignore();	// should ignore the '\n' character
 	}
-	
+
 	bookDatabase >> usedBooks;
 	bookDatabase.ignore(20, '\n');
 	for (int j = 0; j < usedBooks; j++)
@@ -162,7 +162,7 @@ void Inventory::generateAttributeList(int attribute, Book** attributeList)
 	{
 		minIndex = startScan;
 		minValue = attributeList[startScan];
-		for (int j = startScan +1; j < numBooks + numUsedBooks; j++)
+		for (int j = startScan + 1; j < numBooks + numUsedBooks; j++)
 		{
 			if (attributeList[j]->getAttribute(attribute) < minValue->getAttribute(attribute))
 			{
@@ -185,7 +185,7 @@ int Inventory::getNumBooks(void)
 	return numBooks;
 }
 
-Book * Inventory::searchAttribute(int attribute, string value) const 
+Book * Inventory::searchAttribute(int attribute, string value) const
 {
 	int first = 0; // First array element
 	int last = numBooks + numUsedBooks - 1; // Last array element
@@ -218,7 +218,7 @@ void Inventory::updateLists()
 	{
 		delete lists[i];
 		lists[i] = new Book*[numBooks + numUsedBooks];
-		generateAttributeList(i, lists[i]);		
+		generateAttributeList(i, lists[i]);
 	}
 }
 
@@ -231,7 +231,7 @@ int Inventory::strSearch(int attribute, string value, Book** searchList)
 		tempStr = books[i]->getAttribute(attribute);
 		if (tempStr.find(value) != -1)
 		{
-			searchList[counter++]=books[i];
+			searchList[counter++] = books[i];
 		}
 	}
 	for (int i = 0; i < numUsedBooks; i++)
@@ -254,7 +254,7 @@ void Inventory::deleteBook(Book* deletionBook)
 {
 	Book** tempBooks;
 	tempBooks = new Book*;
-	int deleteBookNum =deletionBook->getBookNumber(); // get the book number of the book to be deleted
+	int deleteBookNum = deletionBook->getBookNumber(); // get the book number of the book to be deleted
 	delete books[deleteBookNum];	// delete that book
 	--numBooks;		// decrement the number of books
 	for (int i = deleteBookNum; i < numBooks; i++)	// start at where the book was deleted and copy each book pointer from the index one more
