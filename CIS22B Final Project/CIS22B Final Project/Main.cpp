@@ -10,6 +10,7 @@
 #include <ctime>
 #include <string>
 #include <cstring>
+#include <algorithm>
 #define TAX_RATE .0875
 #define MAX_SEARCH_RESULTS 100
 
@@ -68,7 +69,7 @@ int main(void)
 			break;		// User selected to exit, will fall through and exit while loop
 		default:
 			// Prompt user to enter a valid choice
-			cout << "That is not a valid choice. Please select from the menu.";
+			cout << "That is not a valid choice. Please select from the menu." << endl;
 			system("pause");
 		}
 	}
@@ -150,9 +151,10 @@ void displayCashierScreen(Order* currentOrder)
 	double lineTotal = 0;
 	double total;
 	double tax;
+	// Create variables
 	int purchaseQuantity;
-	int initialQuantity;
 	string userInput;
+	int bookCounter = 0;
 
 	// Declare variables for cashier input
 	string newInput = ""; // Input book
@@ -162,13 +164,8 @@ void displayCashierScreen(Order* currentOrder)
 	struct tm now;
 	localtime_s(&now, &rawtime);
 	char dateStr[30];
-	int bookCounter = 0; // Variable for below while loop
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
-	// Collect user Input
-	//cout << "Please enter the ISBN of the book you are buying: ";
-
-	// cin.ignore();
 
 	// Test Code
 	// *************************************************************************************************************//
@@ -183,6 +180,8 @@ void displayCashierScreen(Order* currentOrder)
 		cout << "Enter [EXIT] if you are ready to checkout or [CANCEL] to cancel the order." << endl;
 		cout << "Please enter the ISBN of the book you are buying: ";
 		getline(cin, newInput);
+		std::string out;
+		std::transform(newInput.begin(), newInput.end(), newInput.begin(), ::toupper);
 		cout << "************************************************************************************************************************" << endl;
 		numBooksFound = inventory.strSearch(ISBN, newInput, searchResults);	//pass the attribute to search by, the value, and the array to store results to search algorithm
 		if (newInput == "EXIT" || newInput == "CANCEL")
@@ -256,63 +255,6 @@ void displayCashierScreen(Order* currentOrder)
 		}
 	}
 	// ****************************************************************************************************************
-	// End test
-
-
-
-
-	// Loop for user order
-	/*
-	while (newInput != "EXIT" && newInput != "CANCEL")
-	{
-		// Collect user Input
-		cout << "Enter [EXIT] if you are ready to checkout or [CANCEL] to cancel the order." << endl;
-		cout << "Please enter the ISBN of the book you are buying: ";
-		getline(cin, newInput);
-
-		// Pull book data from the inventory class
-		currentBook = inventory.searchAttribute(ISBN, newInput);
-
-		if (currentBook != nullptr){
-			// Return book data and verify user input is correct.  Otherwise collect user input again.
-			cout << "You entered the following book:" << endl;
-			cout << "ISBN: " << currentBook->getIsbn() << endl;
-			cout << "Title: " << currentBook->getTitle() << endl;
-			cout << "Author: " << currentBook->getAuthor() << endl;
-			cout << "Publisher: " << currentBook->getPublisher() << endl;
-
-			while (1){
-				cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
-				try{
-					getline(cin, userInput);
-					purchaseQuantity = stoi(userInput);
-
-					if (purchaseQuantity > currentBook->getQuantity()){
-						cout << "This is an invalid entry" << endl;
-					}
-					else{
-						currentOrder->addBook(currentBook, purchaseQuantity);
-						break;
-					}
-				}
-				catch (...)
-				{
-					cout << "That is not a valid quanity." << endl;
-				}
-				
-			}
-
-			currentBook->setQuantity(currentBook->getQuantity() - purchaseQuantity); // Subtract the quantity of books being purchased
-			// cout << "The new quantity of this book is " << currentBook->getQuantity() << endl;
-			cin.ignore();
-		}
-		
-
-		else{
-			cout << "This ISBN is invalid, please try another ISBN: " << endl;
-		}
-	}
-	*/
 
 	// Check if ordered was canceled
 	if (newInput == "CANCEL"){

@@ -24,8 +24,8 @@ public:
 	virtual double getWholesaleCost(void) const;	// overridden from Book class
 	virtual double getRetailPrice(void) const;		// overridden from Book class
 	virtual string getBookType(void) const;			// overridden from Book class
-
 	virtual void print(void);		// overridden from Book class
+	virtual void printCashier(void);
 	friend fstream& operator << (fstream&, UsedBook&);	// overload left shift operator to write to file
 	friend fstream& operator >> (fstream&, UsedBook&);	// overload right shift operator to read from file
 };
