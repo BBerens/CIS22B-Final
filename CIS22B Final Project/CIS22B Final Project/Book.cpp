@@ -156,18 +156,3 @@ void Book::printCashier(void)
 	cout << "  $" << fixed << setw(6) << setprecision(2) << retailPrice;
 	cout << right << setw(9) << getDateAddedStr() << endl;
 }
-
-void Book::setBookNumber(int bookNum)
-{
-	bookNumber = bookNum;
-}
-
-int Book::getBookNumber(void) const
-{
-	return bookNumber;
-}
-
-string Book::getBookType(void) const
-{
-	return "New";
-}
