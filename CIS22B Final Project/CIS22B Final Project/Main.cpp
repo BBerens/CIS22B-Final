@@ -151,13 +151,11 @@ void displayCashierScreen(Order* currentOrder)
 	double lineTotal = 0;
 	double total;
 	double tax;
-	// Create variables
-	int purchaseQuantity;
-	string userInput;
-	int bookCounter = 0;
-
 	// Declare variables for cashier input
-	string newInput = ""; // Input book
+	int purchaseQuantity;
+	string userInput; // Input Quantity
+	int bookCounter = 0; 
+	string newInput = ""; // Input book (ISBN)
 
 	// Get the current system time
 	time_t rawtime = time(NULL);
@@ -167,24 +165,24 @@ void displayCashierScreen(Order* currentOrder)
 	strftime(dateStr, 30, "%d %b %Y %I:%M%p", &now);
 	system("cls");
 
-	// Test Code
-	// *************************************************************************************************************//
-	Book ** searchResults;
 
+	Book ** searchResults;
 	while (1){
 		int numBooksFound;
 		bool tryAgain = true;
 		int bookSelection;
 		searchResults = new Book*[MAX_SEARCH_RESULTS];	// dynamically allocates an array to store search results
 
-		cout << "Enter [EXIT] if you are ready to checkout or [CANCEL] to cancel the order." << endl;
+		// Prompt user to enter an IBSN 
+		cout << "Enter [CHECKOUT] if you are ready to checkout or [CANCEL] to cancel the order." << endl;
 		cout << "Please enter the ISBN of the book you are buying: ";
-		getline(cin, newInput);
+		getline(cin, newInput); // Collect ISBN number
 		std::string out;
 		std::transform(newInput.begin(), newInput.end(), newInput.begin(), ::toupper);
 		cout << "************************************************************************************************************************" << endl;
 		numBooksFound = inventory.strSearch(ISBN, newInput, searchResults);	//pass the attribute to search by, the value, and the array to store results to search algorithm
-		if (newInput == "EXIT" || newInput == "CANCEL")
+
+		if (newInput == "CHECKOUT" || newInput == "CANCEL")
 			break;
 		else{
 			// store the number of books found
@@ -202,7 +200,7 @@ void displayCashierScreen(Order* currentOrder)
 				}
 				cout << endl << "************************************************************************************************************************"
 					<< "Select the book you would like to view by its number on the left:";	// prompt user to pick a book to look at
-				while (tryAgain)	// loop until exception is not thrown
+				while (1)	// loop until exception is not thrown
 				{
 					try{
 						getline(cin, userInput);	// get user's selection
@@ -212,7 +210,7 @@ void displayCashierScreen(Order* currentOrder)
 							string stringException = "That is not a valid book number. Try again.";
 							throw stringException;
 						}
-						tryAgain = false;
+						break; // Exit loop
 					}
 					catch (string stringException)	// catches invalid book number entered and prompts user
 					{
@@ -223,27 +221,31 @@ void displayCashierScreen(Order* currentOrder)
 						cout << "That is not a valid book number. Try again:";
 					}
 				}
-
 				currentBook = searchResults[bookSelection - 1];
 
 				while (1){
-					cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:";
+					// Collect the quantity from the user. 
+					cout << "Please enter the quantity of " << currentBook->getTitle() << " that you wish to buy:"; // Prompt user for input
 					try{
-						getline(cin, userInput);
-						purchaseQuantity = stoi(userInput);
+						getline(cin, userInput); // Collect purchase quantity
+						purchaseQuantity = stoi(userInput); // convert user input to int from string
 
-						if (purchaseQuantity > currentBook->getQuantity()){
-							cout << "This is an invalid entry" << endl;
+						// Run exception to check for valid numbers (not negative or greater than quantity).
+						if (purchaseQuantity > currentBook->getQuantity() || purchaseQuantity <= 0){ 
+							cout << "This is an invalid entry" << endl; 
+							cout << "The current book quantity is: " << currentBook->getQuantity() << endl;
 						}
 						else{
-							currentOrder->addBook(currentBook, purchaseQuantity);
-							break;
+							currentOrder->addBook(currentBook, purchaseQuantity); // Add current book object to the current order object
+							break; // Exit loop
 						}
 					}
 					catch (...)
 					{
 						cout << "That is not a valid quanity." << endl;
+						cout << "The current book quantity is: " << currentBook->getQuantity() << endl; // Display the current quantity to user for feedback
 					}
+					
 
 				}
 
@@ -254,22 +256,21 @@ void displayCashierScreen(Order* currentOrder)
 			system("cls");
 		}
 	}
-	// ****************************************************************************************************************
 
 	// Check if ordered was canceled
 	if (newInput == "CANCEL"){
 		
 		// Reset book quantity to originally book quantity
 		while (bookCounter < currentOrder->getNumBooks()){
-			currentBook = currentOrder->getBook(bookCounter);
-			currentBook->setQuantity(currentBook->getQuantity() + currentOrder->getQuantity(bookCounter));
-			bookCounter++;
+			currentBook = currentOrder->getBook(bookCounter); // Save the current book object found in the order to a temp book object
+			currentBook->setQuantity(currentBook->getQuantity() + currentOrder->getQuantity(bookCounter)); // Add to the temp book object.  This will add to the quantity stored in the inventory.
+			bookCounter++; // Increment until all books on the order have been reset
 		}
-		cout << "Your order has been canceled." << endl;
+		cout << "Your order has been canceled." << endl; 
 		system("pause");
 	}
 
-	else if (newInput == "EXIT" && currentOrder->getNumBooks() != 0){
+	else if (newInput == "CHECKOUT" && currentOrder->getNumBooks() != 0){
 		system("cls");
 		// Display receipt
 		cout << "************************************************************************************************************************"
@@ -282,25 +283,27 @@ void displayCashierScreen(Order* currentOrder)
 			<< "*   Qty   ISBN           Title                             Price               Total                                   *"
 			<< "*   ___________________________________________________________________________________________________________________*";
 		cout << endl;
-		// using a while loop to call the function from order class
+		
+		// USe a loop to print line items and calculate the line total and subtotal
 		bookCounter = 0;
 		while (bookCounter < currentOrder->getNumBooks())
 		{
 			currentBook = currentOrder->getBook(bookCounter);
 			cout << fixed << setprecision(2);
-			cout << "*" << setw(5) << right << currentOrder->getQuantity(bookCounter)
-				<< setw(17) << right << currentBook->getIsbn() << "  "
-				<< setw(33) << left << currentBook->getTitle().substr(0, 32)
-				<< "$" << setw(14) << currentBook->getRetailPrice() << "     ";
-			lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
-			// currentBook->setQuantity(currentBook->getQuantity() - currentOrder->getQuantity(bookCounter)); // Subtract the quantity of books being purchased
-			subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice();
-			bookCounter++;
-			cout << "$" << setw(15) << lineTotal << "                         *";
-			tax = subtotal*TAX_RATE;
-			total = subtotal * (1 + TAX_RATE);
+			cout << "*" << setw(5) << right << currentOrder->getQuantity(bookCounter) // Print the quantity purchased for the current order
+				<< setw(17) << right << currentBook->getIsbn() << "  " // Print the ISBN for the current book
+				<< setw(33) << left << currentBook->getTitle().substr(0, 32) // Print the title for the current book
+				<< "$" << setw(14) << currentBook->getRetailPrice() << "     "; // Print the retail price for the current book
+			lineTotal = currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice(); // Calculate the line total
+			subtotal += currentOrder->getQuantity(bookCounter) * currentBook->getRetailPrice(); // Calculate the subtotal
+			bookCounter++; // Increment until all books have been added.
+			cout << "$" << setw(15) << lineTotal << "                         *"; // Print the line total
 		}
 
+		tax = subtotal*TAX_RATE; // Calculate the tax rate
+		total = subtotal + tax; // Calculate the total cost
+
+		// Print out subtotal, tax, and total
 		cout << "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "*                     Subtotal: $" << setw(6) << right
@@ -319,8 +322,8 @@ void displayCashierScreen(Order* currentOrder)
 		system("pause");
 	}
 
-	else{
-		system("pause");
+	else{ 
+		system("pause"); // Do nothing if no books are ordered and user exits
 	}
 
 	// return to cashier module
