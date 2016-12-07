@@ -154,6 +154,16 @@ void Book::print(void)
 	cout << right << setw(9) << getDateAddedStr() << endl;
 }
 
+void Book::printCashier(void)
+{
+	cout << setw(13) << isbn;
+	cout << "  " << setw(26) << left << title.substr(0, 25);
+	cout << setw(15) << left << author.substr(0, 14);
+	cout << setw(20) << left << publisher.substr(0, 13) << setw(10) << "New";
+	cout << "  $" << fixed << setw(6) << setprecision(2) << retailPrice;
+	cout << right << setw(9) << getDateAddedStr() << endl;
+}
+
 void Book::setBookNumber(int bookNum)
 {
 	bookNumber = bookNum;

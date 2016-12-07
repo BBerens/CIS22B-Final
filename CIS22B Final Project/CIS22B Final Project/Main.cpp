@@ -199,9 +199,9 @@ void displayCashierScreen(Order* currentOrder)
 				for (int i = 0; i < numBooksFound; i++)	// for each book found (stored in searchResults)
 				{
 					cout << setw(3) << right << i + 1 << " ";	// add a result number to facilitate user selecting a book
-					searchResults[i]->print();	// print each book to screen 
+					searchResults[i]->printCashier();	// print each book to screen 
 				}
-				cout << "************************************************************************************************************************"
+				cout << endl << "************************************************************************************************************************"
 					<< "Select the book you would like to view by its number on the left:";	// prompt user to pick a book to look at
 				while (tryAgain)	// loop until exception is not thrown
 				{

@@ -111,3 +111,31 @@ void UsedBook::print(void)
 	cout << "   $" << fixed << setw(6) << setprecision(2) << getRetailPrice();
 	cout << setw(9) << right << getDateAddedStr() << endl;
 }
+
+void UsedBook::printCashier(void)
+{
+	cout << setw(13) << left << isbn;
+	cout << "  " << setw(26) << left << title.substr(0, 25);
+	cout << setw(15) << left << author.substr(0, 14);
+	cout << setw(13) << left << publisher.substr(0, 13);
+	cout << " Used  ";
+	switch (bookCondition)
+	{
+	case(LIKE_NEW) :
+		cout << "Like New ";
+		break;
+	case(GOOD) :
+		cout << "Good     ";
+		break;
+	case(FAIR) :
+		cout << "Fair     ";
+		break;
+	case(POOR) :
+		cout << "Poor     ";
+		break;
+	default:
+		cout << "         ";
+	}
+	cout << "   $" << fixed << setw(6) << setprecision(2) << getRetailPrice();
+	cout << setw(9) << right << getDateAddedStr() << endl;
+}

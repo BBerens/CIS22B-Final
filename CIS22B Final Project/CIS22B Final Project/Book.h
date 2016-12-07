@@ -56,6 +56,7 @@ public:
 	string getBookType(void) const;
 
 	virtual void print(void);
+	virtual void printCashier(void);
 	void writeToFile(fstream&);
 	friend fstream& operator << (fstream&, Book&);
 	friend fstream& operator >> (fstream&, Book&);
