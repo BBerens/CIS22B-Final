@@ -1560,102 +1560,110 @@ void displayDeleteBook(void)
 	searchResults = new Book*[MAX_SEARCH_RESULTS];	// dynamically allocates an array to store search results
 	numResults = inventory.strSearch(ISBN, tempStr, searchResults);	// pass ISBN (0), ISBN to search for, and searchResults list to strSearch for matching ISBNs
 	// print the index reference for user to read results
-	cout << "The following books match that ISBN:                                                                                    "
-		<< "************************************************************************************************************************"
-		<< "                                                                          New/                Wholesale Retail   Date   "
-		<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
-		<< "************************************************************************************************************************";
-	for (int i = 0; i < numResults; i++)	// for each found book..
+	if (numResults == 0)
 	{
-		cout << setw(3) << right << i + 1 << " ";	// print book reference number for user to select book from list
-		searchResults[i]->print();	// print each books data
+		cout << "*  No book with that ISBN could be located in the database.                                                            *"
+			<< "************************************************************************************************************************";
 	}
-	cout << "************************************************************************************************************************"
-		<< "Select the book you would like to delete using the number on the far left: ";
-	tryAgain = true;
-	while (tryAgain)	// loop until exception is not thrown
+	else
 	{
-		try{
-			getline(cin, tempStr);	// get user's selection
-			tempInt = stoi(tempStr);	// convert the string to an int and store it in tempInt, possible exception thrown here if user did not enter a number
-			if (tempInt > numResults || tempInt < 1)	// user can only select from the books displayed on screen
-			{
-				string stringException = "That is not a valid book number. Try again.";
-				throw stringException;
+		cout << "The following books match that ISBN:                                                                                    "
+			<< "************************************************************************************************************************"
+			<< "                                                                          New/                Wholesale Retail   Date   "
+			<< "# ISBN           Title                      Author         Publisher      Used  Condition Qty   Cost     Price   Added  "
+			<< "************************************************************************************************************************";
+		for (int i = 0; i < numResults; i++)	// for each found book..
+		{
+			cout << setw(3) << right << i + 1 << " ";	// print book reference number for user to select book from list
+			searchResults[i]->print();	// print each books data
+		}
+		cout << "************************************************************************************************************************"
+			<< "Select the book you would like to delete using the number on the far left: ";
+		tryAgain = true;
+		while (tryAgain)	// loop until exception is not thrown
+		{
+			try{
+				getline(cin, tempStr);	// get user's selection
+				tempInt = stoi(tempStr);	// convert the string to an int and store it in tempInt, possible exception thrown here if user did not enter a number
+				if (tempInt > numResults || tempInt < 1)	// user can only select from the books displayed on screen
+				{
+					string stringException = "That is not a valid book number. Try again.";
+					throw stringException;
+				}
+				tryAgain = false;
 			}
-			tryAgain = false;
+			catch (string stringException)	// catches invalid book number entered and prompts user
+			{
+				cout << stringException;
+			}
+			catch (...)	// catches a non-number user entry and prompts them to try again
+			{
+				cout << "That is not a valid book number. Try again:";
+			}
 		}
-		catch (string stringException)	// catches invalid book number entered and prompts user
-		{
-			cout << stringException;
-		}
-		catch (...)	// catches a non-number user entry and prompts them to try again
-		{
-			cout << "That is not a valid book number. Try again:";
-		}
-	}
-	deletionBook = searchResults[tempInt-1];	// set deletion book equal to the option selected by the user
-	system("cls");	// clear screen and redraw with book information
-	cout << "************************************************************************************************************************"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                Serendipity Booksellers                                               *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                     Book Deletion                                                    *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "************************************************************************************************************************"
-		<< "*  ISBN: " << left << setw(110) << deletionBook->getIsbn() << "*"
-		<< "*  Title: " << setw(109) << deletionBook->getTitle().substr(0, 109) << "*"
-		<< "*  Author: " << setw(108) << deletionBook->getAuthor() << "*"
-		<< "*  Publisher: " << setw(105) << deletionBook->getPublisher() << "*"
-		<< "*  Date Added: " << setw(104) << deletionBook->getDateAddedStr() << "*"
-		<< "*  Quantity On-hand: " << setw(98) << deletionBook->getQuantity() << "*"
-		<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << deletionBook->getWholesaleCost() << "*"
-		<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << deletionBook->getRetailPrice() << "*"
-		<< "*                                                                                                                      *"
-		<< "************************************************************************************************************************"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                      Are you sure you want to delete this book?                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                    Type [YES] to delete or anything else to cancel                                   *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "*                                                                                                                      *"
-		<< "************************************************************************************************************************";
-	// Menu asked if user really wants to delete the book. only the characters YES get a book deleted
-	getline(cin, tempStr);
-	if (tempStr == "YES")	// user really wants to delete the book
-	{
-		inventory.deleteBook(deletionBook);	// pass book to inventory to be deleted.
+		deletionBook = searchResults[tempInt - 1];	// set deletion book equal to the option selected by the user
+		system("cls");	// clear screen and redraw with book information
 		cout << "************************************************************************************************************************"
 			<< "*                                                                                                                      *"
-			<< "*                                               Book was deleted                                                       *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                Serendipity Booksellers                                               *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                     Book Deletion                                                    *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
+			<< "*  ISBN: " << left << setw(110) << deletionBook->getIsbn() << "*"
+			<< "*  Title: " << setw(109) << deletionBook->getTitle().substr(0, 109) << "*"
+			<< "*  Author: " << setw(108) << deletionBook->getAuthor() << "*"
+			<< "*  Publisher: " << setw(105) << deletionBook->getPublisher() << "*"
+			<< "*  Date Added: " << setw(104) << deletionBook->getDateAddedStr() << "*"
+			<< "*  Quantity On-hand: " << setw(98) << deletionBook->getQuantity() << "*"
+			<< "*  Wholesale Cost: $" << setw(99) << fixed << setprecision(2) << deletionBook->getWholesaleCost() << "*"
+			<< "*  Retail Price: $" << setw(101) << fixed << setprecision(2) << deletionBook->getRetailPrice() << "*"
+			<< "*                                                                                                                      *"
+			<< "************************************************************************************************************************"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                      Are you sure you want to delete this book?                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                    Type [YES] to delete or anything else to cancel                                   *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
+			<< "*                                                                                                                      *"
 			<< "*                                                                                                                      *"
 			<< "************************************************************************************************************************";
-		system("pause");	// pause to view results
-	}
-	else // user selected not to delete book it was cancelled.
-	{
-		cout << "************************************************************************************************************************"
-			<< "*                                                                                                                      *"
-			<< "*                                             Book was not deleted                                                     *"
-			<< "*                                                                                                                      *"
-			<< "************************************************************************************************************************";
-		system("pause");	// pause to view results
+		// Menu asked if user really wants to delete the book. only the characters YES get a book deleted
+		getline(cin, tempStr);
+		if (tempStr == "YES")	// user really wants to delete the book
+		{
+			inventory.deleteBook(deletionBook);	// pass book to inventory to be deleted.
+			cout << "************************************************************************************************************************"
+				<< "*                                                                                                                      *"
+				<< "*                                               Book was deleted                                                       *"
+				<< "*                                                                                                                      *"
+				<< "************************************************************************************************************************";
+			system("pause");	// pause to view results
+		}
+		else // user selected not to delete book it was cancelled.
+		{
+			cout << "************************************************************************************************************************"
+				<< "*                                                                                                                      *"
+				<< "*                                             Book was not deleted                                                     *"
+				<< "*                                                                                                                      *"
+				<< "************************************************************************************************************************";
+			system("pause");	// pause to view results
+		}
 	}
 	delete[] searchResults;	// delete the dynamically allocated array storing search results
 }

@@ -1,10 +1,20 @@
-6 New Books
+16 New Books
 9799812358751	Design Patterns	Erich Gamma	Addison Wesley	26	12.99	15.65	1479096890	
 9780133769395	Starting Out With C++	Tony Gaddiss	Pearson	25	52.5	65	1479098495	
 9780139798092	Thinking in C++	Bruce Eckel	Prentice Hall	50	45.1	55.5	1479098555	
 9780672326967	C Primer Plus	Stephen Prata	Sams	75	48.21	94.54	1479098593	
 9780471457572	A Brief Intro to Fluid Mechanics	Donald Yong	Wiley	2	50	58.99	1480925444	
 9780534372811	Probability and Statistics	Jay Devore	Duxbury Thomson Learning	32	45	84.99	1480925606	
+9780532315724	The Mistletoe Secret	Richard Paul Evans	Simon & Schuster	53	25.36	56.99	1480925603	
+9780316407920	Cross the Line	James Patterson	Little Brown and Company	56	23.99	29.56	148025608	
+9780385541190	The Whistler	John Grisham	Doubleday Books	50	28.95	56.89	1480257896	
+9780345543004	Turbo Twenty-Three	Janet Evanovich	Bantam	63	28	60.99	14802569842	
+9781455520695	Two by Two	Nicholas Sparks	Grand Central Publishing	24	27	56.36	1480257854	
+9781455586516	No Man's Land	David Baldacci	Grand Central Publishing	30	23	56	148257813	
+9780345544957	Small Great Things	Jodi Picoult	Ballantine Books	45	28.99	61.99	1485679652	
+9780316387835	The Chemist	Stephneie Meyer	Lettle Brown and Campany	16	13.58	26.75	1485468751	
+9780399575518	Odessa Sea	Clive Cussler	G.P. Putman's Sons	25	29	58	1458762621	
+9780062225559	Moonglow	Michael Chabon	Harper	10	28.99	35.99	1479035484	
 11 Used Books
 9780133085044	A Practical Guide to Linux Commands, Editors, and Shell Programming	Mark Sobell	Prentice Hall	2	50	51	1480757581		0
 9780133085044	A Practical Guide to Linux Commands, Editors, and Shell Programming	Mark Sobell	Prentice Hall	2	50	51	1480757581		3

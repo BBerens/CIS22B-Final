@@ -242,11 +242,23 @@ int Inventory::strSearch(int attribute, string value, Book** searchList)
 void Inventory::deleteBook(Book* deletionBook)
 {
 	int deleteBookNum = deletionBook->getBookNumber(); // get the book number of the book to be deleted
-	delete books[deleteBookNum];	// delete that book
-	--numBooks;		// decrement the number of books
-	for (int i = deleteBookNum; i < numBooks; i++)	// start at where the book was deleted and copy each book pointer from the index one more
+	if (deletionBook->getBookType() == "New")
 	{
-		books[i] = books[i + 1];
+		delete books[deleteBookNum];	// delete that book
+		--numBooks;		// decrement the number of books
+		for (int i = deleteBookNum; i < numBooks; i++)	// start at where the book was deleted and copy each book pointer from the index one more
+		{
+			books[i] = books[i + 1];
+		}
+	}
+	else
+	{
+		delete usedBooks[deleteBookNum];	// delete that book
+		--numUsedBooks;		// decrement the number of used books
+		for (int i = deleteBookNum; i < numUsedBooks; i++)	// start at where the book was deleted and copy each book pointer from the index one more
+		{
+			usedBooks[i] = usedBooks[i + 1];
+		}
 	}
 	updateLists();	// update all the sorted lists to account for the deleted book
 }
