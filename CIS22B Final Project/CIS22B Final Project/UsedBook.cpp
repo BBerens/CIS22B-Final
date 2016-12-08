@@ -75,7 +75,7 @@ fstream& operator >> (fstream& file, UsedBook& inBook)
 void UsedBook::print(void)
 {
 	cout << setw(13) << left << isbn;
-	cout << "  " << setw(26) << left << title.substr(0, 25);
+	cout << " " << setw(26) << left << title.substr(0, 25);
 	cout << setw(15) << left << author.substr(0, 14);
 	cout << setw(13) << left << publisher.substr(0, 13);
 	cout << " Used  ";

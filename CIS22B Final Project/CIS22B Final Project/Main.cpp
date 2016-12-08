@@ -41,6 +41,26 @@ Inventory inventory;
 // create enum data type to hold data for book attributes
 enum bookAttribute { ISBN, TITLE, AUTHOR, PUBLISHER, WHOLESALE_COST, RETAIL_PRICE, DATE_ADDED, QUANTITY};
 
+// template function to return the larger of 2 arguments
+template <class T>
+T maximum(T T1, T T2)
+{
+	if (T1 > T2)
+		return T1;
+	else
+		return T2;
+}
+
+// template function to return the smaller of 2 arguments
+template <class T>
+T minimum(T T1, T T2)
+{
+	if (T1 < T2)
+		return T1;
+	else
+		return T2;
+}
+
 
 int main(void)
 {
@@ -1413,6 +1433,7 @@ void reportModule(void)
 }
 void displayReportsMenu(void)
 {
+	
 	system("cls");	// clear screen and draw reports menu
 	cout << "************************************************************************************************************************"
 		<< "*                                                                                                                      *"
@@ -1456,6 +1477,14 @@ void displayReportsMenu(void)
 
 void displayReport(int listSelection)
 {
+	int maxQuantity = 0;
+	int minQuantity = 9999;
+	double maxRetail = 0;
+	double minRetail = 9999;
+	double maxWholesale = 0;
+	double minWholesale = 9999;
+	double totalRetail = 0;
+	double totalWholesale = 0;
 	// take the listselection and convert it to an attribute ( subtract 1) 
 	// get the corresponding attribute list and write each book in order to screen
 
@@ -1469,7 +1498,24 @@ void displayReport(int listSelection)
 	{
 		cout << setw(3) << right << i + 1 << " ";	// print the listing number (just for display purposes)
 		bookList[i]->print();	// call print function. This function is overridden usedBook class so it will print different for new and used books
+		maxQuantity = maximum(maxQuantity, bookList[i]->getQuantity());
+		minQuantity = minimum(minQuantity, bookList[i]->getQuantity());
+		maxWholesale = maximum(maxWholesale, bookList[i]->getWholesaleCost());
+		minWholesale = minimum(minWholesale, bookList[i]->getWholesaleCost());
+		maxRetail = maximum(maxRetail, bookList[i]->getRetailPrice());
+		minRetail = minimum(minRetail, bookList[i]->getRetailPrice());
+		totalRetail += bookList[i]->getQuantity() * bookList[i]->getRetailPrice();
+		totalWholesale += bookList[i]->getQuantity() * bookList[i]->getWholesaleCost();
 	}
+	
+	cout << "************************************************************************************************************************"
+		<< "       Minimum Quantity: " << left << setw(15) << minQuantity << "Minimum Wholesale Cost: $" << setprecision(2) << setw(15) << minWholesale << "Minimum Retail Price: $ " << setw(13) << minRetail << endl;
+	cout << "       Maximum Quantity: " << left << setw(15) << maxQuantity << "Maximum Wholesale Cost: $" << setprecision(2) << setw(15) << maxWholesale << "Maximum Retail Price: $ " << setw(13) << maxRetail << endl;
+	cout << "************************************************************************************************************************";
+	if (listSelection == 5)
+		cout << "The total wholesale value of all books in inventory is $" << setprecision(2) << totalWholesale << endl;
+	if (listSelection == 6)
+		cout << "The total retail price of all books in inventory is $" << setprecision(2) << totalRetail << endl;
 	system("pause");	// pause to allow user to read the report
 	// return displayReportMenu
 }

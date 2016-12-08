@@ -76,7 +76,14 @@ string Book::getAttribute(int input) const
 		output = to_string(dateAdded);		// convert from time_t to string (note this is not the same as getDateAddedStr) this returns the digits of time_t to string
 		break;
 	case(QUANTITY) :
-		output = to_string(quantity);	// convert from int to string
+		if (quantity /10 == 0)	// single digit quantity
+			output = "00" + to_string(quantity);	// convert single digit int to have leading 00's to ensure accurate string compare
+		else if(quantity / 100 == 0)	// double digit quantity
+			output = "0" + to_string(quantity);		// convert double digit int to have leading 00's to ensure accurate string compare
+		else if (quantity / 1000 == 0)	// triple digit quantity
+			output = to_string(quantity);	// convert from 3 digit int to string
+		else
+			output = "999"; // cap the output at a large number
 		break;
 	default:
 		output = "error";	// something went wrong and you asked for an incorrect attribute
@@ -138,7 +145,7 @@ fstream& operator >> (fstream& file, Book& inBook)
 void Book::print(void)
 {
 	cout << setw(13) << isbn;
-	cout << "  " << setw(26) << left << title.substr(0,25);
+	cout << " " << setw(26) << left << title.substr(0,25);
 	cout << setw(15) << left << author.substr(0, 14);
 	cout << setw(13) << left << publisher.substr(0, 13);
 	cout << " New            " << setw(3) << quantity;
